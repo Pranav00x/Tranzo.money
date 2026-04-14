@@ -72,68 +72,84 @@
 
 ### 📊 Activity
 - **Full transaction history** with filterable tabs (All/Sent/Received/Swap/Dripper)
-- **Real-time status tracking** via Openfort UserOp monitoring
-- **Color-coded transaction types** with status badges
+- **Real-time status tracking** via Openfort UserOp monitorin## 🏗️ Architecture
+
+```mermaid
+graph TD
+    subgraph "📱 Mobile Application (Android)"
+        A[Jetpack Compose UI]
+        B[Hilt DI]
+        C[Retrofit / OkHttp]
+        D[Room / DataStore]
+    end
+
+    subgraph "🖥️ Backend (Node.js/TS)"
+        E[Express.js API]
+        F[Auth Service]
+        G[Openfort SDK]
+        H[Prisma ORM]
+    end
+
+    subgraph "⛓️ Blockchain (Polygon/Base)"
+        I[ERC-4337 Smart Account]
+        J[TranzoDripper.sol]
+        K[EntryPoint Contract]
+    end
+
+    subgraph "🛠️ Infrastructure"
+        L[Openfort Bundler]
+        M[Openfort Paymaster]
+        N[PostgreSQL]
+    end
+
+    A <--> B
+    B <--> C
+    C <--> E
+    E <--> F
+    E <--> G
+    G <--> L
+    L <--> K
+    K <--> I
+    E <--> H
+    H <--> N
+    I <--> J
+```
+
+### 🔁 Data Flow
+
+```mermaid
+sequenceDiagram
+    participant U as User (Android)
+    participant B as Backend
+    participant O as Openfort
+    participant C as Chain (Polygon)
+
+    U->>B: POST /transfers/send
+    B->>O: Create Transaction Intent
+    O-->>B: UserOperation Hash
+    B->>O: Sign & Send UserOp
+    O->>C: Submit to Bundler
+    C->>C: Execute on EntryPoint
+    C-->>O: Transaction Confirmed
+    O-->>B: Webhook / Result
+    B-->>U: 200 OK (Success)
+```
+
+### ⛽ ERC-4337 UserOp Flow
+
+```mermaid
+graph LR
+    User[User / App] -->|Signs UserOp| Intent[Transaction Intent]
+    Intent --> |Submits to| Bundler[Openfort Bundler]
+    Bundler --> |Requests Gas from| Paymaster[Openfort Paymaster]
+    Paymaster --> |Sponsors| EntryPoint[EntryPoint Contract]
+    EntryPoint --> |Validates & Executes| SmartAccount[User Smart Account]
+    SmartAccount --> |Calls| Contract[Target Contract / Transfer]
+```
 
 ---
 
-## Architecture
-
-```
-┌─────────────────────────────────────────────────────────────┐
-│                    TRANZO ECOSYSTEM                          │
-├──────────────┬──────────────────────┬───────────────────────┤
-│   Android    │      Backend         │    Smart Contracts    │
-│   (Kotlin)   │   (Node/TypeScript)  │     (Solidity)        │
-├──────────────┼──────────────────────┼───────────────────────┤
-│              │                      │                       │
-│  Jetpack     │  Express.js API      │  TranzoDripper.sol    │
-│  Compose UI  │  ┌────────────────┐  │  ┌─────────────────┐  │
-│  ┌────────┐  │  │ Auth Service   │  │  │ createStream()  │  │
-│  │ Splash │  │  │ (Email/OTP +   │  │  │ withdraw()      │  │
-│  │ Onboard│  │  │  Google OAuth) │  │  │ cancel()        │  │
-│  │ Auth   │──┼──│ Openfort SDK   │──┤  │ balanceOf()     │  │
-│  │ Home   │  │  │ Balance Svc    │  │  └─────────────────┘  │
-│  │ Send   │  │  │ Stream Svc     │  │                       │
-│  │ Receive│  │  │ Email Svc      │  │  Deployed on:         │
-│  │ Swap   │  │  └────────────────┘  │  • Polygon            │
-│  │ Dripper│  │                      │  • Base                │
-│  │ History│  │  Prisma (PostgreSQL) │                       │
-│  │Settings│  │  JWT + Rate Limiting │                       │
-│  └────────┘  │                      │                       │
-│              │                      │                       │
-│  Hilt DI     │  Openfort manages:   │                       │
-│  Retrofit    │  • Smart Accounts    │                       │
-│  Room        │  • Bundler           │                       │
-│  Biometric   │  • Paymaster         │                       │
-│              │  • Gas Sponsorship   │                       │
-└──────────────┴──────────────────────┴───────────────────────┘
-```
-
-### Data Flow
-
-```
-User Action (Android)
-    │
-    ▼
-Retrofit API Call ──► Express Backend ──► Openfort SDK
-    │                      │                    │
-    │                      │                    ▼
-    │                      │              ERC-4337 UserOp
-    │                      │                    │
-    │                      │                    ▼
-    │                      │              Bundler + Paymaster
-    │                      │                    │
-    │                      ▼                    ▼
-    │               Prisma (DB)          On-Chain Execution
-    │                      │              (Polygon / Base)
-    ▼                      ▼
-  UI Update          Persist State
-```
-
----
-
-## Tech Stack
+## 🚀 Tech Stack
 
 ### 📱 Android App
 
@@ -189,7 +205,7 @@ Retrofit API Call ──► Express Backend ──► Openfort SDK
 
 ---
 
-## Repository Structure
+## 📂 Repository Structure
 
 ```
 Tranzo.money/
@@ -311,7 +327,7 @@ Tranzo.money/
 
 ---
 
-## Getting Started
+## 🛠️ Getting Started
 
 ### Prerequisites
 
@@ -401,7 +417,7 @@ The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
-## API Reference
+## 🔌 API Reference
 
 ### Authentication
 
@@ -449,7 +465,7 @@ The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
-## Smart Contract: TranzoDripper
+## 💎 Smart Contract: TranzoDripper
 
 The only custom on-chain contract. All account abstraction (smart accounts, bundler, paymaster) is handled by **Openfort**.
 
@@ -488,11 +504,11 @@ function cancel(uint256 streamId) external;
 
 ---
 
-## Design System
+## 🎨 Design System
 
 Tranzo's UI is inspired by **CheQ** — a modern fintech app known for its clean, premium feel.
 
-### Color Palette
+### 🎨 Color Palette
 
 | Token | Hex | Usage |
 |-------|-----|-------|
@@ -509,37 +525,54 @@ Tranzo's UI is inspired by **CheQ** — a modern fintech app known for its clean
 | Error | `#EF4444` | Error states |
 | Warning | `#F59E0B` | Pending states |
 
-### Typography
+### 🔡 Typography
 
 - **Font**: System default (DM Sans when added)
 - **Scale**: Display (36sp) → Headline (26/20/18sp) → Body (16/14/12sp) → Label (16/12/11sp)
 
-### Shape Tokens
+### 📐 Shape Tokens
 
 - Cards: `16dp` rounded
 - Bottom sheets: `24dp` top corners
 - Buttons: `28dp` pill shape
 - Inputs: `12dp` rounded
 
-### Screen Flow
+---
 
-```
-Splash → Onboarding (3 pages) → Welcome (email) → OTP → Wallet Creation → Home
-                                                                              │
-                                                          ┌──────┬──────┬─────┤
-                                                          ▼      ▼      ▼     ▼
-                                                        Send  Receive  Swap  Dripper
-                                                          │                    │
-                                                          ▼                    ├── Dashboard
-                                                     Confirmation             ├── Stream Detail
-                                                          │                    └── Create Stream
-                                                          ▼
-                                                       Success
+## 📱 User Interface Flow
+
+```mermaid
+stateDiagram-v2
+    [*] --> Splash
+    Splash --> Onboarding
+    Onboarding --> Welcome
+    Welcome --> OTP
+    OTP --> WalletCreation
+    WalletCreation --> Home
+
+    state Home {
+        [*] --> Dashboard
+        Dashboard --> Send
+        Dashboard --> Receive
+        Dashboard --> Swap
+        Dashboard --> Dripper
+        Dashboard --> History
+        Dashboard --> Settings
+    }
+
+    Send --> SendConfirmation
+    SendConfirmation --> Success
+    Success --> Dashboard
+
+    Dripper --> StreamDetail
+    Dripper --> CreateStream
+    StreamDetail --> Dashboard
+    CreateStream --> Dashboard
 ```
 
 ---
 
-## CI/CD Pipeline
+## 🔄 CI/CD Pipeline
 
 ### GitHub Actions Workflow
 
@@ -569,46 +602,65 @@ On every push to `main`:
 
 ---
 
-## Database Schema
+## 🗄️ Database Schema
 
+```mermaid
+erDiagram
+    USER ||--o{ SOCIAL_ACCOUNT : has
+    USER ||--o{ PASSKEY : has
+    USER ||--o{ REFRESH_TOKEN : has
+    USER ||--o{ OTP_CODE : requested
+    USER ||--o{ SALARY_STREAM : manages
+    USER ||--o{ USER_OP_LOG : records
+    USER ||--o{ GAS_SPONSORSHIP : receives
+
+    USER {
+        string id PK
+        string email
+        string phone
+        string displayName
+        string smartAccount
+        string openfortId
+        string kycStatus
+        datetime createdAt
+    }
+
+    SOCIAL_ACCOUNT {
+        string provider
+        string providerUid
+        string userId FK
+    }
+
+    PASSKEY {
+        string credentialId PK
+        string publicKey
+        string userId FK
+    }
+
+    SALARY_STREAM {
+        string id PK
+        string onChainId
+        string employerId FK
+        string employeeAddress
+        string tokenAddress
+        string amountPerSecond
+        datetime startTime
+        datetime endTime
+        string status
+    }
+
+    USER_OP_LOG {
+        string intentId PK
+        string txHash
+        string status
+        string userId FK
+    }
 ```
-┌──────────────┐     ┌──────────────┐     ┌──────────────────┐
-│    User       │     │ SocialAccount│     │    Passkey        │
-├──────────────┤     ├──────────────┤     ├──────────────────┤
-│ id (uuid)    │──┐  │ provider     │     │ credentialId     │
-│ email        │  ├──│ providerUid  │     │ publicKey        │
-│ phone        │  │  │ userId (FK)  │     │ userId (FK)      │
-│ displayName  │  │  └──────────────┘     └──────────────────┘
-│ smartAccount │  │
-│ openfortId   │  │  ┌──────────────┐     ┌──────────────────┐
-│ kycStatus    │  │  │  OtpCode     │     │  RefreshToken     │
-│ emailVerified│  ├──│ code (hashed)│     ├──────────────────┤
-│ createdAt    │  │  │ expiresAt    │     │ tokenHash        │
-└──────────────┘  │  │ userId (FK)  │     │ family           │
-                  │  └──────────────┘     │ userId (FK)      │
-                  │                       └──────────────────┘
-                  │
-                  │  ┌──────────────────┐  ┌──────────────────┐
-                  ├──│  SalaryStream    │  │  UserOpLog       │
-                  │  ├──────────────────┤  ├──────────────────┤
-                  │  │ onChainStreamId  │  │ intentId         │
-                  │  │ employerId (FK)  │  │ txHash           │
-                  │  │ employeeAddress  │  │ status           │
-                  │  │ tokenAddress     │  │ userId (FK)      │
-                  │  │ amountPerSecond  │  └──────────────────┘
-                  │  │ startTime        │
-                  │  │ endTime          │  ┌──────────────────┐
-                  │  │ totalWithdrawn   │  │ GasSponsorship   │
-                  │  │ status           │  ├──────────────────┤
-                  │  │ txHash           │  │ amount           │
-                  └──└──────────────────┘  │ chainId          │
-                                           │ userId (FK)      │
-                                           └──────────────────┘
 ```
 
 ---
 
-## Security Model
+## 🔒 Security Model
 
 ### Non-Custodial by Design
 
