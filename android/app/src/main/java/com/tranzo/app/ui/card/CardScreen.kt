@@ -114,7 +114,7 @@ fun CardScreen(
                         onClick = {},
                     )
                     CardQuickAction(
-                        icon = Icons.Outlined.TuneRounded,
+                        icon = Icons.Outlined.Tune,
                         label = "Limits",
                         onClick = onManageLimits,
                     )
