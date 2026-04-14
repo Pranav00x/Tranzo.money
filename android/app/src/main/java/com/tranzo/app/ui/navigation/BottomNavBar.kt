@@ -24,7 +24,7 @@ data class BottomNavItem(
 
 val bottomNavItems = listOf(
     BottomNavItem("Home", Icons.Outlined.Home, Screen.Home.route),
-    BottomNavItem("Wallet", Icons.Outlined.AccountBalanceWallet, Screen.Send.route),
+    BottomNavItem("Card", Icons.Outlined.CreditCard, Screen.Card.route),
     BottomNavItem("Dripper", Icons.Outlined.WaterDrop, Screen.DripperDashboard.route),
     BottomNavItem("Activity", Icons.Outlined.Receipt, Screen.TransactionHistory.route),
     BottomNavItem("Profile", Icons.Outlined.Person, Screen.Settings.route),

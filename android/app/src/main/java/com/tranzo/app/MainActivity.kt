@@ -12,6 +12,8 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.tranzo.app.ui.card.CardScreen
+import com.tranzo.app.ui.card.OrderCardScreen
 import com.tranzo.app.ui.auth.OtpScreen
 import com.tranzo.app.ui.auth.WalletCreationScreen
 import com.tranzo.app.ui.auth.WelcomeScreen
@@ -212,6 +214,25 @@ class MainActivity : ComponentActivity() {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 },
+                            )
+                        }
+
+                        // ── Card Flow ────────────────────────────────
+                        composable(Screen.Card.route) {
+                            CardScreen(
+                                onBack = { navController.popBackStack() },
+                                onOrderCard = { navController.navigate(Screen.OrderCard.route) },
+                                onCardDetails = { cardId ->
+                                    navController.navigate(Screen.CardDetails.createRoute(cardId))
+                                },
+                                onManageLimits = { /* Future */ }
+                            )
+                        }
+
+                        composable(Screen.OrderCard.route) {
+                            OrderCardScreen(
+                                onBack = { navController.popBackStack() },
+                                onOrder = { navController.popBackStack() }
                             )
                         }
                     }
