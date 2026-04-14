@@ -1,0 +1,29 @@
+# ─── Foundry ──────────────────────────────────────────────────
+smart_contracts/cache/
+smart_contracts/out/
+smart_contracts/lib/
+
+# ─── Node.js ──────────────────────────────────────────────────
+node_modules/
+dist/
+.env
+*.log
+
+# ─── Android ──────────────────────────────────────────────────
+*.apk
+*.aab
+*.iml
+.gradle/
+**/build/
+local.properties
+captures/
+.externalNativeBuild/
+.cxx/
+
+# ─── IDE ──────────────────────────────────────────────────────
+.idea/
+.vscode/
+*.swp
+*.swo
+.DS_Store
+Thumbs.db

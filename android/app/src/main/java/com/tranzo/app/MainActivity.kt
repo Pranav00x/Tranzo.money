@@ -15,12 +15,20 @@ import androidx.navigation.compose.rememberNavController
 import com.tranzo.app.ui.auth.OtpScreen
 import com.tranzo.app.ui.auth.WalletCreationScreen
 import com.tranzo.app.ui.auth.WelcomeScreen
+import com.tranzo.app.ui.dripper.CreateStreamScreen
+import com.tranzo.app.ui.dripper.DripperDashboardScreen
+import com.tranzo.app.ui.dripper.StreamDetailScreen
+import com.tranzo.app.ui.history.TransactionHistoryScreen
 import com.tranzo.app.ui.home.HomeScreen
 import com.tranzo.app.ui.navigation.Screen
 import com.tranzo.app.ui.navigation.TranzoBottomBar
 import com.tranzo.app.ui.onboarding.OnboardingScreen
+import com.tranzo.app.ui.receive.ReceiveScreen
+import com.tranzo.app.ui.send.SendConfirmationScreen
+import com.tranzo.app.ui.send.SendScreen
 import com.tranzo.app.ui.settings.SettingsScreen
 import com.tranzo.app.ui.splash.SplashScreen
+import com.tranzo.app.ui.swap.SwapScreen
 import com.tranzo.app.ui.theme.TranzoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -43,7 +51,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = Screen.Splash.route,
                     ) {
-                        // Splash
+                        // ── Auth Flow ────────────────────────────────
                         composable(Screen.Splash.route) {
                             SplashScreen(
                                 onNavigateToOnboarding = {
@@ -59,7 +67,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Onboarding
                         composable(Screen.Onboarding.route) {
                             OnboardingScreen(
                                 onGetStarted = {
@@ -70,7 +77,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Welcome (email input)
                         composable(Screen.Welcome.route) {
                             WelcomeScreen(
                                 onContinue = { email ->
@@ -79,7 +85,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // OTP Verification
                         composable(Screen.Otp.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
                             OtpScreen(
@@ -93,7 +98,6 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Wallet Creation (loading)
                         composable(Screen.WalletCreation.route) {
                             WalletCreationScreen(
                                 onComplete = {
@@ -109,7 +113,7 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Home
+                        // ── Main Screens ─────────────────────────────
                         composable(Screen.Home.route) {
                             HomeScreen(
                                 onSend = { navController.navigate(Screen.Send.route) },
@@ -119,7 +123,88 @@ class MainActivity : ComponentActivity() {
                             )
                         }
 
-                        // Settings
+                        // ── Send Flow ────────────────────────────────
+                        composable(Screen.Send.route) {
+                            SendScreen(
+                                onBack = { navController.popBackStack() },
+                                onReview = { to, token, amount ->
+                                    // Navigate to confirmation
+                                    navController.navigate("send_confirm/$to/$token/$amount")
+                                },
+                            )
+                        }
+
+                        composable("send_confirm/{to}/{token}/{amount}") { backStackEntry ->
+                            val to = backStackEntry.arguments?.getString("to") ?: ""
+                            val token = backStackEntry.arguments?.getString("token") ?: ""
+                            val amount = backStackEntry.arguments?.getString("amount") ?: ""
+                            SendConfirmationScreen(
+                                recipientAddress = to,
+                                tokenSymbol = token,
+                                amount = amount,
+                                onConfirm = { /* call API */ },
+                                onCancel = {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(Screen.Home.route) { inclusive = false }
+                                    }
+                                },
+                            )
+                        }
+
+                        // ── Receive ──────────────────────────────────
+                        composable(Screen.Receive.route) {
+                            ReceiveScreen(
+                                onBack = { navController.popBackStack() },
+                            )
+                        }
+
+                        // ── Swap ─────────────────────────────────────
+                        composable(Screen.Swap.route) {
+                            SwapScreen(
+                                onBack = { navController.popBackStack() },
+                                onSwap = { navController.popBackStack() },
+                            )
+                        }
+
+                        // ── Dripper ──────────────────────────────────
+                        composable(Screen.DripperDashboard.route) {
+                            DripperDashboardScreen(
+                                onCreateStream = {
+                                    navController.navigate(Screen.CreateStream.route)
+                                },
+                                onStreamClick = { streamId ->
+                                    navController.navigate(Screen.StreamDetail.createRoute(streamId))
+                                },
+                            )
+                        }
+
+                        composable(Screen.StreamDetail.route) { backStackEntry ->
+                            val streamId = backStackEntry.arguments?.getString("streamId") ?: ""
+                            StreamDetailScreen(
+                                streamId = streamId,
+                                onBack = { navController.popBackStack() },
+                                onWithdraw = { /* call API */ },
+                                onCancel = { navController.popBackStack() },
+                            )
+                        }
+
+                        composable(Screen.CreateStream.route) {
+                            CreateStreamScreen(
+                                onBack = { navController.popBackStack() },
+                                onCreate = {
+                                    navController.popBackStack()
+                                },
+                            )
+                        }
+
+                        // ── Transaction History ──────────────────────
+                        composable(Screen.TransactionHistory.route) {
+                            TransactionHistoryScreen(
+                                onBack = { navController.popBackStack() },
+                            )
+                        }
+
+                        // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
                             SettingsScreen(
                                 onLogout = {
@@ -128,28 +213,6 @@ class MainActivity : ComponentActivity() {
                                     }
                                 },
                             )
-                        }
-
-                        // Placeholder screens for remaining tabs
-                        composable(Screen.Send.route) {
-                            // TODO: SendScreen
-                            HomeScreen()
-                        }
-                        composable(Screen.Receive.route) {
-                            // TODO: ReceiveScreen
-                            HomeScreen()
-                        }
-                        composable(Screen.Swap.route) {
-                            // TODO: SwapScreen
-                            HomeScreen()
-                        }
-                        composable(Screen.DripperDashboard.route) {
-                            // TODO: DripperDashboardScreen
-                            HomeScreen()
-                        }
-                        composable(Screen.TransactionHistory.route) {
-                            // TODO: TransactionHistoryScreen
-                            HomeScreen()
                         }
                     }
                 }
