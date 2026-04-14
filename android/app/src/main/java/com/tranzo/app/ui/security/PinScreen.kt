@@ -3,10 +3,8 @@ package com.tranzo.app.ui.security
 import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
-import androidx.compose.material.ripple.rememberRipple
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.automirrored.outlined.Backspace
@@ -232,11 +230,7 @@ private fun Numpad(
                     modifier = Modifier
                         .size(72.dp)
                         .clip(CircleShape)
-                        .clickable(
-                            interactionSource = remember { MutableInteractionSource() },
-                            indication = rememberRipple(bounded = false, color = TranzoColors.PrimaryGreen),
-                            onClick = onBiometricClick
-                        ),
+                        .clickable(onClick = onBiometricClick),
                     contentAlignment = Alignment.Center
                 ) {
                     Icon(
@@ -256,11 +250,7 @@ private fun Numpad(
                 modifier = Modifier
                     .size(72.dp)
                     .clip(CircleShape)
-                    .clickable(
-                        interactionSource = remember { MutableInteractionSource() },
-                        indication = rememberRipple(bounded = false),
-                        onClick = onDeleteClick
-                    ),
+                    .clickable(onClick = onDeleteClick),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -281,11 +271,7 @@ private fun NumpadButton(text: String, onClick: () -> Unit) {
             .size(72.dp)
             .clip(CircleShape)
             .background(TranzoColors.CardSurface)
-            .clickable(
-                interactionSource = remember { MutableInteractionSource() },
-                indication = rememberRipple(color = TranzoColors.PrimaryGreen),
-                onClick = onClick
-            ),
+            .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Text(
