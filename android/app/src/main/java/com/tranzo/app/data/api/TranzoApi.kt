@@ -43,13 +43,21 @@ interface TranzoApi {
 
     @GET("transfers/history")
     suspend fun getTransactionHistory(
-        @Query("limit") limit: Int = 20
+        @Query("limit") limit: Int = 20,
     ): TransactionHistoryResponse
 
     @GET("transfers/status/{intentId}")
     suspend fun getTransactionStatus(
-        @Path("intentId") intentId: String
+        @Path("intentId") intentId: String,
     ): TransactionStatusResponse
+
+    // ─── Swap ────────────────────────────────────────────────────
+
+    @POST("swap/quote")
+    suspend fun getSwapQuote(@Body request: SwapQuoteRequest): SwapQuoteResponse
+
+    @POST("swap/execute")
+    suspend fun executeSwap(@Body request: SwapExecuteRequest): SwapExecuteResponse
 
     // ─── Dripper ─────────────────────────────────────────────────
 
@@ -67,6 +75,35 @@ interface TranzoApi {
 
     @POST("dripper/{id}/cancel")
     suspend fun cancelStream(@Path("id") streamId: String): IntentResponse
+
+    // ─── Card ─────────────────────────────────────────────────────
+
+    /** Get the user's virtual/physical card details. */
+    @GET("card")
+    suspend fun getCard(): CardResponse
+
+    /** Order a new virtual or physical card. */
+    @POST("card/order")
+    suspend fun orderCard(@Body request: OrderCardRequest): CardOrderResponse
+
+    /** Freeze or unfreeze the card. */
+    @POST("card/freeze")
+    suspend fun setCardFrozen(@Body request: CardFreezeRequest): CardResponse
+
+    /** Paginated card transaction history. */
+    @GET("card/transactions")
+    suspend fun getCardTransactions(
+        @Query("limit") limit: Int = 20,
+        @Query("offset") offset: Int = 0,
+    ): CardTransactionsResponse
+
+    // ─── Notifications ────────────────────────────────────────────
+
+    /** Register (or refresh) a push notification token. */
+    @POST("notifications/register")
+    suspend fun registerNotificationToken(
+        @Body request: RegisterNotificationTokenRequest,
+    ): MessageResponse
 
     // ─── Settings ────────────────────────────────────────────────
 

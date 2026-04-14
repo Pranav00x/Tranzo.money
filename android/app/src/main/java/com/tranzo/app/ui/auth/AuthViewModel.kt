@@ -4,9 +4,10 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tranzo.app.data.api.TranzoApi
-import com.tranzo.app.data.model.SendOtpRequest
-import com.tranzo.app.data.model.VerifyOtpRequest
 import com.tranzo.app.data.model.GoogleLoginRequest
+import com.tranzo.app.data.model.SendOtpRequest
+import com.tranzo.app.data.model.UpdateProfileRequest
+import com.tranzo.app.data.model.VerifyOtpRequest
 import dagger.hilt.android.lifecycle.HiltViewModel
 import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,6 +19,7 @@ data class AuthUiState(
     val isLoading: Boolean = false,
     val isAuthenticated: Boolean = false,
     val isNewUser: Boolean = false,
+    val isProfileSaved: Boolean = false,
     val error: String? = null,
     val otpSent: Boolean = false,
 )
@@ -100,6 +102,30 @@ class AuthViewModel @Inject constructor(
             } catch (_: Exception) { }
             clearTokens()
             _state.value = AuthUiState()
+        }
+    }
+
+    fun saveProfile(firstName: String, lastName: String, email: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                api.updateProfile(
+                    UpdateProfileRequest(
+                        firstName = firstName,
+                        lastName = lastName,
+                        displayName = "$firstName $lastName".trim(),
+                    )
+                )
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    isProfileSaved = true,
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Failed to save profile",
+                )
+            }
         }
     }
 

@@ -16,15 +16,22 @@ import kotlinx.coroutines.delay
 
 /**
  * Wallet creation loading screen.
+ *
  * Full green background, "Setting up your Wallet", animated progress bar.
- * Matches CheQ's "Setting up your Credit Profile" screen exactly.
+ * Matches CheQ's "Setting up your Credit Profile" screen.
+ *
+ * Behind the scenes (via Openfort):
+ * 1. Create Openfort player (linked to email identity)
+ * 2. Openfort generates embedded signer (smart account)
+ * 3. Compute counterfactual smart account address
+ * 4. Register account on backend
+ * 5. Account deploys lazily on first transaction
  */
 @Composable
 fun WalletCreationScreen(
     onComplete: () -> Unit,
     onSkip: () -> Unit,
 ) {
-    // Animate progress bar
     val progress = remember { Animatable(0f) }
 
     LaunchedEffect(Unit) {
@@ -81,7 +88,7 @@ fun WalletCreationScreen(
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Your self-custody wallet, secured by you.",
+                text = "Your smart wallet, powered by Openfort.",
                 style = MaterialTheme.typography.bodyMedium,
                 color = TranzoColors.TextOnGreen.copy(alpha = 0.8f),
                 textAlign = TextAlign.Center,

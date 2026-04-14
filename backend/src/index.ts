@@ -11,6 +11,7 @@ import transferRoutes from "./routes/transfers.routes.js";
 import dripperRoutes from "./routes/dripper.routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
 import cardRoutes from "./routes/card.routes.js";
+import swapRoutes from "./routes/swap.routes.js";
 
 const app = express();
 
@@ -37,7 +38,8 @@ app.use("/balances", requireAuth, balanceRoutes);
 app.use("/transfers", requireAuth, transferRoutes);
 app.use("/dripper", requireAuth, dripperRoutes);
 app.use("/user", requireAuth, settingsRoutes);
-app.use("/card", cardRoutes);  // Has own auth + public webhooks
+app.use("/card", cardRoutes);       // Has own auth + public webhooks
+app.use("/swap", requireAuth, swapRoutes);
 
 // ─── Error Handler ──────────────────────────────────────────────
 

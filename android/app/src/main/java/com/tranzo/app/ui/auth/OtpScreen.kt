@@ -21,20 +21,20 @@ import kotlinx.coroutines.delay
 
 /**
  * OTP verification screen — 6 individual square boxes.
- * Matches CheQ's OTP input exactly: auto-advance, resend countdown.
+ * Matches CheQ's OTP input: auto-advance, resend countdown.
  */
 @Composable
 fun OtpScreen(
     email: String,
     onVerify: (String) -> Unit,
     onResend: () -> Unit,
+    onSkip: (() -> Unit)? = null,
 ) {
     var otpValue by remember { mutableStateOf("") }
     var resendTimer by remember { mutableIntStateOf(30) }
     var isVerifying by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
 
-    // Resend countdown
     LaunchedEffect(resendTimer) {
         if (resendTimer > 0) {
             delay(1000)
@@ -42,7 +42,6 @@ fun OtpScreen(
         }
     }
 
-    // Auto-verify when 6 digits entered
     LaunchedEffect(otpValue) {
         if (otpValue.length == 6) {
             isVerifying = true
@@ -50,7 +49,6 @@ fun OtpScreen(
         }
     }
 
-    // Request focus on mount
     LaunchedEffect(Unit) {
         focusRequester.requestFocus()
     }
@@ -72,7 +70,6 @@ fun OtpScreen(
 
         Spacer(modifier = Modifier.height(8.dp))
 
-        // Masked email display
         val maskedEmail = email.take(3) + "***@" + email.substringAfter("@")
         Text(
             text = "An OTP has been sent to $maskedEmail",
@@ -84,7 +81,6 @@ fun OtpScreen(
 
         // OTP Input — 6 boxes
         Box(modifier = Modifier.fillMaxWidth()) {
-            // Hidden text field for keyboard input
             BasicTextField(
                 value = otpValue,
                 onValueChange = {
@@ -165,7 +161,6 @@ fun OtpScreen(
             }
         }
 
-        // Loading indicator
         if (isVerifying) {
             Spacer(modifier = Modifier.height(24.dp))
             LinearProgressIndicator(

@@ -17,29 +17,32 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.buildAnnotatedString
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.theme.TranzoColors
-import kotlinx.coroutines.launch
 
 data class OnboardingPage(
     val icon: ImageVector,
     val headline: String,
-    val greenWords: List<String>, // Words to highlight in green
+    val greenWords: List<String>,
     val subtitle: String,
 )
 
 private val pages = listOf(
     OnboardingPage(
-        icon = Icons.Outlined.Shield,
-        headline = "Your Crypto, Your Keys",
-        greenWords = listOf("Your Keys"),
-        subtitle = "Self-custody wallet secured by you. No custodians, no compromises.",
+        icon = Icons.Outlined.CreditCard,
+        headline = "Spend Crypto Anywhere",
+        greenWords = listOf("Anywhere"),
+        subtitle = "Get a Tranzo Visa card and spend your crypto at 80M+ merchants worldwide.",
+    ),
+    OnboardingPage(
+        icon = Icons.Outlined.AccountBalanceWallet,
+        headline = "Your Smart Wallet",
+        greenWords = listOf("Smart Wallet"),
+        subtitle = "One wallet for all your crypto. Send, receive, swap — gasless and instant.",
     ),
     OnboardingPage(
         icon = Icons.Outlined.WaterDrop,
@@ -47,18 +50,10 @@ private val pages = listOf(
         greenWords = listOf("Real-Time"),
         subtitle = "Stream salary every second with Dripper. Withdraw whenever you want.",
     ),
-    OnboardingPage(
-        icon = Icons.Outlined.Bolt,
-        headline = "Zero Gas Fees",
-        greenWords = listOf("Zero Gas Fees"),
-        subtitle = "Gasless transactions. No ETH needed. We handle it all behind the scenes.",
-    ),
 )
 
 /**
- * 3-page onboarding — white background, centered illustration,
- * bold heading with green keyword highlights, pager dots.
- * Matches CheQ's onboarding pattern exactly.
+ * 3-page onboarding — Card-first, clean CheQ-style.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -66,7 +61,6 @@ fun OnboardingScreen(
     onGetStarted: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { pages.size })
-    val scope = rememberCoroutineScope()
 
     Column(
         modifier = Modifier
@@ -90,7 +84,7 @@ fun OnboardingScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // Large icon as illustration placeholder
+                // Large icon illustration
                 Box(
                     modifier = Modifier
                         .size(140.dp)

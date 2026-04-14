@@ -23,14 +23,16 @@ model User {
   updatedAt       DateTime        @updatedAt
 
   // Relations
-  passkeys        Passkey[]
-  socialAccounts  SocialAccount[]
-  refreshTokens   RefreshToken[]
-  otpTokens       OtpToken[]
-  sentStreams      Stream[]        @relation("employer")
-  receivedStreams  Stream[]        @relation("employee")
-  sponsorships    SponsorshipEvent[]
-  useropLogs      UserOpLog[]
+  passkeys           Passkey[]
+  socialAccounts     SocialAccount[]
+  refreshTokens      RefreshToken[]
+  otpTokens          OtpToken[]
+  sentStreams         Stream[]             @relation("employer")
+  receivedStreams     Stream[]             @relation("employee")
+  sponsorships       SponsorshipEvent[]
+  useropLogs         UserOpLog[]
+  cards              Card[]
+  notificationTokens NotificationToken[]
 
   @@index([smartAccount])
 }
@@ -194,4 +196,62 @@ enum UserOpStatus {
   SUBMITTED
   CONFIRMED
   REVERTED
+}
+
+// ─── Card ────────────────────────────────────────────────────────
+
+model Card {
+  id            String            @id @default(uuid())
+  userId        String
+  user          User              @relation(fields: [userId], references: [id], onDelete: Cascade)
+  type          String            // virtual, physical
+  status        String            @default("active") // active, frozen, pending, cancelled
+  last4         String
+  network       String            @default("visa")
+  dailyLimit    Float             @default(1000)
+  monthlyLimit  Float             @default(10000)
+  dailySpent    Float             @default(0)
+  monthlySpent  Float             @default(0)
+  expiryMonth   Int
+  expiryYear    Int
+  partnerId     String?           // External card ID from Kulipa/Reap/Immersve
+  createdAt     DateTime          @default(now())
+  updatedAt     DateTime          @updatedAt
+
+  transactions  CardTransaction[]
+
+  @@index([userId])
+  @@index([partnerId])
+}
+
+model CardTransaction {
+  id         String   @id @default(uuid())
+  cardId     String
+  card       Card     @relation(fields: [cardId], references: [id], onDelete: Cascade)
+  userId     String
+  merchant   String
+  category   String?
+  amount     Float
+  currency   String   @default("USD")
+  status     String   @default("pending") // pending, completed, declined, refunded
+  txHash     String?  // On-chain settlement tx hash
+  createdAt  DateTime @default(now())
+
+  @@index([cardId])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ─── Push Notifications ──────────────────────────────────────────
+
+model NotificationToken {
+  id        String   @id @default(uuid())
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  token     String   // FCM device token
+  platform  String   // android, ios
+  createdAt DateTime @default(now())
+
+  @@unique([token])
+  @@index([userId])
 }

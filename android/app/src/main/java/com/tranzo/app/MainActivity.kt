@@ -55,7 +55,7 @@ class MainActivity : ComponentActivity() {
                         navController = navController,
                         startDestination = Screen.Splash.route,
                     ) {
-                        // ── Auth Flow ────────────────────────────────
+                        // ── Auth Flow (Non-Custodial) ───────────────
                         composable(Screen.Splash.route) {
                             SplashScreen(
                                 onNavigateToOnboarding = {
@@ -83,22 +83,48 @@ class MainActivity : ComponentActivity() {
 
                         composable(Screen.Welcome.route) {
                             WelcomeScreen(
-                                onContinue = { email ->
-                                    navController.navigate(Screen.Otp.createRoute(email))
+                                onContinue = { _ ->
+                                    // Non-custodial: go straight to wallet creation
+                                    // (passkey registration + local key generation)
+                                    navController.navigate(Screen.WalletCreation.route) {
+                                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                                    }
+                                },
+                                onCreateWallet = {
+                                    navController.navigate(Screen.WalletCreation.route) {
+                                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                                    }
+                                },
+                                onPasskeyLogin = {
+                                    // Returning user: authenticate with passkey → home
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                },
+                                onImportWallet = {
+                                    // Import existing wallet flow
+                                    // TODO: Add import wallet screen
+                                    navController.navigate(Screen.WalletCreation.route)
                                 },
                             )
                         }
 
+                        // OTP screen — optional email linking (NOT primary auth)
                         composable(Screen.Otp.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
                             OtpScreen(
                                 email = email,
                                 onVerify = { _ ->
-                                    navController.navigate(Screen.WalletCreation.route) {
-                                        popUpTo(Screen.Welcome.route) { inclusive = true }
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(0) { inclusive = true }
                                     }
                                 },
                                 onResend = { /* re-call sendOTP */ },
+                                onSkip = {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                },
                             )
                         }
 
@@ -134,11 +160,9 @@ class MainActivity : ComponentActivity() {
                             PinScreen(
                                 mode = PinMode.ENTER,
                                 onSuccess = { _ ->
-                                    navController.popBackStack() 
+                                    navController.popBackStack()
                                 },
                                 onUseBiometric = {
-                                    // Normally you'd trigger BiometricPrompt here
-                                    // For now, accept and pop back directly
                                     navController.popBackStack()
                                 },
                                 onBack = { navController.popBackStack() }
@@ -152,6 +176,8 @@ class MainActivity : ComponentActivity() {
                                 onReceive = { navController.navigate(Screen.Receive.route) },
                                 onSwap = { navController.navigate(Screen.Swap.route) },
                                 onDripper = { navController.navigate(Screen.DripperDashboard.route) },
+                                onCard = { navController.navigate(Screen.Card.route) },
+                                onOrderCard = { navController.navigate(Screen.OrderCard.route) },
                             )
                         }
 
@@ -160,7 +186,6 @@ class MainActivity : ComponentActivity() {
                             SendScreen(
                                 onBack = { navController.popBackStack() },
                                 onReview = { to, token, amount ->
-                                    // Navigate to confirmation
                                     navController.navigate("send_confirm/$to/$token/$amount")
                                 },
                             )
@@ -244,6 +269,19 @@ class MainActivity : ComponentActivity() {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 },
+                                onTransactionHistory = {
+                                    navController.navigate(Screen.TransactionHistory.route)
+                                },
+                                onSecurity = {
+                                    navController.navigate(Screen.Security.route)
+                                },
+                            )
+                        }
+
+                        // ── Security ─────────────────────────────────
+                        composable(Screen.Security.route) {
+                            com.tranzo.app.ui.security.SecurityScreen(
+                                onBack = { navController.popBackStack() },
                             )
                         }
 
