@@ -48,42 +48,42 @@
 
 ## Product Features
 
-### 💼 Smart Wallet
+###  Smart Wallet
 - **ERC-4337 Smart Accounts** managed by [Openfort](https://openfort.xyz) — counterfactual deployment, session keys, batch transactions
 - **Multi-chain support** — Polygon + Base (more chains planned)
 - **Gasless everything** — all transactions are sponsored via bundler/paymaster
 
-### 💧 Dripper (Salary Streaming)
+###  Dripper (Salary Streaming)
 - **Linear vesting salary streams** — employers deposit once, employees earn every second
 - **Real-time accrual counter** — watch your balance tick up in real-time
 - **Withdraw anytime** — pull your earned funds whenever you want
 - **On-chain contract** — `TranzoDripper.sol` handles all streaming logic
 
-### 💸 Send / Receive / Swap
+###  Send / Receive / Swap
 - **Send tokens** with QR scan or paste — review screen with fee breakdown
 - **Receive** with auto-generated QR code + network selector (Polygon/Base)
 - **Swap** between tokens with live exchange rates and slippage control
 
-### 🔒 Security
+###  Security
 - **Hardware-backed Keystore** (Android Keystore + StrongBox)
 - **Biometric gating** — fingerprint/face unlock for app + transactions
 - **Social recovery** — add guardians to recover your account
 - **Session management** — view and revoke active sessions
 
-### 📊 Activity
+###  Activity
 - **Full transaction history** with filterable tabs (All/Sent/Received/Swap/Dripper)
-- **Real-time status tracking** via Openfort UserOp monitorin## 🏗️ Architecture
+- **Real-time status tracking** via Openfort UserOp monitorin## ️ Architecture
 
 ```mermaid
 graph TD
-    subgraph "📱 Mobile Application (Android)"
+    subgraph " Mobile Application (Android)"
         A[Jetpack Compose UI]
         B[Hilt DI]
         C[Retrofit / OkHttp]
         D[Room / DataStore]
     end
 
-    subgraph "🖥️ Backend (Node.js/TS)"
+    subgraph "️ Backend (Node.js/TS)"
         E[Express.js API]
         F[Auth Service]
         G[Openfort SDK]
@@ -96,7 +96,7 @@ graph TD
         K[EntryPoint Contract]
     end
 
-    subgraph "🛠️ Infrastructure"
+    subgraph "️ Infrastructure"
         L[Openfort Bundler]
         M[Openfort Paymaster]
         N[PostgreSQL]
@@ -115,7 +115,7 @@ graph TD
     I <--> J
 ```
 
-### 🔁 Data Flow
+###  Data Flow
 
 ```mermaid
 sequenceDiagram
@@ -149,9 +149,9 @@ graph LR
 
 ---
 
-## 🚀 Tech Stack
+##  Tech Stack
 
-### 📱 Android App
+###  Android App
 
 | Technology | Purpose |
 |-----------|---------|
@@ -170,7 +170,7 @@ graph LR
 | **BiometricPrompt** | Fingerprint/Face gating |
 | **Credential Manager** | Google One Tap sign-in |
 
-### 🖥️ Backend
+### ️ Backend
 
 | Technology | Purpose |
 |-----------|---------|
@@ -193,7 +193,7 @@ graph LR
 | **Foundry (Forge)** | Build, test, deploy |
 | **OpenZeppelin** | Contract utilities (IERC20, SafeERC20) |
 
-### 🔧 Infrastructure
+###  Infrastructure
 
 | Technology | Purpose |
 |-----------|---------|
@@ -205,7 +205,7 @@ graph LR
 
 ---
 
-## 📂 Repository Structure
+##  Repository Structure
 
 ```
 Tranzo.money/
@@ -213,7 +213,7 @@ Tranzo.money/
 │   └── workflows/
 │       └── android-build.yml       # CI: Build APK → Telegram
 │
-├── android/                         # 📱 Android Application
+├── android/                         #  Android Application
 │   ├── app/
 │   │   ├── build.gradle.kts        # Dependencies + build config
 │   │   ├── proguard-rules.pro
@@ -281,7 +281,7 @@ Tranzo.money/
 │       ├── libs.versions.toml       # Version catalog
 │       └── wrapper/
 │
-├── backend/                          # 🖥️ Node.js Backend
+├── backend/                          # ️ Node.js Backend
 │   ├── package.json
 │   ├── tsconfig.json
 │   ├── .env.example
@@ -327,7 +327,7 @@ Tranzo.money/
 
 ---
 
-## 🛠️ Getting Started
+## ️ Getting Started
 
 ### Prerequisites
 
@@ -417,7 +417,7 @@ The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
-## 🔌 API Reference
+##  API Reference
 
 ### Authentication
 
@@ -465,7 +465,7 @@ The debug APK will be at `app/build/outputs/apk/debug/app-debug.apk`.
 
 ---
 
-## 💎 Smart Contract: TranzoDripper
+##  Smart Contract: TranzoDripper
 
 The only custom on-chain contract. All account abstraction (smart accounts, bundler, paymaster) is handled by **Openfort**.
 
@@ -504,11 +504,11 @@ function cancel(uint256 streamId) external;
 
 ---
 
-## 🎨 Design System
+##  Design System
 
 Tranzo's UI is inspired by **CheQ** — a modern fintech app known for its clean, premium feel.
 
-### 🎨 Color Palette
+###  Color Palette
 
 | Token | Hex | Usage |
 |-------|-----|-------|
@@ -525,12 +525,12 @@ Tranzo's UI is inspired by **CheQ** — a modern fintech app known for its clean
 | Error | `#EF4444` | Error states |
 | Warning | `#F59E0B` | Pending states |
 
-### 🔡 Typography
+###  Typography
 
 - **Font**: System default (DM Sans when added)
 - **Scale**: Display (36sp) → Headline (26/20/18sp) → Body (16/14/12sp) → Label (16/12/11sp)
 
-### 📐 Shape Tokens
+###  Shape Tokens
 
 - Cards: `16dp` rounded
 - Bottom sheets: `24dp` top corners
@@ -539,7 +539,7 @@ Tranzo's UI is inspired by **CheQ** — a modern fintech app known for its clean
 
 ---
 
-## 📱 User Interface Flow
+##  User Interface Flow
 
 ```mermaid
 stateDiagram-v2
@@ -572,7 +572,7 @@ stateDiagram-v2
 
 ---
 
-## 🔄 CI/CD Pipeline
+##  CI/CD Pipeline
 
 ### GitHub Actions Workflow
 
@@ -602,7 +602,7 @@ On every push to `main`:
 
 ---
 
-## 🗄️ Database Schema
+## ️ Database Schema
 
 ```mermaid
 erDiagram
@@ -660,7 +660,7 @@ erDiagram
 
 ---
 
-## 🔒 Security Model
+##  Security Model
 
 ### Non-Custodial by Design
 
@@ -741,16 +741,16 @@ Please follow [Conventional Commits](https://www.conventionalcommits.org/) for c
 
 | Channel | Contact |
 |---------|---------|
-| 🌐 Website | [tranzo.money](https://tranzo.money) |
-| 📧 General | pranav@tranzo.money |
-| 🐛 Bugs | bugs@tranzo.money |
-| 🤝 Partnerships | partnerships@tranzo.money |
-| 👨‍💻 Founder | [Pranav](https://github.com/Pranav00x) |
+|  Website | [tranzo.money](https://tranzo.money) |
+|  General | pranav@tranzo.money |
+|  Bugs | bugs@tranzo.money |
+|  Partnerships | partnerships@tranzo.money |
+| ‍ Founder | [Pranav](https://github.com/Pranav00x) |
 
 ---
 
 <p align="center">
-  Built with 💚 by <a href="https://github.com/Pranav00x">Pranav</a>
+  Built with  by <a href="https://github.com/Pranav00x">Pranav</a>
 </p>
 
 <p align="center">

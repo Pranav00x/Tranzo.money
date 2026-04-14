@@ -199,7 +199,7 @@ fun CardScreen(
                             .padding(20.dp),
                     ) {
                         Text(
-                            text = "🔐 True Self-Custody Spending",
+                            text = "True Self-Custody Spending",
                             style = MaterialTheme.typography.bodyLarge,
                             fontWeight = FontWeight.SemiBold,
                         )
