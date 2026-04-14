@@ -30,4 +30,8 @@ sealed class Screen(val route: String) {
         fun createRoute(cardId: String) = "card_details/$cardId"
     }
     data object OrderCard : Screen("order_card")
+    
+    // Security
+    data object PinSetup : Screen("pin_setup")
+    data object PinEnter : Screen("pin_enter")
 }

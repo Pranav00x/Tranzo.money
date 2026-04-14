@@ -22,6 +22,8 @@ import com.tranzo.app.ui.dripper.DripperDashboardScreen
 import com.tranzo.app.ui.dripper.StreamDetailScreen
 import com.tranzo.app.ui.history.TransactionHistoryScreen
 import com.tranzo.app.ui.home.HomeScreen
+import com.tranzo.app.ui.security.PinMode
+import com.tranzo.app.ui.security.PinScreen
 import com.tranzo.app.ui.navigation.Screen
 import com.tranzo.app.ui.navigation.TranzoBottomBar
 import com.tranzo.app.ui.onboarding.OnboardingScreen
@@ -103,7 +105,7 @@ class MainActivity : ComponentActivity() {
                         composable(Screen.WalletCreation.route) {
                             WalletCreationScreen(
                                 onComplete = {
-                                    navController.navigate(Screen.Home.route) {
+                                    navController.navigate(Screen.PinSetup.route) {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 },
@@ -112,6 +114,34 @@ class MainActivity : ComponentActivity() {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 },
+                            )
+                        }
+
+                        // ── Security Flow ────────────────────────────
+                        composable(Screen.PinSetup.route) {
+                            PinScreen(
+                                mode = PinMode.SETUP,
+                                onSuccess = { _ ->
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                },
+                                onBack = { navController.popBackStack() }
+                            )
+                        }
+
+                        composable(Screen.PinEnter.route) {
+                            PinScreen(
+                                mode = PinMode.ENTER,
+                                onSuccess = { _ ->
+                                    navController.popBackStack() 
+                                },
+                                onUseBiometric = {
+                                    // Normally you'd trigger BiometricPrompt here
+                                    // For now, accept and pop back directly
+                                    navController.popBackStack()
+                                },
+                                onBack = { navController.popBackStack() }
                             )
                         }
 
