@@ -219,7 +219,7 @@ fun SecurityBadges(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center,
         ) {
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.width(40.dp),
                 color = TranzoColors.DividerGray,
             )
@@ -228,7 +228,7 @@ fun SecurityBadges(modifier: Modifier = Modifier) {
                 style = MaterialTheme.typography.labelMedium,
                 color = TranzoColors.TextSecondary,
             )
-            Divider(
+            HorizontalDivider(
                 modifier = Modifier.width(40.dp),
                 color = TranzoColors.DividerGray,
             )
