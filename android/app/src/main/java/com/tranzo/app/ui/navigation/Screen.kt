@@ -1,0 +1,28 @@
+package com.tranzo.app.ui.navigation
+
+/**
+ * All navigation routes in the app.
+ */
+sealed class Screen(val route: String) {
+    data object Splash : Screen("splash")
+    data object Onboarding : Screen("onboarding")
+    data object Welcome : Screen("welcome")
+    data object Otp : Screen("otp/{email}") {
+        fun createRoute(email: String) = "otp/$email"
+    }
+    data object ProfileSetup : Screen("profile_setup")
+    data object BiometricSetup : Screen("biometric_setup")
+    data object WalletCreation : Screen("wallet_creation")
+    data object Home : Screen("home")
+    data object Send : Screen("send")
+    data object Receive : Screen("receive")
+    data object Swap : Screen("swap")
+    data object DripperDashboard : Screen("dripper")
+    data object StreamDetail : Screen("stream/{streamId}") {
+        fun createRoute(streamId: String) = "stream/$streamId"
+    }
+    data object CreateStream : Screen("create_stream")
+    data object Settings : Screen("settings")
+    data object Security : Screen("security")
+    data object TransactionHistory : Screen("transaction_history")
+}

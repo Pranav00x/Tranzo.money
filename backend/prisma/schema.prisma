@@ -1,0 +1,197 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+// ─── Core User ───────────────────────────────────────────────
+
+model User {
+  id              String          @id @default(cuid())
+  email           String?         @unique
+  phone           String?         @unique
+  displayName     String?
+  avatarUrl       String?
+  smartAccount    String          @unique  // ERC-4337 address from Openfort
+  openfortPlayer  String?         @unique  // Openfort player ID
+  kycStatus       KycStatus       @default(NONE)
+  emailVerified   Boolean         @default(false)
+  createdAt       DateTime        @default(now())
+  updatedAt       DateTime        @updatedAt
+
+  // Relations
+  passkeys        Passkey[]
+  socialAccounts  SocialAccount[]
+  refreshTokens   RefreshToken[]
+  otpTokens       OtpToken[]
+  sentStreams      Stream[]        @relation("employer")
+  receivedStreams  Stream[]        @relation("employee")
+  sponsorships    SponsorshipEvent[]
+  useropLogs      UserOpLog[]
+
+  @@index([smartAccount])
+}
+
+// ─── Auth: Passkeys (WebAuthn) ───────────────────────────────
+
+model Passkey {
+  id            String   @id @default(cuid())
+  userId        String
+  user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  credentialId  String   @unique
+  publicKey     String
+  counter       BigInt   @default(0)
+  createdAt     DateTime @default(now())
+
+  @@index([userId])
+}
+
+// ─── Auth: Social Login ──────────────────────────────────────
+
+model SocialAccount {
+  id          String         @id @default(cuid())
+  userId      String
+  user        User           @relation(fields: [userId], references: [id], onDelete: Cascade)
+  provider    SocialProvider
+  providerId  String
+  createdAt   DateTime       @default(now())
+
+  @@unique([provider, providerId])
+  @@index([userId])
+}
+
+// ─── Auth: OTP Tokens ────────────────────────────────────────
+
+model OtpToken {
+  id        String    @id @default(cuid())
+  userId    String?
+  target    String    // email or phone number
+  tokenHash String
+  type      OtpType
+  expiresAt DateTime
+  used      Boolean   @default(false)
+  createdAt DateTime  @default(now())
+
+  user      User?     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([target])
+  @@index([expiresAt])
+}
+
+// ─── Auth: Refresh Tokens ────────────────────────────────────
+
+model RefreshToken {
+  id        String   @id @default(cuid())
+  token     String   @unique
+  userId    String
+  user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  family    String
+  expiresAt DateTime
+  revoked   Boolean  @default(false)
+  createdAt DateTime @default(now())
+
+  @@index([userId])
+  @@index([family])
+  @@index([expiresAt])
+}
+
+// ─── Dripper: Salary Streams ─────────────────────────────────
+
+model Stream {
+  id                String       @id @default(cuid())
+  onChainStreamId   Int?
+  employerId        String
+  employer          User         @relation("employer", fields: [employerId], references: [id])
+  employeeId        String?
+  employee          User?        @relation("employee", fields: [employeeId], references: [id])
+  employeeAddress   String       // Smart account address (may not be a registered user)
+  tokenAddress      String
+  amountPerSecond   String       // BigInt as string (wei)
+  startTime         DateTime
+  endTime           DateTime
+  totalWithdrawn    String       @default("0")
+  status            StreamStatus @default(ACTIVE)
+  txHash            String?
+  createdAt         DateTime     @default(now())
+
+  @@index([employerId])
+  @@index([employeeId])
+  @@index([employeeAddress])
+  @@index([status])
+}
+
+// ─── Gas Sponsorship Tracking ────────────────────────────────
+
+model SponsorshipEvent {
+  id          String            @id @default(cuid())
+  userId      String
+  user        User              @relation(fields: [userId], references: [id])
+  reason      String            // 'onboarding', 'promotion', 'dripper_withdraw'
+  gasCostWei  String?
+  gasCostUsd  String?
+  txHash      String?
+  status      SponsorshipStatus @default(PENDING)
+  createdAt   DateTime          @default(now())
+
+  @@index([userId])
+}
+
+// ─── UserOp Log ──────────────────────────────────────────────
+
+model UserOpLog {
+  id              String       @id @default(cuid())
+  userId          String
+  user            User         @relation(fields: [userId], references: [id])
+  openfortIntentId String      @unique  // Openfort transaction intent ID
+  type            String       // 'transfer', 'swap', 'dripper_withdraw', 'recovery'
+  status          UserOpStatus @default(PENDING)
+  txHash          String?
+  chainId         Int
+  createdAt       DateTime     @default(now())
+  confirmedAt     DateTime?
+
+  @@index([userId])
+  @@index([openfortIntentId])
+}
+
+// ─── Enums ───────────────────────────────────────────────────
+
+enum KycStatus {
+  NONE
+  PENDING
+  APPROVED
+  REJECTED
+}
+
+enum SocialProvider {
+  GOOGLE
+  APPLE
+}
+
+enum OtpType {
+  EMAIL_VERIFICATION
+  PHONE_VERIFICATION
+  LOGIN
+}
+
+enum StreamStatus {
+  ACTIVE
+  CANCELLED
+  COMPLETED
+}
+
+enum SponsorshipStatus {
+  PENDING
+  CONFIRMED
+  FAILED
+}
+
+enum UserOpStatus {
+  PENDING
+  SUBMITTED
+  CONFIRMED
+  REVERTED
+}
