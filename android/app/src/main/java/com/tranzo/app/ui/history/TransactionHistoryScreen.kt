@@ -367,7 +367,7 @@ private fun EmptyState(filterName: String) {
         val message = if (filterName == "All") {
             "Your transaction history will appear here once you start sending or receiving crypto."
         } else {
-            "No "$filterName" transactions found."
+            "No \"$filterName\" transactions found."
         }
         Text(
             text = message,
