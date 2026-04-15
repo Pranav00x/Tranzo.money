@@ -42,7 +42,7 @@ class DripperViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isLoading = false,
                     streams = allStreams,
-                    activeCount = allStreams.count { it.status == "ACTIVE" },
+                    activeCount = allStreams.count { it.status.equals("ACTIVE", true) },
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(

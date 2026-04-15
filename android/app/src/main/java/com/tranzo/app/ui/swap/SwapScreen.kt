@@ -1,53 +1,66 @@
 package com.tranzo.app.ui.swap
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.KeyboardArrowDown
+import androidx.compose.material.icons.outlined.SwapVert
+import androidx.compose.material3.FilledIconButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.IconButtonDefaults
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.OutlinedTextFieldDefaults
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.theme.TranzoColors
 
-/**
- * Swap screen — CheQ-inspired.
- *
- * Layout:
- * - "From" token card (with amount)
- * - Swap arrow button (circular, rotates on tap)
- * - "To" token card (with estimated amount)
- * - Rate display
- * - Slippage info
- * - "Swap" green pill CTA
- */
 @Composable
 fun SwapScreen(
+    viewModel: SwapViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
-    onSwap: () -> Unit = {},
+    onSwapComplete: () -> Unit = {},
 ) {
-    var fromToken by remember { mutableStateOf("USDC") }
-    var toToken by remember { mutableStateOf("POL") }
-    var fromAmount by remember { mutableStateOf("") }
-    var isSwapped by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsState()
+    val supportedTokens = listOf("USDC", "USDT", "ETH")
 
-    // Mock exchange rate
-    val exchangeRate = "1 USDC = 2.45 POL"
-    val estimatedReceive = if (fromAmount.isNotEmpty()) {
-        try {
-            String.format("%.2f", fromAmount.toDouble() * 2.45)
-        } catch (e: Exception) {
-            "0.00"
-        }
-    } else "0.00"
+    if (state.isSwapped) {
+        SwapSuccessView(
+            txHash = state.txHash,
+            onDone = {
+                viewModel.reset()
+                onSwapComplete()
+            },
+        )
+        return
+    }
 
     Column(
         modifier = Modifier
@@ -55,7 +68,6 @@ fun SwapScreen(
             .background(TranzoColors.Background)
             .systemBarsPadding(),
     ) {
-        // ── Top Bar ──────────────────────────────────────────────
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,17 +94,16 @@ fun SwapScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── From Card ────────────────────────────────────────
             SwapTokenCard(
                 label = "From",
-                token = fromToken,
-                amount = fromAmount,
-                balance = "1,234.56",
-                onAmountChange = { fromAmount = it },
-                onTokenClick = { /* token picker */ },
+                token = state.fromToken,
+                amount = state.fromAmount,
+                isReadOnly = false,
+                tokenOptions = supportedTokens,
+                onAmountChange = viewModel::onFromAmountChanged,
+                onTokenChanged = viewModel::onFromTokenChanged,
             )
 
-            // ── Swap Arrow ───────────────────────────────────────
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -100,12 +111,7 @@ fun SwapScreen(
                 contentAlignment = Alignment.Center,
             ) {
                 FilledIconButton(
-                    onClick = {
-                        val temp = fromToken
-                        fromToken = toToken
-                        toToken = temp
-                        isSwapped = !isSwapped
-                    },
+                    onClick = { viewModel.swapDirection() },
                     modifier = Modifier.size(48.dp),
                     shape = CircleShape,
                     colors = IconButtonDefaults.filledIconButtonColors(
@@ -116,25 +122,22 @@ fun SwapScreen(
                     Icon(
                         imageVector = Icons.Outlined.SwapVert,
                         contentDescription = "Swap direction",
-                        modifier = Modifier.rotate(if (isSwapped) 180f else 0f),
                     )
                 }
             }
 
-            // ── To Card ──────────────────────────────────────────
             SwapTokenCard(
                 label = "To (estimated)",
-                token = toToken,
-                amount = estimatedReceive,
-                balance = "245.80",
+                token = state.toToken,
+                amount = state.quote?.toAmount ?: "0.00",
                 isReadOnly = true,
+                tokenOptions = supportedTokens,
                 onAmountChange = {},
-                onTokenClick = { /* token picker */ },
+                onTokenChanged = viewModel::onToTokenChanged,
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // ── Rate & Slippage ──────────────────────────────────
             Surface(
                 shape = RoundedCornerShape(12.dp),
                 color = TranzoColors.LightGray,
@@ -144,63 +147,34 @@ fun SwapScreen(
                         .fillMaxWidth()
                         .padding(16.dp),
                 ) {
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Text(
-                            text = "Exchange Rate",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextSecondary,
-                        )
-                        Text(
-                            text = exchangeRate,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
+                    DetailRow(
+                        "Exchange Rate",
+                        state.quote?.rate ?: "Enter amount for quote",
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Text(
-                            text = "Slippage",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextSecondary,
-                        )
-                        Text(
-                            text = "0.5%",
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.Medium,
-                        )
-                    }
+                    DetailRow(
+                        "Slippage",
+                        state.quote?.slippageBps?.let { "${it / 100.0}%" } ?: "0.5%",
+                    )
                     Spacer(modifier = Modifier.height(8.dp))
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
+                    DetailRow("Network Fee", "Sponsored")
+                    state.error?.let {
+                        Spacer(modifier = Modifier.height(10.dp))
                         Text(
-                            text = "Network Fee",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextSecondary,
-                        )
-                        Text(
-                            text = "Sponsored ✨",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.PrimaryBlack,
-                            fontWeight = FontWeight.SemiBold,
+                            text = it,
+                            color = TranzoColors.Error,
+                            style = MaterialTheme.typography.bodySmall,
                         )
                     }
                 }
             }
         }
 
-        // ── CTA ──────────────────────────────────────────────────
         TranzoButton(
-            text = "Swap",
-            onClick = onSwap,
-            enabled = fromAmount.isNotEmpty() && fromAmount != "0",
+            text = if (state.isExecuting) "Swapping..." else "Swap",
+            onClick = { viewModel.executeSwap() },
+            enabled = state.quote != null && !state.isExecuting && !state.isLoadingQuote,
+            isLoading = state.isExecuting || state.isLoadingQuote,
             modifier = Modifier.padding(24.dp),
         )
     }
@@ -211,10 +185,10 @@ private fun SwapTokenCard(
     label: String,
     token: String,
     amount: String,
-    balance: String,
-    isReadOnly: Boolean = false,
+    isReadOnly: Boolean,
+    tokenOptions: List<String>,
     onAmountChange: (String) -> Unit,
-    onTokenClick: () -> Unit,
+    onTokenChanged: (String) -> Unit,
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
@@ -222,21 +196,11 @@ private fun SwapTokenCard(
         tonalElevation = 1.dp,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                Text(
-                    text = label,
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TranzoColors.TextSecondary,
-                )
-                Text(
-                    text = "Balance: $balance",
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TranzoColors.TextTertiary,
-                )
-            }
+            Text(
+                text = label,
+                style = MaterialTheme.typography.labelMedium,
+                color = TranzoColors.TextSecondary,
+            )
 
             Spacer(modifier = Modifier.height(12.dp))
 
@@ -244,9 +208,7 @@ private fun SwapTokenCard(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                // Token selector
                 Surface(
-                    onClick = onTokenClick,
                     shape = RoundedCornerShape(12.dp),
                     color = TranzoColors.LightGray,
                 ) {
@@ -254,21 +216,6 @@ private fun SwapTokenCard(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Box(
-                            modifier = Modifier
-                                .size(28.dp)
-                                .clip(CircleShape)
-                                .background(TranzoColors.PaleTeal),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text(
-                                text = token.take(2),
-                                style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.PrimaryBlack,
-                                fontWeight = FontWeight.Bold,
-                            )
-                        }
-                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             text = token,
                             style = MaterialTheme.typography.bodyLarge,
@@ -285,7 +232,6 @@ private fun SwapTokenCard(
 
                 Spacer(modifier = Modifier.weight(1f))
 
-                // Amount
                 if (isReadOnly) {
                     Text(
                         text = amount,
@@ -307,7 +253,7 @@ private fun SwapTokenCard(
                         textStyle = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
                         ),
-                        modifier = Modifier.width(150.dp),
+                        modifier = Modifier.fillMaxWidth(0.48f),
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = TranzoColors.PrimaryBlack,
@@ -316,6 +262,95 @@ private fun SwapTokenCard(
                     )
                 }
             }
+
+            if (!isReadOnly) {
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    tokenOptions.forEach { option ->
+                        Surface(
+                            onClick = { onTokenChanged(option) },
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (token == option) TranzoColors.PrimaryBlack else TranzoColors.LightGray,
+                        ) {
+                            Text(
+                                text = option,
+                                color = if (token == option) TranzoColors.White else TranzoColors.TextSecondary,
+                                style = MaterialTheme.typography.labelSmall,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            )
+                        }
+                    }
+                }
+            } else {
+                Spacer(modifier = Modifier.height(10.dp))
+                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                    tokenOptions.forEach { option ->
+                        Surface(
+                            onClick = { onTokenChanged(option) },
+                            shape = RoundedCornerShape(10.dp),
+                            color = if (token == option) TranzoColors.PrimaryBlack else TranzoColors.LightGray,
+                        ) {
+                            Text(
+                                text = option,
+                                color = if (token == option) TranzoColors.White else TranzoColors.TextSecondary,
+                                style = MaterialTheme.typography.labelSmall,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 6.dp),
+                            )
+                        }
+                    }
+                }
+            }
         }
+    }
+}
+
+@Composable
+private fun DetailRow(label: String, value: String) {
+    Row(
+        modifier = Modifier.fillMaxWidth(),
+        horizontalArrangement = Arrangement.SpaceBetween,
+    ) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.bodyMedium,
+            color = TranzoColors.TextSecondary,
+        )
+        Text(
+            text = value,
+            style = MaterialTheme.typography.bodyMedium,
+            color = TranzoColors.TextPrimary,
+            fontWeight = FontWeight.SemiBold,
+        )
+    }
+}
+
+@Composable
+private fun SwapSuccessView(
+    txHash: String?,
+    onDone: () -> Unit,
+) {
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(TranzoColors.Background)
+            .padding(24.dp),
+        horizontalAlignment = Alignment.CenterHorizontally,
+        verticalArrangement = Arrangement.Center,
+    ) {
+        Text(
+            text = "Swap Complete",
+            style = MaterialTheme.typography.headlineLarge,
+            color = TranzoColors.TextPrimary,
+        )
+        txHash?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Tx: ${it.take(10)}...${it.takeLast(8)}",
+                style = MaterialTheme.typography.bodySmall,
+                color = TranzoColors.TextSecondary,
+            )
+        }
+        Spacer(modifier = Modifier.height(20.dp))
+        TranzoButton(text = "Done", onClick = onDone)
     }
 }

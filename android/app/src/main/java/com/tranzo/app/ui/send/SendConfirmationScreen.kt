@@ -1,16 +1,39 @@
 package com.tranzo.app.ui.send
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.weight
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AutoAwesome
+import androidx.compose.material.icons.outlined.CheckCircle
+import androidx.compose.material.icons.outlined.Shield
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -18,32 +41,37 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.theme.TranzoColors
 
-/**
- * Transfer confirmation screen.
- *
- * Layout:
- * - Dark teal gradient header with "Review Transfer" title
- * - White card with: From wallet, To address, Token, Amount, USD Value, Network Fee (sponsored)
- * - Security note
- * - "Confirm & Send" green pill CTA
- * - Success state after confirmation
- */
 @Composable
 fun SendConfirmationScreen(
+    viewModel: SendViewModel = hiltViewModel(),
     fromAddress: String = "0xYour...Wallet",
     recipientAddress: String = "0x7a3b...f4c2",
     tokenSymbol: String = "USDC",
     amount: String = "100.00",
     usdValue: String = "$100.00",
-    onConfirm: () -> Unit = {},
     onBack: () -> Unit = {},
 ) {
-    var isSending by remember { mutableStateOf(false) }
-    var isSuccess by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsState()
+
+    LaunchedEffect(Unit) {
+        viewModel.reset()
+    }
+
+    if (state.isSent) {
+        SuccessContent(
+            amount = amount,
+            tokenSymbol = tokenSymbol,
+            recipientAddress = recipientAddress,
+            txHash = state.txHash,
+            onDone = onBack,
+        )
+        return
+    }
 
     Column(
         modifier = Modifier
@@ -51,191 +79,173 @@ fun SendConfirmationScreen(
             .background(TranzoColors.Background)
             .systemBarsPadding(),
     ) {
-        if (isSuccess) {
-            // ── Success State ────────────────────────────────────────
-            SuccessContent(
-                amount = amount,
-                tokenSymbol = tokenSymbol,
-                recipientAddress = recipientAddress,
-                onDone = onBack,
-            )
-        } else {
-            // ── Gradient Header ──────────────────────────────────────
-            Box(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(
-                        Brush.verticalGradient(
-                            colors = listOf(TranzoColors.Navy, TranzoColors.DarkTeal),
-                        ),
-                    )
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 8.dp, bottom = 32.dp),
-            ) {
-                Column {
-                    // Back button row
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        IconButton(onClick = onBack) {
-                            Icon(
-                                imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
-                                contentDescription = "Back",
-                                tint = TranzoColors.TextOnDark,
-                            )
-                        }
-                        Text(
-                            text = "Review Transfer",
-                            style = MaterialTheme.typography.headlineMedium,
-                            color = TranzoColors.TextOnDark,
-                        )
-                    }
-
-                    Spacer(modifier = Modifier.height(16.dp))
-
-                    // Hero amount display
-                    Text(
-                        text = "$amount $tokenSymbol",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = TranzoColors.TextOnDark,
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                    )
-                    Spacer(modifier = Modifier.height(4.dp))
-                    Text(
-                        text = usdValue,
-                        style = MaterialTheme.typography.bodyLarge,
-                        color = TranzoColors.LightTeal,
-                        modifier = Modifier.fillMaxWidth(),
-                        textAlign = TextAlign.Center,
-                    )
-                }
-            }
-
-            // ── White Content (overlaps header by 20dp) ──────────────
-            Column(
-                modifier = Modifier
-                    .weight(1f)
-                    .offset(y = (-20).dp)
-                    .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                    .background(TranzoColors.Background)
-                    .verticalScroll(rememberScrollState())
-                    .padding(horizontal = 24.dp)
-                    .padding(top = 28.dp),
-            ) {
-                // Transfer summary card
-                Surface(
-                    shape = RoundedCornerShape(16.dp),
-                    color = TranzoColors.CardSurface,
-                    tonalElevation = 1.dp,
+        Box(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(
+                    Brush.verticalGradient(
+                        colors = listOf(TranzoColors.Navy, TranzoColors.DarkTeal),
+                    ),
+                )
+                .padding(horizontal = 24.dp)
+                .padding(top = 8.dp, bottom = 32.dp),
+        ) {
+            Column {
+                Row(
                     modifier = Modifier.fillMaxWidth(),
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Column(modifier = Modifier.padding(20.dp)) {
-                        SummaryRow(
-                            label = "From",
-                            value = formatAddress(fromAddress),
+                    IconButton(onClick = onBack) {
+                        Icon(
+                            imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                            contentDescription = "Back",
+                            tint = TranzoColors.TextOnDark,
                         )
-                        RowDivider()
-                        SummaryRow(
-                            label = "To",
-                            value = formatAddress(recipientAddress),
-                        )
-                        RowDivider()
-                        SummaryRow(label = "Token", value = tokenSymbol)
-                        RowDivider()
-                        SummaryRow(label = "Amount", value = "$amount $tokenSymbol")
-                        RowDivider()
-                        SummaryRow(label = "USD Value", value = usdValue)
-                        RowDivider()
-                        // Network fee row — special green "Sponsored" treatment
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Text(
-                                text = "Network Fee",
-                                style = MaterialTheme.typography.bodyMedium,
-                                color = TranzoColors.TextSecondary,
-                            )
-                            Surface(
-                                shape = RoundedCornerShape(20.dp),
-                                color = TranzoColors.PaleTeal,
-                            ) {
-                                Text(
-                                    text = "Sponsored ✨",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = TranzoColors.PrimaryBlack,
-                                    fontWeight = FontWeight.SemiBold,
-                                    modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
-                                )
-                            }
-                        }
                     }
+                    Text(
+                        text = "Review Transfer",
+                        style = MaterialTheme.typography.headlineMedium,
+                        color = TranzoColors.TextOnDark,
+                    )
                 }
 
                 Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    text = "$amount $tokenSymbol",
+                    style = MaterialTheme.typography.displayMedium,
+                    color = TranzoColors.TextOnDark,
+                    fontWeight = FontWeight.Bold,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = usdValue,
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TranzoColors.LightTeal,
+                    modifier = Modifier.fillMaxWidth(),
+                    textAlign = TextAlign.Center,
+                )
+            }
+        }
 
-                // Security note
-                Surface(
-                    shape = RoundedCornerShape(12.dp),
-                    color = TranzoColors.PaleTeal.copy(alpha = 0.5f),
-                ) {
+        Column(
+            modifier = Modifier
+                .weight(1f)
+                .offset(y = (-20).dp)
+                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
+                .background(TranzoColors.Background)
+                .verticalScroll(rememberScrollState())
+                .padding(horizontal = 24.dp)
+                .padding(top = 28.dp),
+        ) {
+            Surface(
+                shape = RoundedCornerShape(16.dp),
+                color = TranzoColors.CardSurface,
+                tonalElevation = 1.dp,
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Column(modifier = Modifier.padding(20.dp)) {
+                    SummaryRow(label = "From", value = formatAddress(fromAddress))
+                    RowDivider()
+                    SummaryRow(label = "To", value = formatAddress(recipientAddress))
+                    RowDivider()
+                    SummaryRow(label = "Token", value = tokenSymbol)
+                    RowDivider()
+                    SummaryRow(label = "Amount", value = "$amount $tokenSymbol")
+                    RowDivider()
+                    SummaryRow(label = "USD Value", value = usdValue)
+                    RowDivider()
                     Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(14.dp),
-                        verticalAlignment = Alignment.Top,
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Icon(
-                            imageVector = Icons.Outlined.Shield,
-                            contentDescription = null,
-                            tint = TranzoColors.PrimaryBlack,
-                            modifier = Modifier
-                                .size(18.dp)
-                                .padding(top = 1.dp),
-                        )
-                        Spacer(modifier = Modifier.width(10.dp))
                         Text(
-                            text = "This transaction is gasless and secured by your smart account. " +
-                                    "Always verify the recipient address before confirming.",
-                            style = MaterialTheme.typography.bodySmall,
+                            text = "Network Fee",
+                            style = MaterialTheme.typography.bodyMedium,
                             color = TranzoColors.TextSecondary,
                         )
+                        Surface(
+                            shape = RoundedCornerShape(20.dp),
+                            color = TranzoColors.PaleTeal,
+                        ) {
+                            Text(
+                                text = "Sponsored",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = TranzoColors.PrimaryBlack,
+                                fontWeight = FontWeight.SemiBold,
+                                modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
+                            )
+                        }
                     }
                 }
-
-                Spacer(modifier = Modifier.height(28.dp))
             }
 
-            // ── CTA Section ──────────────────────────────────────────
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .background(TranzoColors.Background)
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 24.dp, top = 8.dp),
+            Spacer(modifier = Modifier.height(16.dp))
+
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = TranzoColors.PaleTeal.copy(alpha = 0.5f),
             ) {
-                TranzoButton(
-                    text = "Confirm & Send",
-                    onClick = {
-                        isSending = true
-                        onConfirm()
-                        isSuccess = true
-                        isSending = false
-                    },
-                    isLoading = isSending,
-                )
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(14.dp),
+                    verticalAlignment = Alignment.Top,
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Shield,
+                        contentDescription = null,
+                        tint = TranzoColors.PrimaryBlack,
+                        modifier = Modifier
+                            .size(18.dp)
+                            .padding(top = 1.dp),
+                    )
+                    Spacer(modifier = Modifier.width(10.dp))
+                    Text(
+                        text = "Transaction is secured by your smart account.",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TranzoColors.TextSecondary,
+                        modifier = Modifier.padding(start = 10.dp),
+                    )
+                }
+            }
 
+            state.error?.let {
                 Spacer(modifier = Modifier.height(12.dp))
-
-                TranzoSecondaryButton(
-                    text = "Cancel",
-                    onClick = onBack,
+                Text(
+                    text = it,
+                    color = TranzoColors.Error,
+                    style = MaterialTheme.typography.bodySmall,
                 )
             }
+
+            Spacer(modifier = Modifier.height(28.dp))
+        }
+
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .background(TranzoColors.Background)
+                .padding(horizontal = 24.dp)
+                .padding(bottom = 24.dp, top = 8.dp),
+        ) {
+            TranzoButton(
+                text = "Confirm & Send",
+                onClick = {
+                    viewModel.sendToken(recipientAddress, tokenSymbol, amount)
+                },
+                isLoading = state.isLoading,
+                enabled = !state.isLoading,
+            )
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            TranzoSecondaryButton(
+                text = "Cancel",
+                onClick = onBack,
+            )
         }
     }
 }
@@ -245,6 +255,7 @@ private fun SuccessContent(
     amount: String,
     tokenSymbol: String,
     recipientAddress: String,
+    txHash: String?,
     onDone: () -> Unit,
 ) {
     Column(
@@ -255,7 +266,6 @@ private fun SuccessContent(
     ) {
         Spacer(modifier = Modifier.weight(1f))
 
-        // Success icon
         Box(
             modifier = Modifier
                 .size(100.dp)
@@ -274,7 +284,7 @@ private fun SuccessContent(
         Spacer(modifier = Modifier.height(28.dp))
 
         Text(
-            text = "Transfer Sent!",
+            text = "Transfer Sent",
             style = MaterialTheme.typography.headlineLarge,
             color = TranzoColors.TextPrimary,
             textAlign = TextAlign.Center,
@@ -283,22 +293,24 @@ private fun SuccessContent(
         Spacer(modifier = Modifier.height(12.dp))
 
         Text(
-            text = "$amount $tokenSymbol has been sent to",
+            text = "$amount $tokenSymbol sent to ${formatAddress(recipientAddress)}",
             style = MaterialTheme.typography.bodyLarge,
             color = TranzoColors.TextSecondary,
             textAlign = TextAlign.Center,
         )
-        Text(
-            text = formatAddress(recipientAddress),
-            style = MaterialTheme.typography.bodyLarge,
-            color = TranzoColors.PrimaryBlack,
-            fontWeight = FontWeight.Medium,
-            textAlign = TextAlign.Center,
-        )
+
+        txHash?.let {
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Tx: ${formatAddress(it)}",
+                style = MaterialTheme.typography.bodySmall,
+                color = TranzoColors.TextTertiary,
+                textAlign = TextAlign.Center,
+            )
+        }
 
         Spacer(modifier = Modifier.height(20.dp))
 
-        // Gasless badge
         Surface(
             shape = RoundedCornerShape(20.dp),
             color = TranzoColors.PaleTeal,
@@ -313,9 +325,8 @@ private fun SuccessContent(
                     tint = TranzoColors.PrimaryBlack,
                     modifier = Modifier.size(16.dp),
                 )
-                Spacer(modifier = Modifier.width(6.dp))
                 Text(
-                    text = "Zero gas fees paid",
+                    text = " Zero gas fees paid",
                     style = MaterialTheme.typography.labelMedium,
                     color = TranzoColors.PrimaryBlack,
                     fontWeight = FontWeight.SemiBold,

@@ -1,14 +1,35 @@
 package com.tranzo.app.ui.dripper
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.weight
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ArrowBack
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
+import androidx.compose.material3.IconButton
+import androidx.compose.material3.LinearProgressIndicator
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -16,49 +37,70 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.theme.TranzoColors
 import kotlinx.coroutines.delay
+import java.math.BigDecimal
+import java.math.RoundingMode
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
-/**
- * Stream detail screen — animated live counter showing real-time accrual.
- *
- * Layout:
- * - Gradient header with live counter
- * - Stream details card (from, token, rate, start/end)
- * - Progress visualization
- * - Withdraw CTA + Cancel option
- */
 @Composable
 fun StreamDetailScreen(
-    streamId: String = "1",
-    fromName: String = "Tranzo Labs",
-    tokenSymbol: String = "USDC",
-    initialEarned: Double = 4562.78,
-    totalAmount: Double = 12000.0,
-    ratePerDay: Double = 200.0,
-    startDate: String = "Jan 15, 2026",
-    endDate: String = "May 15, 2026",
-    status: String = "active",
+    streamId: String,
+    viewModel: DripperViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
-    onWithdraw: () -> Unit = {},
-    onCancel: () -> Unit = {},
 ) {
-    val ratePerSecond = ratePerDay / 86400.0
+    val state by viewModel.state.collectAsState()
+    var currentTime by remember { mutableStateOf(Instant.now()) }
 
-    // Live counter
-    var earned by remember { mutableStateOf(initialEarned) }
     LaunchedEffect(Unit) {
-        if (status == "active") {
-            while (true) {
-                delay(100) // Update 10x per second for smooth animation
-                earned += ratePerSecond / 10
-            }
+        if (state.streams.none { it.id == streamId }) {
+            viewModel.loadStreams()
         }
     }
 
-    val progress = (earned / totalAmount).coerceIn(0.0, 1.0).toFloat()
+    LaunchedEffect(Unit) {
+        while (true) {
+            delay(1000)
+            currentTime = Instant.now()
+        }
+    }
+
+    val stream = state.streams.firstOrNull { it.id == streamId }
+
+    if (stream == null) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .background(TranzoColors.Background),
+            contentAlignment = Alignment.Center,
+        ) {
+            Text(
+                text = if (state.isLoading) "Loading stream..." else "Stream not found",
+                style = MaterialTheme.typography.bodyLarge,
+                color = TranzoColors.TextSecondary,
+            )
+        }
+        return
+    }
+
+    val start = runCatching { Instant.parse(stream.startTime) }.getOrNull()
+    val end = runCatching { Instant.parse(stream.endTime) }.getOrNull()
+    val amountPerSecond = stream.amountPerSecond.toBigDecimalSafe()
+    val totalWithdrawn = stream.totalWithdrawn.toBigDecimalSafe()
+    val elapsedSeconds = if (start != null) Duration.between(start, currentTime).seconds.coerceAtLeast(0) else 0
+    val streamedAmount = amountPerSecond.multiply(elapsedSeconds.toBigDecimal())
+    val earned = streamedAmount.max(totalWithdrawn)
+    val totalDuration = if (start != null && end != null) Duration.between(start, end).seconds.coerceAtLeast(1) else 1
+    val totalAmount = amountPerSecond.multiply(totalDuration.toBigDecimal())
+    val progress = if (totalAmount > BigDecimal.ZERO) earned.divide(totalAmount, 6, RoundingMode.HALF_UP).toFloat().coerceIn(0f, 1f) else 0f
+    val dailyRate = amountPerSecond.multiply(BigDecimal("86400"))
 
     Column(
         modifier = Modifier
@@ -66,7 +108,6 @@ fun StreamDetailScreen(
             .background(TranzoColors.Background)
             .systemBarsPadding(),
     ) {
-        // ── Gradient Header ──────────────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -82,7 +123,6 @@ fun StreamDetailScreen(
                 .padding(top = 8.dp, bottom = 32.dp),
         ) {
             Column {
-                // Top bar
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
@@ -95,7 +135,7 @@ fun StreamDetailScreen(
                         )
                     }
                     Text(
-                        text = "Stream #$streamId",
+                        text = "Stream #${stream.id}",
                         style = MaterialTheme.typography.headlineMedium,
                         color = TranzoColors.TextOnDark,
                         modifier = Modifier.weight(1f),
@@ -104,9 +144,8 @@ fun StreamDetailScreen(
 
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // From label
                 Text(
-                    text = "From $fromName",
+                    text = "To ${stream.employeeAddress.shortAddress()}",
                     style = MaterialTheme.typography.bodyMedium,
                     color = TranzoColors.TextOnDarkMuted,
                     modifier = Modifier.fillMaxWidth(),
@@ -115,9 +154,8 @@ fun StreamDetailScreen(
 
                 Spacer(modifier = Modifier.height(12.dp))
 
-                // Live counter — the hero!
                 Text(
-                    text = "$${String.format("%,.6f", earned)}",
+                    text = "$${earned.toMoney()}",
                     style = MaterialTheme.typography.displayLarge,
                     color = TranzoColors.TextOnDark,
                     fontWeight = FontWeight.Bold,
@@ -128,7 +166,7 @@ fun StreamDetailScreen(
                 Spacer(modifier = Modifier.height(4.dp))
 
                 Text(
-                    text = "$tokenSymbol · $${String.format("%.2f", ratePerDay)}/day",
+                    text = "$${dailyRate.toMoney()} / day",
                     style = MaterialTheme.typography.bodyMedium,
                     color = TranzoColors.LightTeal,
                     modifier = Modifier.fillMaxWidth(),
@@ -137,7 +175,6 @@ fun StreamDetailScreen(
             }
         }
 
-        // ── White Content ────────────────────────────────────────
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -146,122 +183,80 @@ fun StreamDetailScreen(
                 .background(TranzoColors.Background)
                 .padding(24.dp),
         ) {
-            // Progress bar
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
-                    Text(
-                        text = "Progress",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.TextSecondary,
-                    )
-                    Text(
-                        text = "${(progress * 100).toInt()}%",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.PrimaryBlack,
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LinearProgressIndicator(
-                    progress = { progress },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(8.dp)
-                        .clip(RoundedCornerShape(4.dp)),
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+            ) {
+                Text(
+                    text = "Progress",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TranzoColors.TextSecondary,
+                )
+                Text(
+                    text = "${(progress * 100).toInt()}%",
+                    style = MaterialTheme.typography.bodyMedium,
                     color = TranzoColors.PrimaryBlack,
-                    trackColor = TranzoColors.PaleTeal,
+                    fontWeight = FontWeight.SemiBold,
                 )
             }
 
+            Spacer(modifier = Modifier.height(8.dp))
+
+            LinearProgressIndicator(
+                progress = { progress },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(8.dp)
+                    .clip(RoundedCornerShape(4.dp)),
+                color = TranzoColors.PrimaryBlack,
+                trackColor = TranzoColors.PaleTeal,
+            )
+
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Stream details card
             Surface(
                 shape = RoundedCornerShape(16.dp),
                 color = TranzoColors.CardSurface,
                 tonalElevation = 1.dp,
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {
-                    DetailRow("Sender", fromName)
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    DetailRow("Token", tokenSymbol)
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    DetailRow("Rate", "$${String.format("%.2f", ratePerDay)} / day")
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    DetailRow("Earned", "$${String.format("%.2f", earned)}")
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    DetailRow("Total", "$${String.format("%,.2f", totalAmount)}")
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    DetailRow("Start", startDate)
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    DetailRow("End", endDate)
-                    HorizontalDivider(
-                        modifier = Modifier.padding(vertical = 12.dp),
-                        color = TranzoColors.DividerGray,
-                    )
-                    Row(
-                        modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween,
-                    ) {
-                        Text(
-                            text = "Gas Fee",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextSecondary,
-                        )
-                        Text(
-                            text = "Sponsored ✨",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.PrimaryBlack,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                    }
+                    DetailRow("Status", stream.status)
+                    RowLine()
+                    DetailRow("Recipient", stream.employeeAddress.shortAddress())
+                    RowLine()
+                    DetailRow("Rate", "${stream.amountPerSecond} / sec")
+                    RowLine()
+                    DetailRow("Earned", "$${earned.toMoney()}")
+                    RowLine()
+                    DetailRow("Withdrawn", "$${totalWithdrawn.toMoney()}")
+                    RowLine()
+                    DetailRow("Start", stream.startTime.toDisplayDate())
+                    RowLine()
+                    DetailRow("End", stream.endTime.toDisplayDate())
                 }
+            }
+
+            state.error?.let {
+                Spacer(modifier = Modifier.height(10.dp))
+                Text(
+                    text = it,
+                    color = TranzoColors.Error,
+                    style = MaterialTheme.typography.bodySmall,
+                )
             }
 
             Spacer(modifier = Modifier.weight(1f))
 
-            // ── Actions ──────────────────────────────────────────
-            if (status == "active") {
+            if (stream.status.equals("ACTIVE", true)) {
                 TranzoButton(
-                    text = "Withdraw $${String.format("%.2f", earned)} $tokenSymbol",
-                    onClick = onWithdraw,
+                    text = "Withdraw",
+                    onClick = { viewModel.withdrawFromStream(stream.id) },
                 )
-
                 Spacer(modifier = Modifier.height(12.dp))
-
-                TextButton(
-                    onClick = onCancel,
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        text = "Cancel Stream",
-                        color = TranzoColors.Error,
-                        style = MaterialTheme.typography.bodyMedium,
-                    )
-                }
+                TranzoSecondaryButton(
+                    text = "Cancel Stream",
+                    onClick = { viewModel.cancelStream(stream.id) },
+                )
             }
         }
     }
@@ -284,4 +279,24 @@ private fun DetailRow(label: String, value: String) {
             fontWeight = FontWeight.Medium,
         )
     }
+}
+
+@Composable
+private fun RowLine() {
+    HorizontalDivider(
+        modifier = Modifier.padding(vertical = 12.dp),
+        color = TranzoColors.DividerGray,
+    )
+}
+
+private fun String.toBigDecimalSafe(): BigDecimal = runCatching { toBigDecimal() }.getOrDefault(BigDecimal.ZERO)
+
+private fun BigDecimal.toMoney(): String = setScale(2, RoundingMode.HALF_UP).toPlainString()
+
+private fun String.shortAddress(): String = if (length > 12) "${take(8)}...${takeLast(4)}" else this
+
+private fun String.toDisplayDate(): String {
+    val instant = runCatching { Instant.parse(this) }.getOrNull() ?: return this
+    val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.US)
+    return formatter.format(instant.atZone(ZoneId.systemDefault()))
 }

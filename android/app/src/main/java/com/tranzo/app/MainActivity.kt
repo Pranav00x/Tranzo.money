@@ -193,7 +193,6 @@ class MainActivity : FragmentActivity() {
                                 recipientAddress = to,
                                 tokenSymbol = token,
                                 amount = amount,
-                                onConfirm = { /* call API */ },
                                 onBack = {
                                     navController.navigate(Screen.Home.route) {
                                         popUpTo(Screen.Home.route) { inclusive = false }
@@ -213,7 +212,7 @@ class MainActivity : FragmentActivity() {
                         composable(Screen.Swap.route) {
                             SwapScreen(
                                 onBack = { navController.popBackStack() },
-                                onSwap = { navController.popBackStack() },
+                                onSwapComplete = { navController.popBackStack() },
                             )
                         }
 
@@ -234,15 +233,13 @@ class MainActivity : FragmentActivity() {
                             StreamDetailScreen(
                                 streamId = streamId,
                                 onBack = { navController.popBackStack() },
-                                onWithdraw = { /* call API */ },
-                                onCancel = { navController.popBackStack() },
                             )
                         }
 
                         composable(Screen.CreateStream.route) {
                             CreateStreamScreen(
                                 onBack = { navController.popBackStack() },
-                                onCreate = {
+                                onCreateSuccess = {
                                     navController.popBackStack()
                                 },
                             )

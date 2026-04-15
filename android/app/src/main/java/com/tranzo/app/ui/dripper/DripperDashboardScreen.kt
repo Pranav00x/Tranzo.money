@@ -1,107 +1,84 @@
 package com.tranzo.app.ui.dripper
 
-import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material.icons.outlined.AccountBalanceWallet
+import androidx.compose.material.icons.outlined.WaterDrop
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.FloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tranzo.app.data.model.StreamDetail
 import com.tranzo.app.ui.components.StatusBadge
-import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.theme.TranzoColors
-import kotlinx.coroutines.delay
+import java.math.BigDecimal
+import java.time.Duration
+import java.time.Instant
+import java.time.ZoneId
+import java.time.format.DateTimeFormatter
+import java.util.Locale
 
-data class StreamUiItem(
-    val id: String,
-    val fromName: String,
-    val tokenSymbol: String,
-    val earnedSoFar: String,
-    val totalAmount: String,
-    val ratePerDay: String,
-    val progressPercent: Float,
-    val status: String,       // "active", "completed", "cancelled"
-    val endDate: String,
-)
-
-/**
- * Dripper Dashboard — salary streaming.
- *
- * Layout:
- * - Dark gradient header with total earned counter (real-time updating)
- * - "Active Streams" label with count
- * - Stream cards with progress bars
- * - FAB to create new stream
- */
 @Composable
 fun DripperDashboardScreen(
+    viewModel: DripperViewModel = hiltViewModel(),
     onCreateStream: () -> Unit = {},
     onStreamClick: (String) -> Unit = {},
 ) {
-    // Real-time counter animation
-    var totalEarned by remember { mutableStateOf(4562.78) }
+    val state by viewModel.state.collectAsState()
+    val activeStreams = state.streams.filter { it.status.equals("ACTIVE", true) }
+    val totalEarned = state.streams.sumOf { it.totalWithdrawn.toBigDecimalSafe() }
+
     LaunchedEffect(Unit) {
-        while (true) {
-            delay(1000)
-            totalEarned += 0.0023 // ~$0.0023/second = ~$200/day
-        }
+        viewModel.loadStreams()
     }
 
-    val streams = listOf(
-        StreamUiItem(
-            id = "1",
-            fromName = "Tranzo Labs",
-            tokenSymbol = "USDC",
-            earnedSoFar = "$4,562.78",
-            totalAmount = "$12,000.00",
-            ratePerDay = "$200.00",
-            progressPercent = 0.38f,
-            status = "active",
-            endDate = "May 15, 2026",
-        ),
-        StreamUiItem(
-            id = "2",
-            fromName = "DeFi Protocol X",
-            tokenSymbol = "USDC",
-            earnedSoFar = "$850.00",
-            totalAmount = "$3,000.00",
-            ratePerDay = "$50.00",
-            progressPercent = 0.28f,
-            status = "active",
-            endDate = "Jun 1, 2026",
-        ),
-        StreamUiItem(
-            id = "3",
-            fromName = "Freelance Client",
-            tokenSymbol = "USDT",
-            earnedSoFar = "$2,000.00",
-            totalAmount = "$2,000.00",
-            ratePerDay = "—",
-            progressPercent = 1.0f,
-            status = "completed",
-            endDate = "Mar 30, 2026",
-        ),
-    )
-
     Box(modifier = Modifier.fillMaxSize()) {
+        if (state.isLoading && state.streams.isEmpty()) {
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = TranzoColors.PrimaryBlack)
+            }
+            return@Box
+        }
+
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
                 .background(TranzoColors.Background),
         ) {
-            // ── Gradient Header ──────────────────────────────────
             item {
                 Box(
                     modifier = Modifier
@@ -144,16 +121,15 @@ fun DripperDashboardScreen(
                         Spacer(modifier = Modifier.height(24.dp))
 
                         Text(
-                            text = "Total Earned",
+                            text = "Total Withdrawn",
                             style = MaterialTheme.typography.bodyMedium,
                             color = TranzoColors.TextOnDarkMuted,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
 
-                        // Real-time counter
                         Text(
-                            text = "$${String.format("%,.4f", totalEarned)}",
+                            text = "$${totalEarned.formatMoney()}",
                             style = MaterialTheme.typography.displayLarge,
                             color = TranzoColors.TextOnDark,
                             fontWeight = FontWeight.Bold,
@@ -162,16 +138,16 @@ fun DripperDashboardScreen(
                         Spacer(modifier = Modifier.height(4.dp))
 
                         Text(
-                            text = "Streaming every second 💧",
+                            text = "${activeStreams.size} active stream(s)",
                             style = MaterialTheme.typography.bodySmall,
                             color = TranzoColors.LightTeal,
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
 
-                        // Withdraw all button
                         Button(
-                            onClick = {},
+                            onClick = { activeStreams.firstOrNull()?.let { onStreamClick(it.id) } },
+                            enabled = activeStreams.isNotEmpty(),
                             shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(
                                 containerColor = TranzoColors.PrimaryBlack,
@@ -183,14 +159,12 @@ fun DripperDashboardScreen(
                                 contentDescription = null,
                                 modifier = Modifier.size(18.dp),
                             )
-                            Spacer(modifier = Modifier.width(8.dp))
-                            Text("Withdraw All")
+                            Text(" Withdraw")
                         }
                     }
                 }
             }
 
-            // ── White Content ────────────────────────────────────
             item {
                 Box(
                     modifier = Modifier
@@ -212,8 +186,15 @@ fun DripperDashboardScreen(
                                 text = "Your Streams",
                                 style = MaterialTheme.typography.headlineMedium,
                             )
-                            StatusBadge(
-                                text = "${streams.count { it.status == "active" }} Active",
+                            StatusBadge(text = "${state.activeCount} Active")
+                        }
+
+                        state.error?.let {
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                text = it,
+                                color = TranzoColors.Error,
+                                style = MaterialTheme.typography.bodySmall,
                             )
                         }
 
@@ -222,21 +203,27 @@ fun DripperDashboardScreen(
                 }
             }
 
-            // ── Stream Cards ─────────────────────────────────────
-            items(streams) { stream ->
-                StreamCard(
-                    stream = stream,
-                    onClick = { onStreamClick(stream.id) },
-                )
+            if (state.streams.isEmpty()) {
+                item {
+                    Text(
+                        text = "No streams yet. Create your first stream.",
+                        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp),
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TranzoColors.TextSecondary,
+                    )
+                }
+            } else {
+                items(state.streams, key = { it.id }) { stream ->
+                    StreamCard(
+                        stream = stream,
+                        onClick = { onStreamClick(stream.id) },
+                    )
+                }
             }
 
-            // Bottom spacing
-            item {
-                Spacer(modifier = Modifier.height(100.dp))
-            }
+            item { Spacer(modifier = Modifier.height(100.dp)) }
         }
 
-        // ── FAB ──────────────────────────────────────────────────
         FloatingActionButton(
             onClick = onCreateStream,
             modifier = Modifier
@@ -253,18 +240,27 @@ fun DripperDashboardScreen(
 
 @Composable
 private fun StreamCard(
-    stream: StreamUiItem,
+    stream: StreamDetail,
     onClick: () -> Unit,
 ) {
+    val now = Instant.now()
+    val start = stream.startTime.toInstantSafe()
+    val end = stream.endTime.toInstantSafe()
+    val progress = if (start != null && end != null) {
+        val total = Duration.between(start, end).seconds.toFloat().coerceAtLeast(1f)
+        val elapsed = Duration.between(start, now).seconds.toFloat().coerceAtLeast(0f)
+        (elapsed / total).coerceIn(0f, 1f)
+    } else {
+        0f
+    }
+
     Card(
         onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 6.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = TranzoColors.CardSurface,
-        ),
+        colors = CardDefaults.cardColors(containerColor = TranzoColors.CardSurface),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -273,93 +269,63 @@ private fun StreamCard(
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Row(verticalAlignment = Alignment.CenterVertically) {
-                    Box(
-                        modifier = Modifier
-                            .size(40.dp)
-                            .clip(CircleShape)
-                            .background(
-                                when (stream.status) {
-                                    "active" -> TranzoColors.PaleTeal
-                                    "completed" -> TranzoColors.LightGray
-                                    else -> TranzoColors.ErrorLight
-                                }
-                            ),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            imageVector = Icons.Outlined.WaterDrop,
-                            contentDescription = null,
-                            tint = when (stream.status) {
-                                "active" -> TranzoColors.PrimaryBlack
-                                "completed" -> TranzoColors.TextSecondary
-                                else -> TranzoColors.Error
-                            },
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Column {
-                        Text(
-                            text = stream.fromName,
-                            style = MaterialTheme.typography.bodyLarge,
-                            fontWeight = FontWeight.SemiBold,
-                        )
-                        Text(
-                            text = "${stream.ratePerDay}/day in ${stream.tokenSymbol}",
-                            style = MaterialTheme.typography.bodySmall,
-                            color = TranzoColors.TextSecondary,
-                        )
-                    }
-                }
-
-                StatusBadge(
-                    text = stream.status.replaceFirstChar { it.uppercase() },
-                    isError = stream.status == "cancelled",
-                )
-            }
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Progress bar
-            Column {
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                ) {
+                Column {
                     Text(
-                        text = stream.earnedSoFar,
-                        style = MaterialTheme.typography.bodyMedium,
+                        text = stream.employeeAddress.shortAddress(),
+                        style = MaterialTheme.typography.bodyLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.PrimaryBlack,
                     )
                     Text(
-                        text = stream.totalAmount,
+                        text = "${stream.amountPerSecond} / sec",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.TextTertiary,
+                        color = TranzoColors.TextSecondary,
                     )
                 }
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                LinearProgressIndicator(
-                    progress = { stream.progressPercent },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(6.dp)
-                        .clip(RoundedCornerShape(3.dp)),
-                    color = TranzoColors.PrimaryBlack,
-                    trackColor = TranzoColors.PaleTeal,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                Text(
-                    text = if (stream.status == "active") "Ends ${stream.endDate}" else "Ended ${stream.endDate}",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TranzoColors.TextTertiary,
+                StatusBadge(
+                    text = stream.status.lowercase().replaceFirstChar { it.uppercase() },
+                    isError = stream.status.equals("cancelled", true),
                 )
             }
+
+            Spacer(modifier = Modifier.height(12.dp))
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(6.dp),
+                shape = RoundedCornerShape(3.dp),
+                color = TranzoColors.PaleTeal,
+            ) {
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth(progress)
+                        .height(6.dp)
+                        .background(TranzoColors.PrimaryBlack),
+                )
+            }
+            Spacer(modifier = Modifier.height(8.dp))
+            Text(
+                text = "Ends ${stream.endTime.toDisplayDate()}",
+                style = MaterialTheme.typography.labelSmall,
+                color = TranzoColors.TextTertiary,
+            )
         }
     }
 }
+
+private fun String.toInstantSafe(): Instant? = runCatching { Instant.parse(this) }.getOrNull()
+
+private fun String.toDisplayDate(): String {
+    val instant = toInstantSafe() ?: return this
+    val formatter = DateTimeFormatter.ofPattern("MMM dd, yyyy", Locale.US)
+    return formatter.format(instant.atZone(ZoneId.systemDefault()))
+}
+
+private fun String.shortAddress(): String {
+    return if (length > 12) "${take(8)}...${takeLast(4)}" else this
+}
+
+private fun String.toBigDecimalSafe(): BigDecimal = runCatching { toBigDecimal() }.getOrDefault(BigDecimal.ZERO)
+
+private fun BigDecimal.formatMoney(): String = runCatching {
+    setScale(2, java.math.RoundingMode.HALF_UP).toPlainString()
+}.getOrDefault("0.00")

@@ -23,6 +23,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tranzo.app.ui.components.StatusBadge
+import com.tranzo.app.ui.components.TranzoLogo
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoCard
 import androidx.compose.runtime.collectAsState
