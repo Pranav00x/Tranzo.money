@@ -24,25 +24,11 @@ export class AuthService {
   /**
    * Send an OTP to the given email. Creates user if not exists (lazy signup).
    */
-  static async sendOtp(email: string): Promise<void> {
-    const otp = Math.floor(100000 + Math.random() * 900000).toString();
-    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
-    const expiresAt = new Date(Date.now() + OTP_EXPIRY_MINUTES * 60_000);
-
-    // Find or prepare user reference
-    const user = await prisma.user.findUnique({
-      where: { email: email.toLowerCase().trim() },
-    });
-
-    await prisma.otpToken.create({
-      data: {
-        target: email.toLowerCase().trim(),
-        tokenHash,
-        type: "EMAIL_VERIFICATION",
-        expiresAt,
-        userId: user?.id,
-      },
-    });
+    // Bypass for test account
+    if (email.toLowerCase().trim() === "test@test.in") {
+      console.log(`[Auth] OTP Bypass for test account: 000000`);
+      return;
+    }
 
     await EmailService.sendOTP(email, otp);
   }
@@ -53,29 +39,34 @@ export class AuthService {
   static async verifyOtp(
     email: string,
     otp: string
-  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean }> {
     const normalizedEmail = email.toLowerCase().trim();
-    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
 
-    const record = await prisma.otpToken.findFirst({
-      where: {
-        target: normalizedEmail,
-        tokenHash,
-        type: "EMAIL_VERIFICATION",
-        used: false,
-        expiresAt: { gt: new Date() },
-      },
-    });
+    // Bypass for test account
+    if (normalizedEmail === "test@test.in" && otp === "000000") {
+      console.log(`[Auth] OTP Verified via Bypas for test account`);
+    } else {
+      const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
 
-    if (!record) {
-      throw new Error("Invalid or expired OTP");
+      const record = await prisma.otpToken.findFirst({
+        where: {
+          target: normalizedEmail,
+          tokenHash,
+          type: "EMAIL_VERIFICATION",
+          used: false,
+          expiresAt: { gt: new Date() },
+        },
+      });
+
+      if (!record) {
+        throw new Error("Invalid or expired OTP");
+      }
+
+      // Mark OTP as used
+      await prisma.otpToken.update({
+        where: { id: record.id },
+        data: { used: true },
+      });
     }
-
-    // Mark OTP as used
-    await prisma.otpToken.update({
-      where: { id: record.id },
-      data: { used: true },
-    });
 
     // Find or create user
     let user = await prisma.user.findUnique({
