@@ -27,13 +27,11 @@ import com.tranzo.app.ui.theme.TranzoColors
 /**
  * Welcome / Getting Started screen.
  *
- * Auth flow like Avi/Ready — simple email signup.
- * Under the hood: Openfort creates an embedded smart account.
- * User never sees keys, mnemonics, or passkeys.
+ * Auth flow: simple email signup.
+ * Under the hood: ZeroDev creates a Kernel smart account (ERC-4337).
+ * User never sees keys, mnemonics, or seed phrases.
  *
- * Modes:
- * - New user: "Getting Started" → email → OTP → wallet creation
- * - Returning user: "Welcome Back!" → pre-filled name + phone → Login
+ * New user: "Getting Started" → email → OTP → wallet creation
  */
 @Composable
 fun WelcomeScreen(
@@ -90,7 +88,7 @@ fun WelcomeScreen(
                 color = TranzoColors.LightGray,
             ) {
                 Text(
-                    text = name.ifEmpty { "Pranav Jha" },
+                    text = name.ifEmpty { "" },
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -112,7 +110,7 @@ fun WelcomeScreen(
                 color = TranzoColors.LightGray,
             ) {
                 Text(
-                    text = phone.ifEmpty { "+91 7377286823" },
+                    text = phone.ifEmpty { "" },
                     style = MaterialTheme.typography.bodyLarge,
                     modifier = Modifier
                         .fillMaxWidth()
@@ -174,8 +172,8 @@ fun WelcomeScreen(
                     checked = acceptedTerms,
                     onCheckedChange = { acceptedTerms = it },
                     colors = CheckboxDefaults.colors(
-                        checkedColor = TranzoColors.PrimaryGreen,
-                        checkmarkColor = TranzoColors.TextOnGreen,
+                        checkedColor = TranzoColors.PrimaryBlack,
+                        checkmarkColor = TranzoColors.White,
                     ),
                 )
                 Spacer(modifier = Modifier.width(8.dp))
@@ -197,7 +195,7 @@ fun WelcomeScreen(
                 Text(
                     text = "terms-of-service",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                 )
                 Text(
                     text = " and ",
@@ -207,7 +205,7 @@ fun WelcomeScreen(
                 Text(
                     text = "privacy policy",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                 )
             }
 

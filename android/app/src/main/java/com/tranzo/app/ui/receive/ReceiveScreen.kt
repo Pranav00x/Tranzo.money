@@ -98,7 +98,7 @@ fun ReceiveScreen(
                         Text(
                             text = network,
                             style = MaterialTheme.typography.labelLarge,
-                            color = if (isSelected) TranzoColors.PrimaryGreen else TranzoColors.TextSecondary,
+                            color = if (isSelected) TranzoColors.PrimaryBlack else TranzoColors.TextSecondary,
                             textAlign = TextAlign.Center,
                             modifier = Modifier.padding(vertical = 10.dp),
                         )
@@ -181,7 +181,7 @@ fun ReceiveScreen(
                                 Icons.Outlined.CheckCircle
                             else Icons.Outlined.ContentCopy,
                             contentDescription = "Copy Address",
-                            tint = TranzoColors.PrimaryGreen,
+                            tint = TranzoColors.PrimaryBlack,
                             modifier = Modifier.size(20.dp),
                         )
                     }
@@ -193,7 +193,7 @@ fun ReceiveScreen(
                 Text(
                     text = "Address copied!",
                     style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                 )
             }
 

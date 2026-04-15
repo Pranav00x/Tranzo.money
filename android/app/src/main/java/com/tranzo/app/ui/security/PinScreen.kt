@@ -108,7 +108,7 @@ fun PinScreen(
                     Icon(
                         imageVector = Icons.Outlined.Fingerprint,
                         contentDescription = "Use Biometric",
-                        tint = TranzoColors.PrimaryGreen
+                        tint = TranzoColors.PrimaryBlack
                     )
                 }
             }
@@ -156,7 +156,7 @@ fun PinScreen(
                 val isFilled = i < pin.length
                 val color = when {
                     showError -> TranzoColors.Error
-                    isFilled -> TranzoColors.PrimaryGreen
+                    isFilled -> TranzoColors.PrimaryBlack
                     else -> TranzoColors.BorderGray
                 }
                 
@@ -236,7 +236,7 @@ private fun Numpad(
                     Icon(
                         imageVector = Icons.Outlined.Fingerprint,
                         contentDescription = "Biometric",
-                        tint = TranzoColors.PrimaryGreen,
+                        tint = TranzoColors.PrimaryBlack,
                         modifier = Modifier.size(32.dp)
                     )
                 }

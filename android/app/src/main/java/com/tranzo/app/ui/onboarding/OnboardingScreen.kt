@@ -96,7 +96,7 @@ fun OnboardingScreen(
                         imageVector = page.icon,
                         contentDescription = null,
                         modifier = Modifier.size(64.dp),
-                        tint = TranzoColors.PrimaryGreen,
+                        tint = TranzoColors.PrimaryBlack,
                     )
                 }
 
@@ -108,7 +108,7 @@ fun OnboardingScreen(
                     words.forEachIndexed { index, word ->
                         val isGreen = page.greenWords.any { it.contains(word) }
                         if (isGreen) {
-                            withStyle(SpanStyle(color = TranzoColors.PrimaryGreen)) {
+                            withStyle(SpanStyle(color = TranzoColors.PrimaryBlack)) {
                                 append(word)
                             }
                         } else {
@@ -155,7 +155,7 @@ fun OnboardingScreen(
                         )
                         .clip(CircleShape)
                         .background(
-                            if (isSelected) TranzoColors.PrimaryGreen
+                            if (isSelected) TranzoColors.PrimaryBlack
                             else TranzoColors.BorderGray
                         )
                         .animateContentSize(),

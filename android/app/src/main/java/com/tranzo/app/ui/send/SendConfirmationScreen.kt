@@ -167,7 +167,7 @@ fun SendConfirmationScreen(
                                 Text(
                                     text = "Sponsored ✨",
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = TranzoColors.PrimaryGreen,
+                                    color = TranzoColors.PrimaryBlack,
                                     fontWeight = FontWeight.SemiBold,
                                     modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                                 )
@@ -192,7 +192,7 @@ fun SendConfirmationScreen(
                         Icon(
                             imageVector = Icons.Outlined.Shield,
                             contentDescription = null,
-                            tint = TranzoColors.PrimaryGreen,
+                            tint = TranzoColors.PrimaryBlack,
                             modifier = Modifier
                                 .size(18.dp)
                                 .padding(top = 1.dp),
@@ -267,7 +267,7 @@ private fun SuccessContent(
                 imageVector = Icons.Outlined.CheckCircle,
                 contentDescription = null,
                 modifier = Modifier.size(60.dp),
-                tint = TranzoColors.PrimaryGreen,
+                tint = TranzoColors.PrimaryBlack,
             )
         }
 
@@ -291,7 +291,7 @@ private fun SuccessContent(
         Text(
             text = formatAddress(recipientAddress),
             style = MaterialTheme.typography.bodyLarge,
-            color = TranzoColors.PrimaryGreen,
+            color = TranzoColors.PrimaryBlack,
             fontWeight = FontWeight.Medium,
             textAlign = TextAlign.Center,
         )
@@ -310,14 +310,14 @@ private fun SuccessContent(
                 Icon(
                     imageVector = Icons.Outlined.AutoAwesome,
                     contentDescription = null,
-                    tint = TranzoColors.PrimaryGreen,
+                    tint = TranzoColors.PrimaryBlack,
                     modifier = Modifier.size(16.dp),
                 )
                 Spacer(modifier = Modifier.width(6.dp))
                 Text(
                     text = "Zero gas fees paid",
                     style = MaterialTheme.typography.labelMedium,
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                     fontWeight = FontWeight.SemiBold,
                 )
             }

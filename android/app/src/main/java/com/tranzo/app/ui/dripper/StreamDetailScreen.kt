@@ -160,7 +160,7 @@ fun StreamDetailScreen(
                     Text(
                         text = "${(progress * 100).toInt()}%",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.PrimaryGreen,
+                        color = TranzoColors.PrimaryBlack,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
@@ -173,7 +173,7 @@ fun StreamDetailScreen(
                         .fillMaxWidth()
                         .height(8.dp)
                         .clip(RoundedCornerShape(4.dp)),
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                     trackColor = TranzoColors.PaleTeal,
                 )
             }
@@ -234,7 +234,7 @@ fun StreamDetailScreen(
                         Text(
                             text = "Sponsored ✨",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.PrimaryGreen,
+                            color = TranzoColors.PrimaryBlack,
                             fontWeight = FontWeight.SemiBold,
                         )
                     }

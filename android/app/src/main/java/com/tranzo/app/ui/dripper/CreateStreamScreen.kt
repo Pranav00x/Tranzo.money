@@ -108,7 +108,7 @@ fun CreateStreamScreen(
                     Icon(
                         imageVector = Icons.Outlined.Info,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryGreen,
+                        tint = TranzoColors.PrimaryBlack,
                         modifier = Modifier.size(20.dp),
                     )
                     Spacer(modifier = Modifier.width(12.dp))
@@ -134,7 +134,7 @@ fun CreateStreamScreen(
                         Icon(
                             imageVector = Icons.Outlined.ContentPaste,
                             contentDescription = "Paste",
-                            tint = TranzoColors.PrimaryGreen,
+                            tint = TranzoColors.PrimaryBlack,
                             modifier = Modifier.size(20.dp),
                         )
                     }
@@ -157,8 +157,8 @@ fun CreateStreamScreen(
                         onClick = { selectedToken = token },
                         label = { Text(token) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = TranzoColors.PrimaryGreen,
-                            selectedLabelColor = TranzoColors.TextOnGreen,
+                            selectedContainerColor = TranzoColors.PrimaryBlack,
+                            selectedLabelColor = TranzoColors.White,
                         ),
                     )
                 }
@@ -226,7 +226,7 @@ fun CreateStreamScreen(
                             Text(
                                 text = "Sponsored ✨",
                                 style = MaterialTheme.typography.bodyMedium,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                                 fontWeight = FontWeight.SemiBold,
                             )
                         }

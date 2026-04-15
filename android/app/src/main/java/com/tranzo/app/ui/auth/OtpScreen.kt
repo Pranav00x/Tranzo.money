@@ -107,8 +107,8 @@ fun OtpScreen(
                                     .border(
                                         width = if (isFocused) 2.dp else 1.dp,
                                         color = when {
-                                            isFocused -> TranzoColors.PrimaryGreen
-                                            char != null -> TranzoColors.PrimaryGreen.copy(alpha = 0.5f)
+                                            isFocused -> TranzoColors.PrimaryBlack
+                                            char != null -> TranzoColors.PrimaryBlack.copy(alpha = 0.5f)
                                             else -> TranzoColors.BorderGray
                                         },
                                         shape = RoundedCornerShape(12.dp),
@@ -155,7 +155,7 @@ fun OtpScreen(
                     Text(
                         text = "Resend OTP",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.PrimaryGreen,
+                        color = TranzoColors.PrimaryBlack,
                     )
                 }
             }
@@ -165,7 +165,7 @@ fun OtpScreen(
             Spacer(modifier = Modifier.height(24.dp))
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),
-                color = TranzoColors.PrimaryGreen,
+                color = TranzoColors.PrimaryBlack,
                 trackColor = TranzoColors.PaleTeal,
             )
         }

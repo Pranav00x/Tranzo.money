@@ -17,15 +17,12 @@ import kotlinx.coroutines.delay
 /**
  * Wallet creation loading screen.
  *
- * Full green background, "Setting up your Wallet", animated progress bar.
- * Matches CheQ's "Setting up your Credit Profile" screen.
- *
- * Behind the scenes (via Openfort):
- * 1. Create Openfort player (linked to email identity)
- * 2. Openfort generates embedded signer (smart account)
+ * Behind the scenes (via ZeroDev):
+ * 1. Generate local signer key
+ * 2. Create Kernel smart account (ERC-4337)
  * 3. Compute counterfactual smart account address
  * 4. Register account on backend
- * 5. Account deploys lazily on first transaction
+ * 5. Account deploys lazily on first transaction (gasless)
  */
 @Composable
 fun WalletCreationScreen(
@@ -49,10 +46,9 @@ fun WalletCreationScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.PrimaryGreen)
+            .background(TranzoColors.PrimaryBlack)
             .systemBarsPadding(),
     ) {
-        // Centered content
         Column(
             modifier = Modifier
                 .align(Alignment.Center)
@@ -60,42 +56,41 @@ fun WalletCreationScreen(
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
             Text(
-                text = "Setting up your\nWallet",
+                text = "Setting up your\nSmart Wallet",
                 style = MaterialTheme.typography.headlineLarge,
-                color = TranzoColors.TextOnGreen,
+                color = TranzoColors.White,
                 textAlign = TextAlign.Center,
             )
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Progress bar — white track, light green fill
+            // Progress bar
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp))
-                    .background(TranzoColors.TextOnGreen.copy(alpha = 0.3f)),
+                    .background(TranzoColors.White.copy(alpha = 0.2f)),
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxHeight()
                         .fillMaxWidth(fraction = progress.value)
                         .clip(RoundedCornerShape(4.dp))
-                        .background(TranzoColors.TextOnGreen),
+                        .background(TranzoColors.White),
                 )
             }
 
             Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                text = "Your smart wallet, powered by Openfort.",
+                text = "Powered by ZeroDev — ERC-4337 smart account.",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TranzoColors.TextOnGreen.copy(alpha = 0.8f),
+                color = TranzoColors.White.copy(alpha = 0.6f),
                 textAlign = TextAlign.Center,
             )
         }
 
-        // Skip at bottom
         TextButton(
             onClick = onSkip,
             modifier = Modifier
@@ -105,7 +100,7 @@ fun WalletCreationScreen(
             Text(
                 text = "Skip",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TranzoColors.TextOnGreen.copy(alpha = 0.7f),
+                color = TranzoColors.White.copy(alpha = 0.5f),
             )
         }
     }

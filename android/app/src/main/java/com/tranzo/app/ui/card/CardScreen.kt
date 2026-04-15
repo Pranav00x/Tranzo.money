@@ -247,7 +247,7 @@ fun CardScreen(
                             Icon(
                                 imageVector = Icons.Outlined.CreditCard,
                                 contentDescription = null,
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                             )
                         }
                         Spacer(modifier = Modifier.width(16.dp))
@@ -427,7 +427,7 @@ private fun CardQuickAction(
                 Icon(
                     imageVector = icon,
                     contentDescription = label,
-                    tint = TranzoColors.PrimaryGreen,
+                    tint = TranzoColors.PrimaryBlack,
                     modifier = Modifier.size(24.dp),
                 )
             }
@@ -452,7 +452,7 @@ private fun SpendingLimitCard(
     val progressColor = when {
         progress > 0.9 -> TranzoColors.Error
         progress > 0.7 -> TranzoColors.Warning
-        else -> TranzoColors.PrimaryGreen
+        else -> TranzoColors.PrimaryBlack
     }
 
     Surface(
@@ -522,7 +522,7 @@ private fun CardTransactionRow(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = TranzoColors.PrimaryGreen,
+                    tint = TranzoColors.PrimaryBlack,
                     modifier = Modifier.size(20.dp),
                 )
             }
@@ -566,7 +566,7 @@ private fun PartnerChip(name: String) {
             text = name,
             style = MaterialTheme.typography.labelSmall,
             fontWeight = FontWeight.Medium,
-            color = TranzoColors.PrimaryGreen,
+            color = TranzoColors.PrimaryBlack,
             modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
         )
     }
@@ -590,7 +590,7 @@ private fun NoCardState(onOrderCard: () -> Unit) {
             Icon(
                 imageVector = Icons.Outlined.CreditCard,
                 contentDescription = null,
-                tint = TranzoColors.PrimaryGreen,
+                tint = TranzoColors.PrimaryBlack,
                 modifier = Modifier.size(56.dp),
             )
         }
@@ -642,8 +642,8 @@ private fun NoCardState(onOrderCard: () -> Unit) {
                 .height(56.dp),
             shape = RoundedCornerShape(28.dp),
             colors = ButtonDefaults.buttonColors(
-                containerColor = TranzoColors.PrimaryGreen,
-                contentColor = TranzoColors.TextOnGreen,
+                containerColor = TranzoColors.PrimaryBlack,
+                contentColor = TranzoColors.White,
             ),
         ) {
             Icon(
@@ -672,7 +672,7 @@ private fun HowItWorksStep(number: String, text: String) {
             modifier = Modifier
                 .size(28.dp)
                 .clip(CircleShape)
-                .background(TranzoColors.PrimaryGreen),
+                .background(TranzoColors.PrimaryBlack),
             contentAlignment = Alignment.Center,
         ) {
             Text(

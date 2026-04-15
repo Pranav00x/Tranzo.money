@@ -225,14 +225,14 @@ fun HomeScreen(
                             Text(
                                 text = "Spend anywhere",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                                 fontWeight = FontWeight.SemiBold,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Icon(
                                 imageVector = Icons.Outlined.CreditCard,
                                 contentDescription = null,
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(32.dp),
                             )
                         }
@@ -251,14 +251,14 @@ fun HomeScreen(
                             Text(
                                 text = "Earn in real-time",
                                 style = MaterialTheme.typography.bodySmall,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                                 fontWeight = FontWeight.SemiBold,
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Icon(
                                 imageVector = Icons.Outlined.WaterDrop,
                                 contentDescription = null,
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(32.dp),
                             )
                         }
@@ -283,13 +283,13 @@ fun HomeScreen(
                             Text(
                                 text = "Best rates",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Icon(
                                 imageVector = Icons.Outlined.SwapHoriz,
                                 contentDescription = null,
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -306,13 +306,13 @@ fun HomeScreen(
                             Text(
                                 text = "Zero gas",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Icon(
                                 imageVector = Icons.Outlined.ArrowOutward,
                                 contentDescription = null,
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -329,13 +329,13 @@ fun HomeScreen(
                             Text(
                                 text = "QR code",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                             )
                             Spacer(modifier = Modifier.height(8.dp))
                             Icon(
                                 imageVector = Icons.Outlined.ArrowDownward,
                                 contentDescription = null,
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(24.dp),
                             )
                         }
@@ -356,7 +356,7 @@ fun HomeScreen(
                         TextButton(onClick = {}) {
                             Text(
                                 text = "View All",
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                                 style = MaterialTheme.typography.bodyMedium,
                             )
                         }
@@ -582,7 +582,7 @@ private fun TokenBalanceRow(token: TokenItem) {
                 Text(
                     text = token.symbol.take(2),
                     style = MaterialTheme.typography.labelMedium,
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                     fontWeight = FontWeight.Bold,
                 )
             }

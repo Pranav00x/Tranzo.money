@@ -116,7 +116,7 @@ fun SendScreen(
                         Text(
                             text = selectedToken.take(2),
                             style = MaterialTheme.typography.labelMedium,
-                            color = TranzoColors.PrimaryGreen,
+                            color = TranzoColors.PrimaryBlack,
                             fontWeight = FontWeight.Bold,
                         )
                     }
@@ -156,7 +156,7 @@ fun SendScreen(
                             Icon(
                                 imageVector = Icons.Outlined.ContentPaste,
                                 contentDescription = "Paste",
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(20.dp),
                             )
                         }
@@ -164,7 +164,7 @@ fun SendScreen(
                             Icon(
                                 imageVector = Icons.Outlined.QrCodeScanner,
                                 contentDescription = "Scan QR",
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(20.dp),
                             )
                         }
@@ -216,7 +216,7 @@ fun SendScreen(
                         Text(
                             text = "Use Max",
                             style = MaterialTheme.typography.labelMedium,
-                            color = TranzoColors.PrimaryGreen,
+                            color = TranzoColors.PrimaryBlack,
                         )
                     }
                 }
@@ -243,7 +243,7 @@ fun SendScreen(
                     Text(
                         text = "Sponsored ✨",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.PrimaryGreen,
+                        color = TranzoColors.PrimaryBlack,
                         fontWeight = FontWeight.SemiBold,
                     )
                 }
@@ -299,7 +299,7 @@ fun SendScreen(
                                 Text(
                                     text = symbol.take(2),
                                     style = MaterialTheme.typography.labelMedium,
-                                    color = TranzoColors.PrimaryGreen,
+                                    color = TranzoColors.PrimaryBlack,
                                     fontWeight = FontWeight.Bold,
                                 )
                             }
@@ -316,7 +316,7 @@ fun SendScreen(
                                 Icon(
                                     imageVector = Icons.Outlined.CheckCircle,
                                     contentDescription = null,
-                                    tint = TranzoColors.PrimaryGreen,
+                                    tint = TranzoColors.PrimaryBlack,
                                 )
                             }
                         }

@@ -199,7 +199,7 @@ fun ProfileSetupScreen(
                             Icon(
                                 imageVector = Icons.Outlined.CheckCircle,
                                 contentDescription = "Verified",
-                                tint = TranzoColors.PrimaryGreen,
+                                tint = TranzoColors.PrimaryBlack,
                                 modifier = Modifier.size(18.dp),
                             )
                         }
@@ -207,7 +207,7 @@ fun ProfileSetupScreen(
                     Text(
                         text = "Verified via OTP",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.PrimaryGreen,
+                        color = TranzoColors.PrimaryBlack,
                         modifier = Modifier.padding(start = 4.dp, top = 4.dp),
                     )
                 }

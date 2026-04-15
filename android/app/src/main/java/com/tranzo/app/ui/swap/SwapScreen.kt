@@ -109,8 +109,8 @@ fun SwapScreen(
                     modifier = Modifier.size(48.dp),
                     shape = CircleShape,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = TranzoColors.PrimaryGreen,
-                        contentColor = TranzoColors.TextOnGreen,
+                        containerColor = TranzoColors.PrimaryBlack,
+                        contentColor = TranzoColors.White,
                     ),
                 ) {
                     Icon(
@@ -188,7 +188,7 @@ fun SwapScreen(
                         Text(
                             text = "Sponsored ✨",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.PrimaryGreen,
+                            color = TranzoColors.PrimaryBlack,
                             fontWeight = FontWeight.SemiBold,
                         )
                     }
@@ -264,7 +264,7 @@ private fun SwapTokenCard(
                             Text(
                                 text = token.take(2),
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.PrimaryGreen,
+                                color = TranzoColors.PrimaryBlack,
                                 fontWeight = FontWeight.Bold,
                             )
                         }
@@ -310,7 +310,7 @@ private fun SwapTokenCard(
                         modifier = Modifier.width(150.dp),
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = TranzoColors.PrimaryGreen,
+                            focusedBorderColor = TranzoColors.PrimaryBlack,
                             unfocusedBorderColor = TranzoColors.BorderGray.copy(alpha = 0f),
                         ),
                     )

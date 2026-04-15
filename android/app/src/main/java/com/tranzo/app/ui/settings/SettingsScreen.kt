@@ -18,28 +18,26 @@ import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import com.tranzo.app.ui.components.StatusBadge
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Profile/Settings screen — CheQ-style.
+ * Settings screen — clean, crypto-native.
  *
- * Dark gradient header with avatar + name,
- * white section with menu items (icons + labels + chevrons),
- * logout confirmation dialog.
+ * Only shows options relevant to a self-custody wallet:
+ * - Wallet (address, export, backup)
+ * - Security & Recovery (PIN, biometric, recovery phrase)
+ * - Transaction History
+ * - Network (chain selection)
+ * - Help & Support
+ * - Logout
  */
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
-    userName: String = "Pranav Jha",
-    userPhone: String = "+91 7377286823",
-    userEmail: String = "pranav@tranzo.money",
     onLogout: () -> Unit = {},
-    onPersonalDetails: () -> Unit = {},
     onTransactionHistory: () -> Unit = {},
     onWallet: () -> Unit = {},
     onSecurity: () -> Unit = {},
-    onReferEarn: () -> Unit = {},
     onHelp: () -> Unit = {},
 ) {
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -49,7 +47,7 @@ fun SettingsScreen(
             .fillMaxSize()
             .background(TranzoColors.Background),
     ) {
-        // ── Gradient Header with Avatar ─────────────────────────
+        // ── Header ──────────────────────────────────────────────
         Box(
             modifier = Modifier
                 .fillMaxWidth()
@@ -64,45 +62,15 @@ fun SettingsScreen(
                 .statusBarsPadding()
                 .padding(horizontal = 24.dp, vertical = 24.dp),
         ) {
-            Row(verticalAlignment = Alignment.CenterVertically) {
-                // Avatar circle with initials
-                Box(
-                    modifier = Modifier
-                        .size(56.dp)
-                        .clip(CircleShape)
-                        .background(TranzoColors.PrimaryGreen),
-                    contentAlignment = Alignment.Center,
-                ) {
-                    Text(
-                        text = userName.split(" ")
-                            .mapNotNull { it.firstOrNull()?.uppercase() }
-                            .take(2)
-                            .joinToString(""),
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = TranzoColors.TextOnGreen,
-                        fontWeight = FontWeight.Bold,
-                    )
-                }
-
-                Spacer(modifier = Modifier.width(16.dp))
-
-                Column {
-                    Text(
-                        text = userName,
-                        style = MaterialTheme.typography.headlineSmall,
-                        color = TranzoColors.TextOnDark,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    Text(
-                        text = userPhone,
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.TextOnDarkMuted,
-                    )
-                }
-            }
+            Text(
+                text = "Settings",
+                style = MaterialTheme.typography.headlineMedium,
+                color = TranzoColors.TextOnDark,
+                fontWeight = FontWeight.Bold,
+            )
         }
 
-        // ── White Content with Rounded Top ──────────────────────
+        // ── Menu Items ──────────────────────────────────────────
         Column(
             modifier = Modifier
                 .fillMaxWidth()
@@ -113,47 +81,49 @@ fun SettingsScreen(
                 .verticalScroll(rememberScrollState())
                 .padding(top = 8.dp),
         ) {
-            ProfileMenuItem(
-                icon = Icons.Outlined.Person,
-                label = "Personal Details",
-                badge = "50% Complete",
-                onClick = onPersonalDetails,
-            )
-
-            ProfileMenuItem(
-                icon = Icons.Outlined.Receipt,
-                label = "Transaction History",
-                onClick = onTransactionHistory,
-            )
-
-            ProfileMenuItem(
+            SettingsMenuItem(
                 icon = Icons.Outlined.AccountBalanceWallet,
                 label = "Wallet",
+                subtitle = "Address, backup, export keys",
                 onClick = onWallet,
             )
 
-            ProfileMenuItem(
+            SettingsMenuItem(
                 icon = Icons.Outlined.Shield,
-                label = "Security & Recovery",
+                label = "Security",
+                subtitle = "PIN, biometric, recovery",
                 onClick = onSecurity,
             )
 
-            ProfileMenuItem(
-                icon = Icons.Outlined.CreditCard,
-                label = "Manage Card",
+            SettingsMenuItem(
+                icon = Icons.Outlined.Receipt,
+                label = "Transaction History",
+                subtitle = "View all on-chain activity",
+                onClick = onTransactionHistory,
             )
 
-            ProfileMenuItem(
-                icon = Icons.Outlined.Share,
-                label = "Refer & Earn",
-                badge = "New",
-                onClick = onReferEarn,
+            SettingsMenuItem(
+                icon = Icons.Outlined.Language,
+                label = "Network",
+                subtitle = "Base Sepolia (Testnet)",
             )
 
-            ProfileMenuItem(
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                color = TranzoColors.DividerGray,
+            )
+
+            SettingsMenuItem(
                 icon = Icons.Outlined.HelpOutline,
                 label = "Help & Support",
+                subtitle = "Contact us",
                 onClick = onHelp,
+            )
+
+            SettingsMenuItem(
+                icon = Icons.Outlined.Info,
+                label = "About Tranzo",
+                subtitle = "Version 1.0.0",
             )
 
             HorizontalDivider(
@@ -162,14 +132,13 @@ fun SettingsScreen(
             )
 
             // Logout
-            ProfileMenuItem(
+            SettingsMenuItem(
                 icon = Icons.AutoMirrored.Outlined.ExitToApp,
                 label = "Logout",
                 showChevron = false,
                 onClick = { showLogoutDialog = true },
             )
 
-            // Terms + Version
             Spacer(modifier = Modifier.height(24.dp))
 
             Row(
@@ -183,7 +152,7 @@ fun SettingsScreen(
                     Text(
                         text = "Terms & Policies",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.PrimaryGreen,
+                        color = TranzoColors.TextSecondary,
                     )
                 }
                 Text(
@@ -196,7 +165,7 @@ fun SettingsScreen(
         }
     }
 
-    // ── Logout Confirmation Dialog (CheQ-style bottom sheet) ────
+    // ── Logout Confirmation Dialog ──────────────────────────────
     if (showLogoutDialog) {
         ModalBottomSheet(
             onDismissRequest = { showLogoutDialog = false },
@@ -228,13 +197,20 @@ fun SettingsScreen(
                     }
                 }
 
+                Spacer(modifier = Modifier.height(8.dp))
+
+                Text(
+                    text = "Your wallet is stored locally. Make sure you have backed up your recovery phrase before logging out.",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TranzoColors.TextSecondary,
+                )
+
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Row(
                     modifier = Modifier.fillMaxWidth(),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
-                    // Confirm — outlined / light
                     OutlinedButton(
                         onClick = {
                             showLogoutDialog = false
@@ -245,16 +221,15 @@ fun SettingsScreen(
                             .height(52.dp),
                         shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.outlinedButtonColors(
-                            contentColor = TranzoColors.PrimaryGreen,
+                            contentColor = TranzoColors.Error,
                         ),
                     ) {
                         Text(
-                            text = "Confirm",
+                            text = "Logout",
                             style = MaterialTheme.typography.labelLarge,
                         )
                     }
 
-                    // Cancel — filled green
                     Button(
                         onClick = { showLogoutDialog = false },
                         modifier = Modifier
@@ -262,7 +237,7 @@ fun SettingsScreen(
                             .height(52.dp),
                         shape = RoundedCornerShape(28.dp),
                         colors = ButtonDefaults.buttonColors(
-                            containerColor = TranzoColors.PrimaryGreen,
+                            containerColor = TranzoColors.PrimaryBlack,
                         ),
                     ) {
                         Text(
@@ -277,11 +252,10 @@ fun SettingsScreen(
 }
 
 @Composable
-private fun ProfileMenuItem(
+private fun SettingsMenuItem(
     icon: ImageVector,
     label: String,
-    badge: String? = null,
-    isBadgeError: Boolean = false,
+    subtitle: String? = null,
     showChevron: Boolean = true,
     onClick: () -> Unit = {},
 ) {
@@ -304,18 +278,18 @@ private fun ProfileMenuItem(
 
             Spacer(modifier = Modifier.width(16.dp))
 
-            Text(
-                text = label,
-                style = MaterialTheme.typography.bodyLarge,
-                modifier = Modifier.weight(1f),
-            )
-
-            if (badge != null) {
-                StatusBadge(
-                    text = badge,
-                    isError = isBadgeError,
+            Column(modifier = Modifier.weight(1f)) {
+                Text(
+                    text = label,
+                    style = MaterialTheme.typography.bodyLarge,
                 )
-                Spacer(modifier = Modifier.width(8.dp))
+                if (subtitle != null) {
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TranzoColors.TextTertiary,
+                    )
+                }
             }
 
             if (showChevron) {

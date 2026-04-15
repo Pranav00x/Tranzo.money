@@ -5,13 +5,13 @@ import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 
 private val TranzoColorScheme = lightColorScheme(
-    primary = TranzoColors.PrimaryGreen,
-    onPrimary = TranzoColors.TextOnGreen,
+    primary = TranzoColors.PrimaryBlack,
+    onPrimary = TranzoColors.White,
     primaryContainer = TranzoColors.PaleTeal,
-    onPrimaryContainer = TranzoColors.PrimaryGreenDark,
+    onPrimaryContainer = TranzoColors.PrimaryBlackDark,
 
     secondary = TranzoColors.LightTeal,
-    onSecondary = TranzoColors.TextOnGreen,
+    onSecondary = TranzoColors.White,
 
     background = TranzoColors.Background,
     onBackground = TranzoColors.TextPrimary,

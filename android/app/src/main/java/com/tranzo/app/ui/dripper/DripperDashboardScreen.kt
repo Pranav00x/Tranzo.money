@@ -174,7 +174,7 @@ fun DripperDashboardScreen(
                             onClick = {},
                             shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = TranzoColors.PrimaryGreen,
+                                containerColor = TranzoColors.PrimaryBlack,
                             ),
                             modifier = Modifier.fillMaxWidth(0.6f),
                         ) {
@@ -242,8 +242,8 @@ fun DripperDashboardScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 24.dp, bottom = 100.dp),
-            containerColor = TranzoColors.PrimaryGreen,
-            contentColor = TranzoColors.TextOnGreen,
+            containerColor = TranzoColors.PrimaryBlack,
+            contentColor = TranzoColors.White,
             shape = CircleShape,
         ) {
             Icon(Icons.Filled.Add, contentDescription = "Create Stream")
@@ -291,7 +291,7 @@ private fun StreamCard(
                             imageVector = Icons.Outlined.WaterDrop,
                             contentDescription = null,
                             tint = when (stream.status) {
-                                "active" -> TranzoColors.PrimaryGreen
+                                "active" -> TranzoColors.PrimaryBlack
                                 "completed" -> TranzoColors.TextSecondary
                                 else -> TranzoColors.Error
                             },
@@ -331,7 +331,7 @@ private fun StreamCard(
                         text = stream.earnedSoFar,
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.PrimaryGreen,
+                        color = TranzoColors.PrimaryBlack,
                     )
                     Text(
                         text = stream.totalAmount,
@@ -348,7 +348,7 @@ private fun StreamCard(
                         .fillMaxWidth()
                         .height(6.dp)
                         .clip(RoundedCornerShape(3.dp)),
-                    color = TranzoColors.PrimaryGreen,
+                    color = TranzoColors.PrimaryBlack,
                     trackColor = TranzoColors.PaleTeal,
                 )
 

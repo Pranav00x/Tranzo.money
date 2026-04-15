@@ -6,6 +6,9 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.material.icons.outlined.Shield
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -17,8 +20,7 @@ import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Primary CTA — Full-width green pill button.
- * Matches CheQ's "Get OTP", "Continue", "+ Add New Card" style.
+ * Primary CTA — Full-width pill button.
  */
 @Composable
 fun TranzoButton(
@@ -36,10 +38,10 @@ fun TranzoButton(
         enabled = enabled && !isLoading,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.PrimaryGreen,
-            contentColor = TranzoColors.TextOnGreen,
-            disabledContainerColor = TranzoColors.PrimaryGreen.copy(alpha = 0.4f),
-            disabledContentColor = TranzoColors.TextOnGreen.copy(alpha = 0.6f),
+            containerColor = TranzoColors.PrimaryBlack,
+            contentColor = TranzoColors.White,
+            disabledContainerColor = TranzoColors.PrimaryBlack.copy(alpha = 0.4f),
+            disabledContentColor = TranzoColors.White.copy(alpha = 0.6f),
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
@@ -49,7 +51,7 @@ fun TranzoButton(
         if (isLoading) {
             CircularProgressIndicator(
                 modifier = Modifier.size(24.dp),
-                color = TranzoColors.TextOnGreen,
+                color = TranzoColors.White,
                 strokeWidth = 2.dp,
             )
         } else {
@@ -62,8 +64,7 @@ fun TranzoButton(
 }
 
 /**
- * Secondary button — light green tinted pill with green text.
- * Matches CheQ's "Skip" button style.
+ * Secondary button — light tinted pill.
  */
 @Composable
 fun TranzoSecondaryButton(
@@ -78,8 +79,8 @@ fun TranzoSecondaryButton(
             .height(52.dp),
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.SkipButtonBg,
-            contentColor = TranzoColors.SkipButtonText,
+            containerColor = TranzoColors.LightGray,
+            contentColor = TranzoColors.TextPrimary,
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
@@ -94,7 +95,6 @@ fun TranzoSecondaryButton(
 
 /**
  * Outlined text field with floating label.
- * Matches CheQ's "Mobile Number" input style.
  */
 @Composable
 fun TranzoTextField(
@@ -128,12 +128,12 @@ fun TranzoTextField(
             keyboardActions = keyboardActions,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = TranzoColors.PrimaryGreen,
+                focusedBorderColor = TranzoColors.PrimaryBlack,
                 unfocusedBorderColor = TranzoColors.BorderGray,
                 errorBorderColor = TranzoColors.Error,
-                focusedLabelColor = TranzoColors.PrimaryGreen,
+                focusedLabelColor = TranzoColors.PrimaryBlack,
                 unfocusedLabelColor = TranzoColors.TextSecondary,
-                cursorColor = TranzoColors.PrimaryGreen,
+                cursorColor = TranzoColors.PrimaryBlack,
             ),
         )
 
@@ -150,7 +150,6 @@ fun TranzoTextField(
 
 /**
  * Content card — white with rounded corners.
- * Matches CheQ's feature cards (Education Fee, Utilities, etc.)
  */
 @Composable
 fun TranzoCard(
@@ -195,8 +194,8 @@ fun TranzoCard(
 }
 
 /**
- * Security badges row — "100% Secure" with shield icons.
- * Matches CheQ's splash/auth screen bottom section.
+ * Security badges row — clean, no emojis.
+ * Uses Material icons for a professional look.
  */
 @Composable
 fun SecurityBadges(modifier: Modifier = Modifier) {
@@ -209,14 +208,28 @@ fun SecurityBadges(modifier: Modifier = Modifier) {
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(bottom = 8.dp),
         ) {
+            Icon(
+                imageVector = Icons.Outlined.Lock,
+                contentDescription = null,
+                modifier = Modifier.size(14.dp),
+                tint = TranzoColors.TextTertiary,
+            )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "🔒 256-bit encrypted",
+                text = "256-bit encrypted",
                 style = MaterialTheme.typography.labelSmall,
                 color = TranzoColors.TextTertiary,
             )
             Spacer(modifier = Modifier.width(16.dp))
+            Icon(
+                imageVector = Icons.Outlined.Shield,
+                contentDescription = null,
+                modifier = Modifier.size(14.dp),
+                tint = TranzoColors.TextTertiary,
+            )
+            Spacer(modifier = Modifier.width(4.dp))
             Text(
-                text = "🛡️ Self-custody",
+                text = "Self-custody",
                 style = MaterialTheme.typography.labelSmall,
                 color = TranzoColors.TextTertiary,
             )
@@ -243,7 +256,7 @@ fun SecurityBadges(modifier: Modifier = Modifier) {
 }
 
 /**
- * Green status badge — "50% Complete", "New", "Popular"
+ * Status badge
  */
 @Composable
 fun StatusBadge(

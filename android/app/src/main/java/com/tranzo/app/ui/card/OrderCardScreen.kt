@@ -219,7 +219,7 @@ private fun CardTypeOption(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val borderColor = if (isSelected) TranzoColors.PrimaryGreen else TranzoColors.BorderGray
+    val borderColor = if (isSelected) TranzoColors.PrimaryBlack else TranzoColors.BorderGray
 
     Surface(
         onClick = onClick,
@@ -251,7 +251,7 @@ private fun CardTypeOption(
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = if (isSelected) TranzoColors.PrimaryGreen
+                        tint = if (isSelected) TranzoColors.PrimaryBlack
                         else TranzoColors.TextSecondary,
                     )
                 }
@@ -272,7 +272,7 @@ private fun CardTypeOption(
                     Icon(
                         imageVector = Icons.Outlined.CheckCircle,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryGreen,
+                        tint = TranzoColors.PrimaryBlack,
                     )
                 }
             }
@@ -285,7 +285,7 @@ private fun CardTypeOption(
                     Icon(
                         imageVector = Icons.Outlined.Check,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryGreen,
+                        tint = TranzoColors.PrimaryBlack,
                         modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -314,13 +314,13 @@ private fun SettlementStep(
             modifier = Modifier
                 .size(28.dp)
                 .clip(CircleShape)
-                .background(TranzoColors.PrimaryGreen),
+                .background(TranzoColors.PrimaryBlack),
             contentAlignment = Alignment.Center,
         ) {
             Text(
                 text = step,
                 style = MaterialTheme.typography.labelSmall,
-                color = TranzoColors.TextOnGreen,
+                color = TranzoColors.White,
                 fontWeight = FontWeight.Bold,
             )
         }
