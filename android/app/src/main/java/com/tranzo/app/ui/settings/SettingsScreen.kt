@@ -1,5 +1,7 @@
 package com.tranzo.app.ui.settings
 
+import android.content.Intent
+import android.net.Uri
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -12,6 +14,7 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
+import androidx.compose.ui.platform.LocalContext
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.home.HomeViewModel
 import androidx.compose.ui.Alignment
@@ -46,6 +49,19 @@ fun SettingsScreen(
 ) {
     val state by viewModel.state.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+
+    fun openUrl(url: String) {
+        context.startActivity(
+            Intent(Intent.ACTION_VIEW, Uri.parse(url))
+        )
+    }
+
+    fun openEmail(email: String) {
+        context.startActivity(
+            Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:$email"))
+        )
+    }
 
     Column(
         modifier = Modifier
@@ -139,6 +155,73 @@ fun SettingsScreen(
                 label = "About Tranzo",
                 subtitle = "Version 1.0.0",
             )
+
+            HorizontalDivider(
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+                color = TranzoColors.DividerGray,
+            )
+
+            Text(
+                text = "Contact & Legal",
+                style = MaterialTheme.typography.titleMedium,
+                fontWeight = FontWeight.Bold,
+                color = TranzoColors.TextPrimary,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
+            )
+
+            ContactCard(
+                title = "Founder",
+                email = "pranav@tranzo.money",
+                description = "For partnerships, press, and direct inquiries.",
+                onClick = { openEmail("pranav@tranzo.money") },
+            )
+
+            ContactCard(
+                title = "Team",
+                email = "hi@tranzo.money",
+                description = "Product questions and onboarding support.",
+                onClick = { openEmail("hi@tranzo.money") },
+            )
+
+            ContactCard(
+                title = "Legal",
+                email = "legal@tranzo.money",
+                description = "Compliance, regulatory, and legal matters.",
+                onClick = { openEmail("legal@tranzo.money") },
+            )
+
+            ContactCard(
+                title = "Security",
+                email = "security@tranzo.money",
+                description = "Report security vulnerabilities responsibly.",
+                onClick = { openEmail("security@tranzo.money") },
+            )
+
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
+            ) {
+                OutlinedButton(
+                    onClick = { openUrl("https://www.tranzo.money/privacy") },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text("Privacy")
+                }
+                OutlinedButton(
+                    onClick = { openUrl("https://www.tranzo.money/terms") },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text("Terms")
+                }
+                OutlinedButton(
+                    onClick = { openUrl("https://www.tranzo.money/manifesto.html") },
+                    modifier = Modifier.weight(1f),
+                ) {
+                    Text("Manifesto")
+                }
+            }
 
             HorizontalDivider(
                 modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
@@ -312,6 +395,66 @@ private fun SettingsMenuItem(
                     contentDescription = null,
                     tint = TranzoColors.TextTertiary,
                     modifier = Modifier.size(20.dp),
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun ContactCard(
+    title: String,
+    email: String,
+    description: String,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        shape = RoundedCornerShape(16.dp),
+        color = TranzoColors.LightGray,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = 24.dp, vertical = 6.dp),
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(16.dp),
+            verticalAlignment = Alignment.Top,
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(44.dp)
+                    .clip(RoundedCornerShape(12.dp))
+                    .background(TranzoColors.PrimaryBlack),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    imageVector = Icons.Outlined.Email,
+                    contentDescription = null,
+                    tint = TranzoColors.White,
+                    modifier = Modifier.size(22.dp),
+                )
+            }
+            Spacer(modifier = Modifier.width(12.dp))
+            Column {
+                Text(
+                    text = title.uppercase(),
+                    style = MaterialTheme.typography.labelMedium,
+                    color = TranzoColors.TextSecondary,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = email,
+                    style = MaterialTheme.typography.titleMedium,
+                    color = TranzoColors.TextPrimary,
+                    fontWeight = FontWeight.Bold,
+                )
+                Spacer(modifier = Modifier.height(4.dp))
+                Text(
+                    text = description,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TranzoColors.TextSecondary,
                 )
             }
         }
