@@ -23,6 +23,7 @@ import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
+import androidx.hilt.navigation.compose.hiltViewModel
 
 /**
  * Welcome / Getting Started screen.
@@ -35,21 +36,28 @@ import com.tranzo.app.ui.theme.TranzoColors
  */
 @Composable
 fun WelcomeScreen(
+    viewModel: AuthViewModel = hiltViewModel(),
     isReturningUser: Boolean = false,
     userName: String = "",
     userPhone: String = "",
-    onContinue: (String) -> Unit = {},
+    onNavigateToOtp: (String) -> Unit = {},
     onLoginWithAnotherNumber: () -> Unit = {},
     // Unused — kept for nav compat
     onCreateWallet: () -> Unit = {},
     onPasskeyLogin: () -> Unit = {},
     onImportWallet: () -> Unit = {},
 ) {
+    val state by viewModel.state.collectAsState()
     var email by remember { mutableStateOf("") }
     var name by remember { mutableStateOf(userName) }
     var phone by remember { mutableStateOf(userPhone) }
-    var isLoading by remember { mutableStateOf(false) }
     var acceptedTerms by remember { mutableStateOf(true) }
+
+    LaunchedEffect(state.otpSent) {
+        if (state.otpSent) {
+            onNavigateToOtp(email)
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -210,14 +218,22 @@ fun WelcomeScreen(
             }
 
             // Get OTP button
+            if (state.error != null) {
+                Text(
+                    text = state.error!!,
+                    color = TranzoColors.Error,
+                    style = MaterialTheme.typography.bodySmall,
+                    modifier = Modifier.padding(bottom = 8.dp)
+                )
+            }
+
             TranzoButton(
                 text = "Get OTP",
                 onClick = {
-                    isLoading = true
-                    onContinue(email)
+                    viewModel.sendOtp(email)
                 },
                 enabled = email.contains("@") && acceptedTerms,
-                isLoading = isLoading,
+                isLoading = state.isLoading,
             )
         }
 

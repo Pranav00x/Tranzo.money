@@ -17,6 +17,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.components.SecurityBadges
 import com.tranzo.app.ui.theme.TranzoColors
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 
 /**
@@ -25,15 +26,22 @@ import kotlinx.coroutines.delay
  */
 @Composable
 fun OtpScreen(
+    viewModel: AuthViewModel = hiltViewModel(),
     email: String,
-    onVerify: (String) -> Unit,
+    onNavigateToHome: () -> Unit,
     onResend: () -> Unit,
     onSkip: (() -> Unit)? = null,
 ) {
+    val state by viewModel.state.collectAsState()
     var otpValue by remember { mutableStateOf("") }
     var resendTimer by remember { mutableIntStateOf(30) }
-    var isVerifying by remember { mutableStateOf(false) }
     val focusRequester = remember { FocusRequester() }
+
+    LaunchedEffect(state.isAuthenticated) {
+        if (state.isAuthenticated) {
+            onNavigateToHome()
+        }
+    }
 
     LaunchedEffect(resendTimer) {
         if (resendTimer > 0) {
@@ -44,8 +52,7 @@ fun OtpScreen(
 
     LaunchedEffect(otpValue) {
         if (otpValue.length == 6) {
-            isVerifying = true
-            onVerify(otpValue)
+            viewModel.verifyOtp(email, otpValue)
         }
     }
 
@@ -161,7 +168,19 @@ fun OtpScreen(
             }
         }
 
-        if (isVerifying) {
+        if (state.error != null) {
+            Text(
+                text = state.error!!,
+                color = TranzoColors.Error,
+                style = MaterialTheme.typography.bodySmall,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 16.dp),
+                textAlign = TextAlign.Center
+            )
+        }
+
+        if (state.isLoading) {
             Spacer(modifier = Modifier.height(24.dp))
             LinearProgressIndicator(
                 modifier = Modifier.fillMaxWidth(),

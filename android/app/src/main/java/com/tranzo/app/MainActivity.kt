@@ -89,43 +89,25 @@ class MainActivity : FragmentActivity() {
 
                         composable(Screen.Welcome.route) {
                             WelcomeScreen(
-                                onContinue = { _ ->
-                                    // Non-custodial: go straight to wallet creation
-                                    // (passkey registration + local key generation)
-                                    navController.navigate(Screen.WalletCreation.route) {
-                                        popUpTo(Screen.Welcome.route) { inclusive = true }
-                                    }
+                                onNavigateToOtp = { email ->
+                                    navController.navigate(Screen.Otp.createRoute(email))
                                 },
                                 onCreateWallet = {
-                                    navController.navigate(Screen.WalletCreation.route) {
-                                        popUpTo(Screen.Welcome.route) { inclusive = true }
-                                    }
-                                },
-                                onPasskeyLogin = {
-                                    // Returning user: authenticate with passkey → home
-                                    navController.navigate(Screen.Home.route) {
-                                        popUpTo(0) { inclusive = true }
-                                    }
-                                },
-                                onImportWallet = {
-                                    // Import existing wallet flow
-                                    // TODO: Add import wallet screen
                                     navController.navigate(Screen.WalletCreation.route)
-                                },
+                                }
                             )
                         }
 
-                        // OTP screen — optional email linking (NOT primary auth)
                         composable(Screen.Otp.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
                             OtpScreen(
                                 email = email,
-                                onVerify = { _ ->
-                                    navController.navigate(Screen.Home.route) {
+                                onNavigateToHome = {
+                                    navController.navigate(Screen.WalletCreation.route) {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 },
-                                onResend = { /* re-call sendOTP */ },
+                                onResend = { /* Handled in VM */ },
                                 onSkip = {
                                     navController.navigate(Screen.Home.route) {
                                         popUpTo(0) { inclusive = true }
