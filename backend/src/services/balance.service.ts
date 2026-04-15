@@ -1,6 +1,6 @@
 import { ENV } from "../config/env.js";
 import { createPublicClient, http, formatUnits } from "viem";
-import { polygon, base } from "viem/chains";
+import { polygon, base, baseSepolia } from "viem/chains";
 
 // Supported tokens per chain
 const TOKENS: Record<
@@ -19,6 +19,10 @@ const TOKENS: Record<
     { symbol: "WETH", address: "0x4200000000000000000000000000000000000006", decimals: 18 },
     { symbol: "ETH",  address: "native", decimals: 18 },
   ],
+  84532: [
+    { symbol: "USDC", address: "0x036CbD53842c5426634e7929541eC2318f3dCF7e", decimals: 6 },
+    { symbol: "ETH",  address: "native", decimals: 18 },
+  ],
 };
 
 // ERC-20 balanceOf ABI
@@ -33,9 +37,12 @@ const erc20Abi = [
 ] as const;
 
 function getClient(chainId: number) {
-  const chain = chainId === 137 ? polygon : base;
-  const rpcUrl =
-    chainId === 137 ? ENV.POLYGON_RPC_URL : ENV.BASE_RPC_URL;
+  const chain = chainId === 137 ? polygon : (chainId === 8453 ? base : baseSepolia);
+  
+  let rpcUrl = ENV.ZERODEV_RPC_URL;
+  if (!rpcUrl) {
+    rpcUrl = chainId === 137 ? ENV.POLYGON_RPC_URL : (chainId === 8453 ? ENV.BASE_RPC_URL : undefined);
+  }
 
   return createPublicClient({
     chain,

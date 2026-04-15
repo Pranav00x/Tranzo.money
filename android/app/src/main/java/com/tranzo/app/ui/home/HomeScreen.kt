@@ -25,6 +25,11 @@ import androidx.compose.ui.unit.sp
 import com.tranzo.app.ui.components.StatusBadge
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoCard
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tranzo.app.data.model.TokenBalance
+import com.tranzo.app.ui.home.HomeViewModel
+import java.util.Locale
 import com.tranzo.app.ui.theme.TranzoColors
 
 data class QuickAction(
@@ -57,10 +62,7 @@ data class TokenItem(
  */
 @Composable
 fun HomeScreen(
-    userName: String = "Pranav",
-    totalBalance: String = "$2,450.00",
-    balanceChange: String = "+$45.20 (1.88%)",
-    hasCard: Boolean = true,
+    viewModel: HomeViewModel = hiltViewModel(),
     onSend: () -> Unit = {},
     onReceive: () -> Unit = {},
     onSwap: () -> Unit = {},
@@ -68,6 +70,8 @@ fun HomeScreen(
     onCard: () -> Unit = {},
     onOrderCard: () -> Unit = {},
 ) {
+    val state by viewModel.state.collectAsState()
+    
     val quickActions = listOf(
         QuickAction("Send", Icons.Outlined.ArrowOutward, onSend),
         QuickAction("Receive", Icons.Outlined.ArrowDownward, onReceive),
@@ -75,12 +79,16 @@ fun HomeScreen(
         QuickAction("Dripper", Icons.Outlined.WaterDrop, onDripper),
     )
 
-    val tokens = listOf(
-        TokenItem("USDC", "USD Coin", "1,234.56", "$1,234.56", "+0.01%", true),
-        TokenItem("USDT", "Tether", "500.00", "$500.00", "+0.00%", true),
-        TokenItem("POL", "Polygon", "245.8", "$165.44", "-2.4%", false),
-        TokenItem("WETH", "Wrapped ETH", "0.15", "$550.00", "+3.2%", true),
-    )
+    val tokens = state.balances.map { balance ->
+        TokenItem(
+            symbol = balance.symbol,
+            name = balance.symbol, // Use symbol as name if full name not in TokenBalance
+            balance = balance.formatted,
+            price = "$${balance.formatted}", // Placeholder for price
+            change = "0.00%", // Placeholder
+            isPositive = true
+        )
+    }
 
     LazyColumn(
         modifier = Modifier
@@ -114,7 +122,7 @@ fun HomeScreen(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Text(
-                            text = "tranzo",
+                            text = state.user?.displayName ?: "User",
                             style = MaterialTheme.typography.headlineSmall,
                             color = TranzoColors.TextOnDark,
                             fontWeight = FontWeight.Bold,
@@ -147,19 +155,19 @@ fun HomeScreen(
 
                     // ── Balance Section ──────────────────────────
                     Text(
-                        text = "Hello, $userName",
+                        text = "Hello, ${state.user?.displayName ?: "User"}",
                         style = MaterialTheme.typography.bodyMedium,
                         color = TranzoColors.TextOnDarkMuted,
                     )
                     Spacer(modifier = Modifier.height(4.dp))
                     Text(
-                        text = totalBalance,
+                        text = "$${String.format(Locale.US, "%,.2f", state.totalUsdBalance)}",
                         style = MaterialTheme.typography.displayLarge,
                         color = TranzoColors.TextOnDark,
                     )
                     Spacer(modifier = Modifier.height(2.dp))
                     Text(
-                        text = "$balanceChange today",
+                        text = "+$0.00 (0.00%) today",
                         style = MaterialTheme.typography.bodySmall,
                         color = TranzoColors.LightTeal,
                     )
@@ -386,9 +394,9 @@ private fun MiniCardHero(onClick: () -> Unit) {
                 .background(
                     Brush.linearGradient(
                         colors = listOf(
-                            Color(0xFF1A3A4A),
-                            Color(0xFF0D2A35),
-                            Color(0xFF162D3A),
+                            TranzoColors.Navy,
+                            TranzoColors.GradientMid,
+                            TranzoColors.DarkTeal,
                         ),
                     ),
                     shape = RoundedCornerShape(16.dp),
@@ -490,9 +498,10 @@ private fun NoCardHero(onOrderCard: () -> Unit) {
                 onClick = onOrderCard,
                 shape = RoundedCornerShape(28.dp),
                 colors = ButtonDefaults.buttonColors(
-                    containerColor = TranzoColors.PrimaryGreen,
+                    containerColor = TranzoColors.White,
+                    contentColor = TranzoColors.PrimaryBlack,
                 ),
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier.fillMaxWidth().height(48.dp),
             ) {
                 Icon(
                     Icons.Filled.Add,
@@ -501,8 +510,9 @@ private fun NoCardHero(onOrderCard: () -> Unit) {
                 )
                 Spacer(modifier = Modifier.width(8.dp))
                 Text(
-                    text = "Get Your Card",
+                    text = "Get Your Card — Free",
                     style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.Bold,
                 )
             }
         }

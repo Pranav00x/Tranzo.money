@@ -38,12 +38,11 @@ class SwapViewModel @Inject constructor(
     private val _state = MutableStateFlow(SwapUiState())
     val state = _state.asStateFlow()
 
-    // Well-known token addresses on Polygon
+    // Well-known token addresses on Base Sepolia
     private val tokenAddresses = mapOf(
-        "USDC" to "0x3c499c542cEF5E3811e1192ce70d8cC03d5c3359",
-        "USDT" to "0xc2132D05D31c914a87C6611C10748AEb04B58e8F",
-        "WETH" to "0x7ceB23fD6bC0adD59E62ac25578270cFf1b9f619",
-        "POL"  to "0x0000000000000000000000000000000000001010",
+        "USDC" to "0x036CbD53842c5426634e7929541eC2318f3dCF7e",
+        "USDT" to "0x0000000000000000000000000000000000000000",
+        "ETH"  to "0x0000000000000000000000000000000000000000",
     )
 
     fun onFromTokenChanged(token: String) {
