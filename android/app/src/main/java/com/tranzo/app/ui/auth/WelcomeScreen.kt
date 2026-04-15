@@ -132,10 +132,11 @@ fun WelcomeScreen(
             TranzoButton(
                 text = "Login",
                 onClick = {
-                    isLoading = true
-                    onContinue(phone.ifEmpty { userPhone })
+                    // For logic consistency, we navigate to OTP if email setup exists
+                    // or just use the callback.
+                    onNavigateToOtp(phone.ifEmpty { userPhone })
                 },
-                isLoading = isLoading,
+                isLoading = state.isLoading,
             )
 
             Spacer(modifier = Modifier.height(12.dp))
