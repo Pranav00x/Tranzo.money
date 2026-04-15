@@ -4,7 +4,8 @@ import { OAuth2Client } from "google-auth-library";
 import { ENV } from "../config/env.js";
 import prisma from "./prisma.service.js";
 import { EmailService } from "./email.service.js";
-import { OpenfortService } from "./openfort.service.js";
+import { SmartAccountService } from "./smart-account.service.js";
+import { generatePrivateKey } from "viem/accounts";
 import type { AuthPayload } from "../middleware/auth.js";
 
 const ACCESS_TOKEN_EXPIRY = "15m";
@@ -84,16 +85,17 @@ export class AuthService {
     let isNewUser = false;
 
     if (!user) {
-      // Create smart account via Openfort
-      const { playerId, smartAccountAddress } =
-        await OpenfortService.createPlayer(normalizedEmail);
+      // Create smart account via ZeroDev
+      const privateKey = generatePrivateKey();
+      const { address: smartAccountAddress } =
+        await SmartAccountService.createAccount(privateKey);
 
       user = await prisma.user.create({
         data: {
           email: normalizedEmail,
           emailVerified: true,
           smartAccount: smartAccountAddress,
-          openfortPlayer: playerId,
+          signerPrivateKey: privateKey,
         },
       });
       isNewUser = true;
@@ -157,9 +159,10 @@ export class AuthService {
     let isNewUser = false;
 
     if (!user) {
-      // New user — create Openfort player + smart account
-      const { playerId, smartAccountAddress } =
-        await OpenfortService.createPlayer(email);
+      // New user — create ZeroDev smart account
+      const privateKey = generatePrivateKey();
+      const { address: smartAccountAddress } =
+        await SmartAccountService.createAccount(privateKey);
 
       user = await prisma.user.create({
         data: {
@@ -168,7 +171,7 @@ export class AuthService {
           displayName: payload.name,
           avatarUrl: payload.picture,
           smartAccount: smartAccountAddress,
-          openfortPlayer: playerId,
+          signerPrivateKey: privateKey,
           socialAccounts: {
             create: { provider: "GOOGLE", providerId: googleId },
           },

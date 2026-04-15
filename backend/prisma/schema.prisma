@@ -15,8 +15,9 @@ model User {
   phone           String?         @unique
   displayName     String?
   avatarUrl       String?
-  smartAccount    String          @unique  // ERC-4337 address from Openfort
-  openfortPlayer  String?         @unique  // Openfort player ID
+  smartAccount    String          @unique  // ERC-4337 address
+  signerPrivateKey String?                // For ZeroDev ownership (encrypted in production)
+  openfortPlayer  String?         @unique  // Deprecated: Openfort player ID
   kycStatus       KycStatus       @default(NONE)
   emailVerified   Boolean         @default(false)
   createdAt       DateTime        @default(now())

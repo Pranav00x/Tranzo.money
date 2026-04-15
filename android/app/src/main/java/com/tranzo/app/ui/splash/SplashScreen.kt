@@ -65,45 +65,47 @@ fun SplashScreen(
             .background(TranzoColors.CardSurface) // Clean white
             .systemBarsPadding(),
     ) {
-        // Centered logo + wordmark (horizontal arrangement matching the images)
+        // Centered logo + wordmark
         Row(
             modifier = Modifier.align(Alignment.Center),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.Center
         ) {
-            // Squircle container containing the black diamond
+            // Squircle container
             Box(
                 modifier = Modifier
                     .scale(logoScale.value)
                     .alpha(logoAlpha.value)
                     .size(72.dp)
                     .shadow(
-                        elevation = 8.dp, 
+                        elevation = 4.dp, 
                         shape = RoundedCornerShape(20.dp),
-                        spotColor = Color.Black.copy(alpha = 0.1f)
+                        spotColor = Color.Black.copy(alpha = 0.05f)
                     )
-                    .background(TranzoColors.CardSurface, RoundedCornerShape(20.dp)),
+                    .background(TranzoColors.White, RoundedCornerShape(20.dp)),
                 contentAlignment = Alignment.Center
             ) {
-                // Black Diamond (rotated square)
+                // Black Diamond
                 Box(
                     modifier = Modifier
-                        .size(32.dp)
+                        .size(30.dp)
                         .rotate(45f)
-                        .background(Color(0xFF1A1A1A), RoundedCornerShape(6.dp))
+                        .background(TranzoColors.PrimaryBlack, RoundedCornerShape(4.dp))
                 )
             }
 
-            Spacer(modifier = Modifier.width(16.dp))
+            Spacer(modifier = Modifier.width(20.dp))
 
             // Wordmark
             Text(
                 text = "Tranzo",
-                modifier = Modifier.alpha(wordmarkAlpha.value),
-                color = Color(0xFF1A1A1A),
+                modifier = Modifier
+                    .alpha(wordmarkAlpha.value)
+                    .padding(bottom = 2.dp), // Tiny lift to match diamond's visual center
+                color = TranzoColors.PrimaryBlack,
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = (-1).sp
+                letterSpacing = (-1.5).sp
             )
         }
 

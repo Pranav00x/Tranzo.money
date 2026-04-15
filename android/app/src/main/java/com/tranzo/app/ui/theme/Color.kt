@@ -9,57 +9,63 @@ import androidx.compose.ui.graphics.Color
  * clean white surfaces with subtle gray cards.
  */
 object TranzoColors {
-    // ── Primary ──────────────────────────────────────────────
-    val PrimaryGreen      = Color(0xFF1D9E75)
-    val PrimaryGreenDark  = Color(0xFF178A65)
-    val LightTeal         = Color(0xFF5DCAA5)
-    val PaleTeal          = Color(0xFFE0F5ED) // Light green tinted background
+    // ── Primary (Monochrome) ──────────────────────────────
+    val PrimaryBlack      = Color(0xFF000000)
+    val PrimaryWhite      = Color(0xFFFFFFFF)
+    val DarkGray          = Color(0xFF1A1A1A)
+    val MediumGray        = Color(0xFF666666)
+    val LightGray         = Color(0xFFF5F5F5)
+    
+    // ── Brand Mapping (Converted to B&W) ─────────────────────
+    val PrimaryGreen      = Color(0xFF000000)
+    val PrimaryGreenDark  = Color(0xFF1A1A1A)
+    val LightTeal         = Color(0xFF888888)
+    val PaleTeal          = Color(0xFFF9F9F9)
 
-    // ── Gradient (Header / Dashboard) ────────────────────────
-    val Navy              = Color(0xFF0B1D2E)
-    val DarkTeal          = Color(0xFF0F3D3E)
-    val GradientMid       = Color(0xFF143833)
+    // ── Header / Gradients (Flat Black) ──────────────────────
+    val Navy              = Color(0xFF000000)
+    val DarkTeal          = Color(0xFF0D0D0D)
+    val GradientMid       = Color(0xFF000000)
 
     // ── Surfaces ─────────────────────────────────────────────
-    val White             = Color(0xFFFFFFFE) // Avoid pure white
-    val Background        = Color(0xFFF8FAFB)
+    val White             = Color(0xFFFFFFFF)
+    val Background        = Color(0xFFFFFFFF)
     val CardSurface       = Color(0xFFFFFFFF)
-    val LightGray         = Color(0xFFF5F7FA)
-    val BorderGray        = Color(0xFFE5E8EB)
-    val DividerGray       = Color(0xFFEEF0F2)
+    val BorderGray        = Color(0xFFE0E0E0)
+    val DividerGray       = Color(0xFFEEEEEE)
 
     // ── Text ─────────────────────────────────────────────────
-    val TextPrimary       = Color(0xFF1A1A2E)
-    val TextSecondary     = Color(0xFF6B7280)
-    val TextTertiary      = Color(0xFF9CA3AF)
+    val TextPrimary       = Color(0xFF000000)
+    val TextSecondary     = Color(0xFF555555)
+    val TextTertiary      = Color(0xFF999999)
     val TextOnDark        = Color(0xFFFFFFFF)
-    val TextOnDarkMuted   = Color(0xFFB0C4C8)
+    val TextOnDarkMuted   = Color(0xFFAAAAAA)
     val TextOnGreen       = Color(0xFFFFFFFF)
 
-    // ── Status ───────────────────────────────────────────────
-    val Success           = Color(0xFF1D9E75) // Same as primary
-    val Error             = Color(0xFFEF4444)
-    val ErrorLight        = Color(0xFFFEE2E2)
-    val Warning           = Color(0xFFF59E0B)
-    val WarningLight      = Color(0xFFFEF3C7)
-    val Info              = Color(0xFF3B82F6)
+    // ── Status (Monochrome) ──────────────────────────────────
+    val Success           = Color(0xFF000000)
+    val Error             = Color(0xFF000000)
+    val ErrorLight        = Color(0xFFF5F5F5)
+    val Warning           = Color(0xFF555555)
+    val WarningLight      = Color(0xFFFAFAFA)
+    val Info              = Color(0xFF000000)
 
     // ── Badges ───────────────────────────────────────────────
-    val BadgeGreen        = Color(0xFF1D9E75)
-    val BadgeGreenBg      = Color(0xFFDCFCE7)
-    val BadgeRed          = Color(0xFFEF4444)
-    val BadgeRedBg        = Color(0xFFFEE2E2)
-    val BadgeNew          = Color(0xFF1D9E75)
+    val BadgeGreen        = Color(0xFFFFFFFF)
+    val BadgeGreenBg      = Color(0xFF000000)
+    val BadgeRed          = Color(0xFF000000)
+    val BadgeRedBg        = Color(0xFFEEEEEE)
+    val BadgeNew          = Color(0xFF000000)
 
     // ── Skip Button ──────────────────────────────────────────
-    val SkipButtonBg      = Color(0xFFE0F5ED) // Light green tint
-    val SkipButtonText    = Color(0xFF1D9E75)
+    val SkipButtonBg      = Color(0xFFEEEEEE)
+    val SkipButtonText    = Color(0xFF000000)
 
     // ── Bottom Nav ───────────────────────────────────────────
-    val NavActive         = Color(0xFF1D9E75)
-    val NavInactive       = Color(0xFF9CA3AF)
+    val NavActive         = Color(0xFF000000)
+    val NavInactive       = Color(0xFFAAAAAA)
 
     // ── Shimmer ──────────────────────────────────────────────
-    val ShimmerBase       = Color(0xFFE5E8EB)
-    val ShimmerHighlight  = Color(0xFFF5F7FA)
+    val ShimmerBase       = Color(0xFFF0F0F0)
+    val ShimmerHighlight  = Color(0xFFFFFFFF)
 }

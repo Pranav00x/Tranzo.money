@@ -109,7 +109,7 @@ fun HomeScreen(
                     Row(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .padding(top = 16.dp),
+                            .padding(top = 16.dp, bottom = 8.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
@@ -119,11 +119,15 @@ fun HomeScreen(
                             color = TranzoColors.TextOnDark,
                             fontWeight = FontWeight.Bold,
                         )
-                        IconButton(onClick = {}) {
+                        IconButton(
+                            onClick = {},
+                            modifier = Modifier.size(48.dp)
+                        ) {
                             Icon(
                                 imageVector = Icons.Outlined.Notifications,
                                 contentDescription = "Notifications",
                                 tint = TranzoColors.TextOnDark,
+                                modifier = Modifier.size(24.dp)
                             )
                         }
                     }

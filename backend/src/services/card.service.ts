@@ -1,5 +1,6 @@
 import prisma from "./prisma.service.js";
-import { OpenfortService } from "./openfort.service.js";
+import { SmartAccountService } from "./smart-account.service.js";
+import { encodeFunctionData } from "viem";
 import { NotificationService } from "./notification.service.js";
 import { AppError } from "../utils/errors.js";
 import { ENV } from "../config/env.js";
@@ -435,35 +436,45 @@ export class CardService {
       status: "pending",
     });
 
-    // Step 7: Queue on-chain USDC debit via Openfort UserOp
+    // Step 7: Queue on-chain USDC debit via ZeroDev UserOp
     // We do this asynchronously so as not to block the <500ms response window.
-    // The settlement webhook will confirm the on-chain tx hash.
-    if (user.openfortPlayer && usdcAddress) {
+    if (user.signerPrivateKey && usdcAddress) {
       setImmediate(async () => {
         try {
           // The card partner's settlement address (configure per partner)
-          const SETTLEMENT_ADDRESS = process.env.CARD_SETTLEMENT_ADDRESS ?? "0x0000000000000000000000000000000000000000";
+          const SETTLEMENT_ADDRESS = (process.env.CARD_SETTLEMENT_ADDRESS || "0x0000000000000000000000000000000000000000") as `0x${string}`;
 
-          const intent = await OpenfortService.sendToken({
-            playerId: user.openfortPlayer!,
-            to: SETTLEMENT_ADDRESS,
-            tokenAddress: usdcAddress,
-            amount: usdcAmountWei,
-            chainId: ENV.DEFAULT_CHAIN_ID,
+          // Encode USDC transfer call
+          const usdcTransferData = encodeFunctionData({
+            abi: [{
+              name: "transfer",
+              type: "function",
+              inputs: [{ name: "to", type: "address" }, { name: "value", type: "uint256" }],
+              outputs: [{ name: "", type: "bool" }]
+            }],
+            args: [SETTLEMENT_ADDRESS, BigInt(usdcAmountWei)]
           });
+
+          const txHash = await SmartAccountService.sendGaslessTransaction(
+            user.signerPrivateKey as `0x${string}`,
+            usdcAddress as `0x${string}`,
+            0n,
+            usdcTransferData,
+            ENV.DEFAULT_CHAIN_ID
+          );
 
           await Promise.all([
             prisma.cardTransaction.update({
               where: { id: tx.id },
-              data: { txHash: intent.response?.transactionHash ?? null },
+              data: { txHash },
             }),
             prisma.userOpLog.create({
               data: {
                 userId: user.id,
-                openfortIntentId: intent.id,
+                openfortIntentId: `zerodev_${Date.now()}_${tx.id}`, // Placeholder ID for schema compatibility
                 type: "card_debit",
                 status: "SUBMITTED",
-                txHash: intent.response?.transactionHash ?? null,
+                txHash: txHash,
                 chainId: ENV.DEFAULT_CHAIN_ID,
               },
             }),
@@ -477,11 +488,9 @@ export class CardService {
           );
         } catch (err) {
           console.error(`[Card Auth] Async debit failed for tx ${tx.id}:`, err);
-          // Flag for reconciliation — do NOT reverse the approval at this point.
-          // The settlement webhook handles final state.
           await prisma.cardTransaction.update({
             where: { id: tx.id },
-            data: { status: "pending" }, // Keep pending; ops team reconciles
+            data: { status: "pending" },
           });
         }
       });

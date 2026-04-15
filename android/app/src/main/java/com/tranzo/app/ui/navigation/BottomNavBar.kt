@@ -54,6 +54,7 @@ fun TranzoBottomBar(navController: NavHostController) {
 
                 NavigationBarItem(
                     selected = selected,
+                    alwaysShowLabel = true,
                     onClick = {
                         navController.navigate(item.route) {
                             popUpTo(Screen.Home.route) { saveState = true }
@@ -74,8 +75,8 @@ fun TranzoBottomBar(navController: NavHostController) {
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = TranzoColors.PrimaryGreen,
-                        selectedTextColor = TranzoColors.PrimaryGreen,
+                        selectedIconColor = TranzoColors.NavActive,
+                        selectedTextColor = TranzoColors.NavActive,
                         unselectedIconColor = TranzoColors.NavInactive,
                         unselectedTextColor = TranzoColors.NavInactive,
                         indicatorColor = TranzoColors.PaleTeal,

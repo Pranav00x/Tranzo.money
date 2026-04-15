@@ -36,8 +36,14 @@ import com.tranzo.app.ui.swap.SwapScreen
 import com.tranzo.app.ui.theme.TranzoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
+import androidx.fragment.app.FragmentActivity
+import com.tranzo.app.util.BiometricHelper
+import javax.inject.Inject
+
 @AndroidEntryPoint
-class MainActivity : ComponentActivity() {
+class MainActivity : FragmentActivity() {
+    @Inject lateinit var biometricHelper: BiometricHelper
+
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
         super.onCreate(savedInstanceState)
@@ -163,7 +169,13 @@ class MainActivity : ComponentActivity() {
                                     navController.popBackStack()
                                 },
                                 onUseBiometric = {
-                                    navController.popBackStack()
+                                    biometricHelper.showPrompt(
+                                        activity = this@MainActivity,
+                                        onSuccess = {
+                                            navController.popBackStack()
+                                        },
+                                        onError = { /* Handle error */ }
+                                    )
                                 },
                                 onBack = { navController.popBackStack() }
                             )

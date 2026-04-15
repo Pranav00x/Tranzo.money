@@ -30,10 +30,14 @@ const envSchema = z.object({
   // Google OAuth
   GOOGLE_CLIENT_ID: z.string().optional(),
 
+  // ZeroDev
+  ZERODEV_PROJECT_ID: z.string().optional(),
+  ZERODEV_RPC_URL: z.string().optional(),
+
   // Chains
   POLYGON_RPC_URL: z.string().optional(),
   BASE_RPC_URL: z.string().optional(),
-  DEFAULT_CHAIN_ID: z.coerce.number().default(137),
+  DEFAULT_CHAIN_ID: z.coerce.number().default(84532),
 });
 
 export const ENV = envSchema.parse(process.env);
