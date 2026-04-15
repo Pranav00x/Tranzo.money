@@ -1,39 +1,50 @@
 package com.tranzo.app.ui.auth
 
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.systemBarsPadding
+import androidx.compose.foundation.layout.width
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
-import androidx.compose.runtime.*
+import androidx.compose.material3.Card
+import androidx.compose.material3.CardDefaults
+import androidx.compose.material3.Checkbox
+import androidx.compose.material3.CheckboxDefaults
+import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
+import androidx.compose.material3.Text
+import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
-import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.SecurityBadges
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
-import androidx.hilt.navigation.compose.hiltViewModel
 
-/**
- * Welcome / Getting Started screen.
- *
- * Auth flow: simple email signup.
- * Under the hood: ZeroDev creates a Kernel smart account (ERC-4337).
- * User never sees keys, mnemonics, or seed phrases.
- *
- * New user: "Getting Started" → email → OTP → wallet creation
- */
 @Composable
 fun WelcomeScreen(
     viewModel: AuthViewModel = hiltViewModel(),
@@ -42,206 +53,192 @@ fun WelcomeScreen(
     userPhone: String = "",
     onNavigateToOtp: (String) -> Unit = {},
     onLoginWithAnotherNumber: () -> Unit = {},
-    // Unused — kept for nav compat
     onCreateWallet: () -> Unit = {},
     onPasskeyLogin: () -> Unit = {},
     onImportWallet: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
     var email by remember { mutableStateOf("") }
-    var name by remember { mutableStateOf(userName) }
-    var phone by remember { mutableStateOf(userPhone) }
     var acceptedTerms by remember { mutableStateOf(true) }
+    var submittedEmail by remember { mutableStateOf("") }
 
-    LaunchedEffect(state.otpSent) {
-        if (state.otpSent) {
-            onNavigateToOtp(email)
+    LaunchedEffect(state.otpSent, submittedEmail) {
+        if (state.otpSent && submittedEmail.isNotBlank()) {
+            onNavigateToOtp(submittedEmail)
+            submittedEmail = ""
         }
     }
 
-    Column(
+    Box(
         modifier = Modifier
             .fillMaxSize()
             .background(TranzoColors.White)
             .systemBarsPadding()
-            .padding(horizontal = 24.dp),
+            .navigationBarsPadding(),
     ) {
-        Spacer(modifier = Modifier.height(48.dp))
-
-        if (isReturningUser) {
-            // ── Returning User (CheQ "Welcome Back!" style) ─────
-            Text(
-                text = "Welcome Back!",
-                style = MaterialTheme.typography.headlineLarge,
-                color = TranzoColors.TextPrimary,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Confirm your details before jumping back in",
-                style = MaterialTheme.typography.bodyLarge,
-                color = TranzoColors.TextSecondary,
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Name (pre-filled, read-only style)
-            Text(
-                text = "Name",
-                style = MaterialTheme.typography.labelMedium,
-                color = TranzoColors.TextSecondary,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.LightGray,
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 20.dp),
+        ) {
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(210.dp)
+                    .background(
+                        brush = Brush.linearGradient(
+                            colors = listOf(Color(0xFF050505), Color(0xFF202020), Color(0xFF050505))
+                        ),
+                        shape = RoundedCornerShape(bottomStart = 28.dp, bottomEnd = 28.dp),
+                    )
+                    .padding(horizontal = 22.dp, vertical = 20.dp),
             ) {
-                Text(
-                    text = name.ifEmpty { "" },
-                    style = MaterialTheme.typography.bodyLarge,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                )
+                Column {
+                    Box(
+                        modifier = Modifier
+                            .background(Color(0x33FFFFFF), CircleShape)
+                            .padding(horizontal = 10.dp, vertical = 4.dp),
+                    ) {
+                        Text(
+                            text = "Tranzo Secure Login",
+                            style = MaterialTheme.typography.labelMedium,
+                            color = TranzoColors.White,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    Text(
+                        text = if (isReturningUser) "Welcome Back" else "Email Verification",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.White,
+                    )
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    Text(
+                        text = if (isReturningUser) {
+                            "Continue with your account details."
+                        } else {
+                            "Enter your email and we will send a one-time passcode."
+                        },
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TranzoColors.White.copy(alpha = 0.86f),
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(20.dp))
 
-            // Phone (pre-filled, read-only style)
-            Text(
-                text = "Phone Number",
-                style = MaterialTheme.typography.labelMedium,
-                color = TranzoColors.TextSecondary,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.LightGray,
+            Card(
+                modifier = Modifier.fillMaxWidth(),
+                shape = RoundedCornerShape(24.dp),
+                colors = CardDefaults.cardColors(containerColor = TranzoColors.CardSurface),
+                elevation = CardDefaults.cardElevation(defaultElevation = 2.dp),
             ) {
-                Text(
-                    text = phone.ifEmpty { "" },
-                    style = MaterialTheme.typography.bodyLarge,
+                Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                )
+                        .padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                ) {
+                    if (isReturningUser) {
+                        ReadOnlyField(label = "Name", value = userName.ifBlank { "-" })
+                        ReadOnlyField(label = "Phone", value = userPhone.ifBlank { "-" })
+
+                        TranzoButton(
+                            text = "Continue",
+                            onClick = onCreateWallet,
+                        )
+
+                        TranzoSecondaryButton(
+                            text = "Use Another Number",
+                            onClick = onLoginWithAnotherNumber,
+                        )
+                    } else {
+                        TranzoTextField(
+                            value = email,
+                            onValueChange = { email = it.trim() },
+                            label = "Email Address",
+                            placeholder = "you@example.com",
+                            keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Email),
+                        )
+
+                        Row(verticalAlignment = Alignment.Top) {
+                            Checkbox(
+                                checked = acceptedTerms,
+                                onCheckedChange = { acceptedTerms = it },
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = TranzoColors.PrimaryBlack,
+                                    checkmarkColor = TranzoColors.White,
+                                ),
+                            )
+                            Spacer(modifier = Modifier.width(8.dp))
+                            Text(
+                                text = "I authorize Tranzo to create a smart wallet account on my behalf.",
+                                style = MaterialTheme.typography.bodySmall,
+                                color = TranzoColors.TextSecondary,
+                                modifier = Modifier.padding(top = 11.dp),
+                            )
+                        }
+
+                        HorizontalDivider(color = TranzoColors.DividerGray)
+
+                        Text(
+                            text = "By continuing you agree to Terms and Privacy Policy.",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = TranzoColors.TextTertiary,
+                        )
+
+                        state.error?.let {
+                            Text(
+                                text = it,
+                                style = MaterialTheme.typography.bodySmall,
+                                color = TranzoColors.Error,
+                            )
+                        }
+
+                        TranzoButton(
+                            text = "Get OTP",
+                            onClick = {
+                                val cleanEmail = email.trim()
+                                submittedEmail = cleanEmail
+                                viewModel.sendOtp(cleanEmail)
+                            },
+                            enabled = email.contains("@") && acceptedTerms,
+                            isLoading = state.isLoading,
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.weight(1f))
+            SecurityBadges()
+            Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
 
-            // Login button
-            TranzoButton(
-                text = "Login",
-                onClick = {
-                    // For logic consistency, we navigate to OTP if email setup exists
-                    // or just use the callback.
-                    onNavigateToOtp(phone.ifEmpty { userPhone })
-                },
-                isLoading = state.isLoading,
-            )
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Login with another number
-            TranzoSecondaryButton(
-                text = "Login with another Number",
-                onClick = onLoginWithAnotherNumber,
-            )
-        } else {
-            // ── New User ────────────────────────────────────────
+@Composable
+private fun ReadOnlyField(label: String, value: String) {
+    Column(verticalArrangement = Arrangement.spacedBy(6.dp)) {
+        Text(
+            text = label,
+            style = MaterialTheme.typography.labelMedium,
+            color = TranzoColors.TextSecondary,
+        )
+        Surface(
+            modifier = Modifier.fillMaxWidth(),
+            shape = RoundedCornerShape(14.dp),
+            color = TranzoColors.LightGray,
+        ) {
             Text(
-                text = "Getting Started",
-                style = MaterialTheme.typography.headlineLarge,
-                color = TranzoColors.TextPrimary,
-            )
-            Spacer(modifier = Modifier.height(8.dp))
-            Text(
-                text = "Enter your email to create your wallet",
+                text = value,
                 style = MaterialTheme.typography.bodyLarge,
-                color = TranzoColors.TextSecondary,
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Email input — CheQ-style
-            TranzoTextField(
-                value = email,
-                onValueChange = { email = it },
-                label = "Email Address",
-                placeholder = "you@example.com",
-            )
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Terms
-            Row(
-                verticalAlignment = Alignment.Top,
-                modifier = Modifier.padding(bottom = 12.dp),
-            ) {
-                Checkbox(
-                    checked = acceptedTerms,
-                    onCheckedChange = { acceptedTerms = it },
-                    colors = CheckboxDefaults.colors(
-                        checkedColor = TranzoColors.PrimaryBlack,
-                        checkmarkColor = TranzoColors.White,
-                    ),
-                )
-                Spacer(modifier = Modifier.width(8.dp))
-                Text(
-                    text = "I authorize Tranzo to create a smart wallet account on my behalf",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.TextSecondary,
-                    modifier = Modifier.padding(top = 12.dp),
-                )
-            }
-
-            // Terms links
-            Row(modifier = Modifier.padding(bottom = 16.dp)) {
-                Text(
-                    text = "By proceeding, you agree to Tranzo's ",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.TextTertiary,
-                )
-                Text(
-                    text = "terms-of-service",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.PrimaryBlack,
-                )
-                Text(
-                    text = " and ",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.TextTertiary,
-                )
-                Text(
-                    text = "privacy policy",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.PrimaryBlack,
-                )
-            }
-
-            // Get OTP button
-            if (state.error != null) {
-                Text(
-                    text = state.error!!,
-                    color = TranzoColors.Error,
-                    style = MaterialTheme.typography.bodySmall,
-                    modifier = Modifier.padding(bottom = 8.dp)
-                )
-            }
-
-            TranzoButton(
-                text = "Get OTP",
-                onClick = {
-                    viewModel.sendOtp(email)
-                },
-                enabled = email.contains("@") && acceptedTerms,
-                isLoading = state.isLoading,
+                color = TranzoColors.TextPrimary,
+                modifier = Modifier.padding(horizontal = 14.dp, vertical = 13.dp),
             )
         }
-
-        Spacer(modifier = Modifier.height(16.dp))
-
-        SecurityBadges()
-
-        Spacer(modifier = Modifier.height(24.dp))
     }
 }
