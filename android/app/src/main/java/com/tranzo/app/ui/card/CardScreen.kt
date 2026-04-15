@@ -23,6 +23,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
@@ -42,12 +44,14 @@ import com.tranzo.app.ui.theme.TranzoColors
  */
 @Composable
 fun CardScreen(
+    viewModel: CardViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
     onOrderCard: () -> Unit = {},
     onCardDetails: (String) -> Unit = {},
     onManageLimits: () -> Unit = {},
 ) {
-    var hasCard by remember { mutableStateOf(true) }
+    val state by viewModel.state.collectAsState()
+    val hasCard = state.hasCard
 
     Column(
         modifier = Modifier
@@ -92,9 +96,16 @@ fun CardScreen(
         ) {
             Spacer(modifier = Modifier.height(8.dp))
 
-            if (hasCard) {
+            if (state.isLoading && state.card == null) {
+                Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                    CircularProgressIndicator(color = TranzoColors.PrimaryBlack)
+                }
+            } else if (hasCard) {
                 // ── Virtual Card Display ─────────────────────────
-                CardVisual()
+                CardVisual(
+                    card = state.card,
+                    cardholderName = "USER" // TODO: Get from auth state
+                )
 
                 Spacer(modifier = Modifier.height(24.dp))
 
@@ -109,9 +120,12 @@ fun CardScreen(
                         onClick = { onCardDetails("card_1") },
                     )
                     CardQuickAction(
-                        icon = Icons.Outlined.AcUnit,
-                        label = "Freeze",
-                        onClick = {},
+                        icon = if (state.card?.status == "frozen") Icons.Outlined.AcUnit else Icons.Outlined.LockOpen,
+                        label = if (state.card?.status == "frozen") "Unfreeze" else "Freeze",
+                        onClick = { 
+                            if (state.card?.status == "frozen") viewModel.unfreezeCard() 
+                            else viewModel.freezeCard() 
+                        },
                     )
                     CardQuickAction(
                         icon = Icons.Outlined.Tune,
@@ -134,19 +148,21 @@ fun CardScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                SpendingLimitCard(
-                    label = "Daily",
-                    spent = 120.0,
-                    limit = 1000.0,
-                    currency = "USD",
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-                SpendingLimitCard(
-                    label = "Monthly",
-                    spent = 2400.0,
-                    limit = 10000.0,
-                    currency = "USD",
-                )
+                state.card?.let { card ->
+                    SpendingLimitCard(
+                        label = "Daily",
+                        spent = card.dailySpent,
+                        limit = card.dailyLimit,
+                        currency = "USD",
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    SpendingLimitCard(
+                        label = "Monthly",
+                        spent = card.monthlySpent,
+                        limit = card.monthlyLimit,
+                        currency = "USD",
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(28.dp))
 
@@ -157,34 +173,30 @@ fun CardScreen(
                 )
                 Spacer(modifier = Modifier.height(12.dp))
 
-                CardTransactionRow(
-                    merchant = "Starbucks",
-                    category = "Food & Drink",
-                    amount = "-$4.50",
-                    time = "2 min ago",
-                    icon = Icons.Outlined.LocalCafe,
-                )
-                CardTransactionRow(
-                    merchant = "Uber",
-                    category = "Transport",
-                    amount = "-$12.80",
-                    time = "1 hr ago",
-                    icon = Icons.Outlined.DirectionsCar,
-                )
-                CardTransactionRow(
-                    merchant = "Amazon",
-                    category = "Shopping",
-                    amount = "-$67.99",
-                    time = "Yesterday",
-                    icon = Icons.Outlined.ShoppingCart,
-                )
-                CardTransactionRow(
-                    merchant = "Netflix",
-                    category = "Entertainment",
-                    amount = "-$15.99",
-                    time = "3 days ago",
-                    icon = Icons.Outlined.Tv,
-                )
+                if (state.transactions.isEmpty()) {
+                    Text(
+                        text = "No transactions yet",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TranzoColors.TextTertiary,
+                        modifier = Modifier.padding(vertical = 12.dp)
+                    )
+                } else {
+                    state.transactions.forEach { tx ->
+                        CardTransactionRow(
+                            merchant = tx.merchant,
+                            category = tx.category,
+                            amount = "-$${String.format("%.2f", tx.amount)}",
+                            time = tx.timestamp,
+                            icon = when (tx.category.lowercase()) {
+                                "food & drink" -> Icons.Outlined.LocalCafe
+                                "transport" -> Icons.Outlined.DirectionsCar
+                                "shopping" -> Icons.Outlined.ShoppingCart
+                                "entertainment" -> Icons.Outlined.Tv
+                                else -> Icons.Outlined.ReceiptLong
+                            },
+                        )
+                    }
+                }
 
                 Spacer(modifier = Modifier.height(28.dp))
 
@@ -289,7 +301,10 @@ fun CardScreen(
  * card number, expiry, and Visa logo placeholder.
  */
 @Composable
-private fun CardVisual() {
+private fun CardVisual(
+    card: CardInfo?,
+    cardholderName: String,
+) {
     val infiniteTransition = rememberInfiniteTransition(label = "card_shimmer")
     val shimmerAngle by infiniteTransition.animateFloat(
         initialValue = 0f,
@@ -352,7 +367,7 @@ private fun CardVisual() {
 
             // Card number
             Text(
-                text = "•••• •••• •••• 4291",
+                text = card?.let { "•••• •••• •••• ${it.last4}" } ?: "•••• •••• •••• ••••",
                 style = MaterialTheme.typography.headlineMedium,
                 color = Color.White,
                 letterSpacing = 3.sp,
@@ -375,7 +390,7 @@ private fun CardVisual() {
                         fontSize = 9.sp,
                     )
                     Text(
-                        text = "PRANAV",
+                        text = cardholderName.uppercase(),
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Medium,
@@ -389,7 +404,7 @@ private fun CardVisual() {
                         fontSize = 9.sp,
                     )
                     Text(
-                        text = "12/28",
+                        text = card?.let { "${String.format("%02d", it.expiryMonth)}/${it.expiryYear.toString().takeLast(2)}" } ?: "--/--",
                         style = MaterialTheme.typography.bodyMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Medium,

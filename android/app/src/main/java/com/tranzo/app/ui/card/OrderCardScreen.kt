@@ -18,6 +18,8 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.theme.TranzoColors
 
@@ -29,10 +31,19 @@ import com.tranzo.app.ui.theme.TranzoColors
  */
 @Composable
 fun OrderCardScreen(
+    viewModel: CardViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
     onOrder: () -> Unit = {},
 ) {
+    val state by viewModel.state.collectAsState()
     var selectedType by remember { mutableStateOf("virtual") }
+
+    // Navigate back or to card screen on success
+    LaunchedEffect(state.orderSuccess) {
+        if (state.orderSuccess) {
+            onOrder()
+        }
+    }
 
     Column(
         modifier = Modifier
@@ -204,7 +215,10 @@ fun OrderCardScreen(
                     "Get Virtual Card — Free"
                 else
                     "Order Physical Card — Free",
-                onClick = onOrder,
+                isLoading = state.isOrdering,
+                onClick = { 
+                    viewModel.orderCard(type = selectedType, cardholderName = "USER") 
+                },
             )
         }
     }

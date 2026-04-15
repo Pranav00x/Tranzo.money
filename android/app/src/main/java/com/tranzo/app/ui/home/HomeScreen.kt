@@ -83,10 +83,10 @@ fun HomeScreen(
     val tokens = state.balances.map { balance ->
         TokenItem(
             symbol = balance.symbol,
-            name = balance.symbol, // Use symbol as name if full name not in TokenBalance
+            name = balance.symbol,
             balance = balance.formatted,
-            usdValue = "$${balance.formatted}", // Corrected parameter name
-            change = "0.00%", // Placeholder
+            usdValue = if (balance.symbol == "USDC") "$${balance.formatted}" else "---", // Only show USD if stable or we have prices
+            change = "", // Remove hardcoded 0.00%
             isPositive = true
         )
     }
@@ -122,12 +122,16 @@ fun HomeScreen(
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        TranzoLogo(size = 32.dp)
+                        Spacer(modifier = Modifier.width(12.dp))
                         Text(
-                            text = state.user?.displayName ?: "User",
+                            text = "Tranzo",
                             style = MaterialTheme.typography.headlineSmall,
                             color = TranzoColors.TextOnDark,
                             fontWeight = FontWeight.Bold,
                         )
+                    }
                         IconButton(
                             onClick = {},
                             modifier = Modifier.size(48.dp)

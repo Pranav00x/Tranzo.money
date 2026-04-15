@@ -10,7 +10,7 @@
         android:rotation="45">
         <!-- A rounded square centered in the container, rotated 45 degrees to make a diamond -->
         <path
-            android:fillColor="#1A1A1A"
-            android:pathData="M38,38 h32 a6,6 0 0 1 6,6 v32 a6,6 0 0 1 -6,6 h-32 a6,6 0 0 1 -6,-6 v-32 a6,6 0 0 1 6,-6 z" />
+            android:fillColor="#000000"
+            android:pathData="M34,34 h40 a8,8 0 0 1 8,8 v40 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-40 a8,8 0 0 1 8,-8 z" />
     </group>
 </vector>

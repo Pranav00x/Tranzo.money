@@ -9,8 +9,10 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.*
-import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tranzo.app.ui.home.HomeViewModel
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -34,12 +36,14 @@ import com.tranzo.app.ui.theme.TranzoColors
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun SettingsScreen(
+    viewModel: HomeViewModel = hiltViewModel(),
     onLogout: () -> Unit = {},
     onTransactionHistory: () -> Unit = {},
     onWallet: () -> Unit = {},
     onSecurity: () -> Unit = {},
     onHelp: () -> Unit = {},
 ) {
+    val state by viewModel.state.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
 
     Column(
@@ -62,12 +66,19 @@ fun SettingsScreen(
                 .statusBarsPadding()
                 .padding(horizontal = 24.dp, vertical = 24.dp),
         ) {
-            Text(
-                text = "Settings",
-                style = MaterialTheme.typography.headlineMedium,
-                color = TranzoColors.TextOnDark,
-                fontWeight = FontWeight.Bold,
-            )
+                Text(
+                    text = state.user?.displayName ?: "Settings",
+                    style = MaterialTheme.typography.headlineMedium,
+                    color = TranzoColors.TextOnDark,
+                    fontWeight = FontWeight.Bold,
+                )
+                if (state.user != null) {
+                    Text(
+                        text = state.user?.email ?: "",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TranzoColors.TextOnDarkMuted,
+                    )
+                }
         }
 
         // ── Menu Items ──────────────────────────────────────────
@@ -84,7 +95,9 @@ fun SettingsScreen(
             SettingsMenuItem(
                 icon = Icons.Outlined.AccountBalanceWallet,
                 label = "Wallet",
-                subtitle = "Address, backup, export keys",
+                subtitle = state.user?.smartAccount?.let { 
+                    "${it.take(6)}...${it.takeLast(4)}" 
+                } ?: "Address, backup, export keys",
                 onClick = onWallet,
             )
 

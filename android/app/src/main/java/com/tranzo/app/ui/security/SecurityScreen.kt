@@ -16,6 +16,9 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.theme.TranzoColors
+import androidx.hilt.navigation.compose.hiltViewModel
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.launch
 
 /**
  * Security & Recovery screen.
@@ -29,11 +32,10 @@ import com.tranzo.app.ui.theme.TranzoColors
  */
 @Composable
 fun SecurityScreen(
+    viewModel: SecurityViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
 ) {
-    var biometricEnabled by remember { mutableStateOf(true) }
-    var transactionLockEnabled by remember { mutableStateOf(true) }
-    var autoLockEnabled by remember { mutableStateOf(true) }
+    val state by viewModel.state.collectAsState()
 
     Column(
         modifier = Modifier
@@ -122,24 +124,24 @@ fun SecurityScreen(
                 icon = Icons.Outlined.Fingerprint,
                 title = "Biometric Login",
                 subtitle = "Use fingerprint or face to unlock",
-                checked = biometricEnabled,
-                onCheckedChange = { biometricEnabled = it },
+                checked = state.isBiometricEnabled,
+                onCheckedChange = { viewModel.setBiometricEnabled(it) },
             )
 
             SecurityToggleRow(
                 icon = Icons.Outlined.Lock,
                 title = "Transaction Lock",
                 subtitle = "Require biometric for every transfer",
-                checked = transactionLockEnabled,
-                onCheckedChange = { transactionLockEnabled = it },
+                checked = state.isTransactionLockEnabled,
+                onCheckedChange = { viewModel.setTransactionLockEnabled(it) },
             )
 
             SecurityToggleRow(
                 icon = Icons.Outlined.Timer,
                 title = "Auto-Lock",
                 subtitle = "Lock after 5 minutes of inactivity",
-                checked = autoLockEnabled,
-                onCheckedChange = { autoLockEnabled = it },
+                checked = state.isAutoLockEnabled,
+                onCheckedChange = { viewModel.setAutoLockEnabled(it) },
             )
 
             Spacer(modifier = Modifier.height(24.dp))

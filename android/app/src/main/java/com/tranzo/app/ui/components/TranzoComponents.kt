@@ -20,6 +20,33 @@ import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
+ * Tranzo Logo — White rounded square with a black diamond.
+ * Matches the uploaded app icon design.
+ */
+@Composable
+fun TranzoLogo(
+    modifier: Modifier = Modifier,
+    size: androidx.compose.ui.unit.Dp = 48.dp,
+) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .clip(RoundedCornerShape(size * 0.22f))
+            .background(TranzoColors.White)
+            .padding(size * 0.25f),
+        contentAlignment = Alignment.Center
+    ) {
+        Box(
+            modifier = Modifier
+                .fillMaxSize()
+                .rotate(45f)
+                .clip(RoundedCornerShape(size * 0.05f))
+                .background(TranzoColors.PrimaryBlack)
+        )
+    }
+}
+
+/**
  * Primary CTA — Full-width pill button.
  */
 @Composable

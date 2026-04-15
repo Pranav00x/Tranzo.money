@@ -66,42 +66,22 @@ fun SplashScreen(
             .systemBarsPadding(),
     ) {
         // Centered logo + wordmark
-        Row(
+        Column(
             modifier = Modifier.align(Alignment.Center),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.Center
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // Squircle container
-            Box(
+            TranzoLogo(
+                size = 120.dp,
                 modifier = Modifier
                     .scale(logoScale.value)
                     .alpha(logoAlpha.value)
-                    .size(72.dp)
-                    .shadow(
-                        elevation = 4.dp, 
-                        shape = RoundedCornerShape(20.dp),
-                        spotColor = Color.Black.copy(alpha = 0.05f)
-                    )
-                    .background(TranzoColors.White, RoundedCornerShape(20.dp)),
-                contentAlignment = Alignment.Center
-            ) {
-                // Black Diamond
-                Box(
-                    modifier = Modifier
-                        .size(30.dp)
-                        .rotate(45f)
-                        .background(TranzoColors.PrimaryBlack, RoundedCornerShape(4.dp))
-                )
-            }
+            )
+            
+            Spacer(modifier = Modifier.height(32.dp))
 
-            Spacer(modifier = Modifier.width(20.dp))
-
-            // Wordmark
             Text(
                 text = "Tranzo",
-                modifier = Modifier
-                    .alpha(wordmarkAlpha.value)
-                    .padding(bottom = 2.dp), // Tiny lift to match diamond's visual center
+                modifier = Modifier.alpha(wordmarkAlpha.value),
                 color = TranzoColors.PrimaryBlack,
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
