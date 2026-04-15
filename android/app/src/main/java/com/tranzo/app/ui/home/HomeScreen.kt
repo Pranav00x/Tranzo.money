@@ -71,6 +71,7 @@ fun HomeScreen(
     onOrderCard: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
+    val hasCard = true // Local flag for UI state
     
     val quickActions = listOf(
         QuickAction("Send", Icons.Outlined.ArrowOutward, onSend),
@@ -84,7 +85,7 @@ fun HomeScreen(
             symbol = balance.symbol,
             name = balance.symbol, // Use symbol as name if full name not in TokenBalance
             balance = balance.formatted,
-            price = "$${balance.formatted}", // Placeholder for price
+            usdValue = "$${balance.formatted}", // Corrected parameter name
             change = "0.00%", // Placeholder
             isPositive = true
         )
