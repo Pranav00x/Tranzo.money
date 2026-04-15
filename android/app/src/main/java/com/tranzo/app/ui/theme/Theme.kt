@@ -8,7 +8,7 @@ private val TranzoColorScheme = lightColorScheme(
     primary = TranzoColors.PrimaryBlack,
     onPrimary = TranzoColors.White,
     primaryContainer = TranzoColors.PaleTeal,
-    onPrimaryContainer = TranzoColors.PrimaryBlackDark,
+    onPrimaryContainer = TranzoColors.DarkGray,
 
     secondary = TranzoColors.LightTeal,
     onSecondary = TranzoColors.White,
