@@ -20,6 +20,8 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.tranzo.app.ui.theme.TranzoColors
+import androidx.compose.runtime.collectAsState
+import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -33,11 +35,13 @@ import kotlinx.coroutines.launch
  */
 @Composable
 fun PinScreen(
+    viewModel: SecurityViewModel = hiltViewModel(),
     mode: PinMode = PinMode.ENTER,
     onSuccess: (String) -> Unit = {},
     onBack: () -> Unit = {},
     onUseBiometric: (() -> Unit)? = null,
 ) {
+    val securityState by viewModel.state.collectAsState()
     var pin by remember { mutableStateOf("") }
     var confirmPin by remember { mutableStateOf("") }
     var isConfirming by remember { mutableStateOf(false) }
@@ -62,6 +66,7 @@ fun PinScreen(
                         // Validate confirm
                         if (pin == confirmPin) {
                             delay(200)
+                            viewModel.setPin(pin)
                             onSuccess(pin)
                         } else {
                             showError = true
@@ -74,9 +79,14 @@ fun PinScreen(
                 }
                 PinMode.ENTER -> {
                     delay(200)
-                    // TODO: Replace with real validation logic
-                    // For mock, accept any 4 digits or logic. Let's just pass back for ViewModel to handle.
-                    onSuccess(pin)
+                    if (viewModel.validatePin(pin)) {
+                        onSuccess(pin)
+                    } else {
+                        showError = true
+                        delay(1000)
+                        pin = ""
+                        showError = false
+                    }
                 }
             }
         }

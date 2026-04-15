@@ -104,7 +104,7 @@ fun CardScreen(
                 // ── Virtual Card Display ─────────────────────────
                 CardVisual(
                     card = state.card,
-                    cardholderName = "USER" // TODO: Get from auth state
+                    cardholderName = state.user?.displayName ?: "User"
                 )
 
                 Spacer(modifier = Modifier.height(24.dp))

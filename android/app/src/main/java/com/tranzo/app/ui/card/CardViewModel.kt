@@ -41,6 +41,7 @@ data class CardUiState(
     val transactions: List<CardTransaction> = emptyList(),
     val isOrdering: Boolean = false,
     val orderSuccess: Boolean = false,
+    val user: UserResponse? = null,
     val error: String? = null,
 )
 
@@ -57,8 +58,18 @@ class CardViewModel @Inject constructor(
     }
 
     fun loadData() {
+        loadUser()
         loadCard()
         loadTransactions()
+    }
+
+    fun loadUser() {
+        viewModelScope.launch {
+            try {
+                val user = api.getMe()
+                _state.value = _state.value.copy(user = user)
+            } catch (_: Exception) {}
+        }
     }
 
     fun loadCard() {
