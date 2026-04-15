@@ -200,7 +200,7 @@ class MainActivity : ComponentActivity() {
                                 tokenSymbol = token,
                                 amount = amount,
                                 onConfirm = { /* call API */ },
-                                onCancel = {
+                                onBack = {
                                     navController.navigate(Screen.Home.route) {
                                         popUpTo(Screen.Home.route) { inclusive = false }
                                     }
