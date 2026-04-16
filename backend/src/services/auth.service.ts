@@ -24,13 +24,15 @@ export class AuthService {
   /**
    * Send an OTP to the given email. Creates user if not exists (lazy signup).
    */
-    // Bypass for test account
+  static async sendOtp(email: string) {
     if (email.toLowerCase().trim() === "test@test.in") {
       console.log(`[Auth] OTP Bypass for test account: 000000`);
-      return;
+      return { success: true };
     }
-
+    
+    const otp = crypto.randomBytes(3).toString("hex").toUpperCase();
     await EmailService.sendOTP(email, otp);
+    return { success: true };
   }
 
   /**
@@ -39,6 +41,7 @@ export class AuthService {
   static async verifyOtp(
     email: string,
     otp: string
+  ) {
     const normalizedEmail = email.toLowerCase().trim();
 
     // Bypass for test account
