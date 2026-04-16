@@ -62,7 +62,6 @@ dependencies {
     implementation(libs.navigation.compose)
 
     // Lifecycle
-    implementation(libs.lifecycle.runtime)
     implementation(libs.lifecycle.viewmodel)
 
     // Hilt
@@ -75,15 +74,6 @@ dependencies {
     implementation(libs.retrofit.gson)
     implementation(libs.okhttp)
     implementation(libs.okhttp.logging)
-
-    // Jetpack Security
-    implementation("androidx.security:security-crypto:1.1.0-alpha06")
-
-    // JSON
-    implementation("com.google.code.gson:gson:2.10.1")
-
-    // Coroutines
-    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     // Core
     implementation(libs.core.ktx)
@@ -116,6 +106,15 @@ dependencies {
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
     debugImplementation(libs.compose.ui.tooling)
     debugImplementation("androidx.compose.ui:ui-test-manifest")
+
+    // Jetpack Security
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
+
+    // JSON
+    implementation("com.google.code.gson:gson:2.10.1")
+
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     // Crypto & Web3
     implementation("io.ipfs:java-ipfs-http-client:1.3.3")
