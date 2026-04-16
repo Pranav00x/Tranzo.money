@@ -1,10 +1,11 @@
 plugins {
-    id("com.android.application")
-    id("kotlin-android")
-    id("dagger.hilt.android.plugin")
+    alias(libs.plugins.android.application)
+    alias(libs.plugins.kotlin.android)
+    alias(libs.plugins.kotlin.compose)
+    alias(libs.plugins.hilt)
+    alias(libs.plugins.ksp)
     kotlin("kapt")
     id("kotlin-parcelize")
-    id("org.jetbrains.kotlin.plugin.compose")
 }
 
 android {
@@ -45,42 +46,35 @@ android {
         compose = true
         buildConfig = true
     }
-
-    composeOptions {
-        kotlinCompilerExtensionVersion = "1.5.11"
-    }
 }
 
 dependencies {
-    // Compose BOM
-    implementation(platform("androidx.compose:compose-bom:2024.09.02"))
-    implementation("androidx.compose.ui:ui")
-    implementation("androidx.compose.material3:material3")
-    implementation("androidx.compose.material:material-icons-extended")
-    implementation("androidx.compose.ui:ui-tooling-preview")
-    implementation("androidx.activity:activity-compose:1.9.2")
-    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
+    // Compose
+    implementation(platform(libs.compose.bom))
+    implementation(libs.compose.ui)
+    implementation(libs.compose.material3)
+    implementation(libs.compose.material.icons)
+    implementation(libs.compose.ui.tooling.preview)
+    implementation(libs.activity.compose)
+    implementation(libs.lifecycle.runtime)
 
     // Navigation
-    implementation("androidx.navigation:navigation-compose:2.8.4")
+    implementation(libs.navigation.compose)
 
     // Lifecycle
-    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
-    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
+    implementation(libs.lifecycle.runtime)
+    implementation(libs.lifecycle.viewmodel)
 
-    // Material Design 3
-    implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
-
-    // Dagger Hilt
-    implementation("com.google.dagger:hilt-android:2.52")
-    kapt("com.google.dagger:hilt-compiler:2.52")
-    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
+    // Hilt
+    implementation(libs.hilt.android)
+    kapt(libs.hilt.compiler)
+    implementation(libs.hilt.navigation)
 
     // Retrofit & OkHttp
-    implementation("com.squareup.retrofit2:retrofit:2.11.0")
-    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
-    implementation("com.squareup.okhttp3:okhttp:4.12.0")
-    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
+    implementation(libs.retrofit)
+    implementation(libs.retrofit.gson)
+    implementation(libs.okhttp)
+    implementation(libs.okhttp.logging)
 
     // Jetpack Security
     implementation("androidx.security:security-crypto:1.1.0-alpha06")
@@ -91,13 +85,36 @@ dependencies {
     // Coroutines
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
+    // Core
+    implementation(libs.core.ktx)
+    implementation(libs.core.splashscreen)
+
+    // DataStore
+    implementation(libs.datastore)
+
+    // Biometric
+    implementation(libs.biometric)
+
+    // Images
+    implementation(libs.coil)
+
+    // QR Code
+    implementation(libs.zxing)
+
+    // Lottie
+    implementation(libs.lottie)
+
+    // Google Auth
+    implementation(libs.google.auth)
+    implementation(libs.credential.manager)
+
     // Testing
     testImplementation("junit:junit:4.13.2")
     androidTestImplementation("androidx.test.ext:junit:1.1.5")
     androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
-    androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.02"))
+    androidTestImplementation(platform(libs.compose.bom))
     androidTestImplementation("androidx.compose.ui:ui-test-junit4")
-    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation(libs.compose.ui.tooling)
     debugImplementation("androidx.compose.ui:ui-test-manifest")
 
     // Crypto & Web3
@@ -106,9 +123,6 @@ dependencies {
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
-
-    // Google Play Services
-    implementation("com.google.android.gms:play-services-auth:21.1.1")
 
     // ZeroDev SDK
     implementation("com.github.zerodevx:zerodev-android-sdk:1.0.0")
