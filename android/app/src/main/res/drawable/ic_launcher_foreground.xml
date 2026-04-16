@@ -4,13 +4,13 @@
     android:height="108dp"
     android:viewportWidth="108"
     android:viewportHeight="108">
-    <group
-        android:pivotX="54"
-        android:pivotY="54"
-        android:rotation="45">
-        <!-- A rounded square centered in the container, rotated 45 degrees to make a diamond -->
-        <path
-            android:fillColor="#000000"
-            android:pathData="M34,34 h40 a8,8 0 0 1 8,8 v40 a8,8 0 0 1 -8,8 h-40 a8,8 0 0 1 -8,-8 v-40 a8,8 0 0 1 8,-8 z" />
-    </group>
+  <path
+      android:pathData="M24,54C24,36.3 36.3,24 54,24C71.7,24 84,36.3 84,54C84,71.7 71.7,84 54,84C36.3,84 24,71.7 24,54Z"
+      android:fillColor="#000000"/>
+  <path
+      android:pathData="M54,36C44.1,36 36,44.1 36,54C36,63.9 44.1,72 54,72C63.9,72 72,63.9 72,54C72,44.1 63.9,36 54,36ZM54,66C46.3,66 42,61.7 42,54C42,46.3 46.3,42 54,42C61.7,42 66,46.3 66,54C66,61.7 61.7,66 54,66Z"
+      android:fillColor="#FFFFFF"/>
+  <path
+      android:pathData="M48,54L54,48L60,54L54,60Z"
+      android:fillColor="#000000"/>
 </vector>
