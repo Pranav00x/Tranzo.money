@@ -15,40 +15,28 @@ import swapRoutes from "./routes/swap.routes.js";
 
 const app = express();
 
-// ─── Global Middleware ──────────────────────────────────────────
-
 app.use(helmet());
 app.use(cors());
 app.use(express.json());
 app.use(generalLimiter);
 
-// ─── Health Check ───────────────────────────────────────────────
-
 app.get("/health", (_req, res) => {
   res.json({ status: "ok", version: "1.0.0" });
 });
 
-// ─── Auth Routes (rate limited) ─────────────────────────────────
-
 app.use("/auth", authLimiter, authRoutes);
-
-// ─── Protected Routes ───────────────────────────────────────────
-
 app.use("/balances", requireAuth, balanceRoutes);
 app.use("/transfers", requireAuth, transferRoutes);
 app.use("/dripper", requireAuth, dripperRoutes);
 app.use("/user", requireAuth, settingsRoutes);
-app.use("/card", cardRoutes);       // Has own auth + public webhooks
+app.use("/card", cardRoutes);
 app.use("/swap", requireAuth, swapRoutes);
-
-// ─── Error Handler ──────────────────────────────────────────────
 
 app.use(errorHandler);
 
-// ─── Start Server ───────────────────────────────────────────────
-
-app.listen(ENV.PORT, () => {
-  console.log(`\n  🟢 Tranzo Backend running on port ${ENV.PORT}`);
+const PORT = process.env.PORT || ENV.PORT;
+app.listen(PORT, () => {
+  console.log(`\n  🟢 Tranzo Backend running on port ${PORT}`);
   console.log(`  📡 Chain: ${ENV.DEFAULT_CHAIN_ID}`);
   console.log(`  🌍 Environment: ${ENV.NODE_ENV}\n`);
 });
