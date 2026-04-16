@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
-        buildConfigField("String", "BASE_URL", "\"https://api.tranzo.money\"")
+        buildConfigField("String", "BASE_URL", ""https://favorably-smoking-giddy.ngrok-free.dev")")
     }
 
     buildTypes {
@@ -27,7 +27,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"http://10.0.2.2:3000\"")
+            buildConfigField("String", "BASE_URL", ""https://favorably-smoking-giddy.ngrok-free.dev")")
         }
     }
 
