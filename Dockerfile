@@ -2,13 +2,13 @@ FROM node:20-alpine
 
 WORKDIR /app
 
-# Copy backend source structure
-COPY backend/dist ./dist
-COPY backend/prisma ./prisma
+# Copy backend files
 COPY backend/package*.json ./
+COPY backend/prisma ./prisma
+COPY backend/dist ./dist
 
-# Install production dependencies only
-RUN npm ci --omit=dev
+# Install dependencies and generate Prisma client
+RUN npm ci --omit=dev && npx prisma generate
 
 EXPOSE 3000
 
