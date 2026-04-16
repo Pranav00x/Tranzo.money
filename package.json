@@ -1,7 +1,0 @@
-{
-  "name": "tranzo-monorepo",
-  "private": true,
-  "workspaces": [
-    "backend"
-  ]
-}

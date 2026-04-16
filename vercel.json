@@ -1,6 +1,0 @@
-{
-  "buildCommand": "cd backend && npm run build",
-  "outputDirectory": "backend/dist",
-  "devCommand": "cd backend && npm run dev",
-  "installCommand": "npm install"
-}
