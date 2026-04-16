@@ -19,7 +19,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
-        buildConfigField("String", "BASE_URL", "\"https://favorably-smoking-giddy.ngrok-free.dev\"")
+        buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
     }
 
     buildTypes {
@@ -29,7 +29,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-            buildConfigField("String", "BASE_URL", "\"https://favorably-smoking-giddy.ngrok-free.dev\"")
+            buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
         }
     }
 
