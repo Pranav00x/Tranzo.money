@@ -1,7 +1,7 @@
 {
   "name": "tranzo-backend",
   "version": "1.0.0",
-  "description": "Tranzo Backend — Openfort-powered wallet API",
+  "description": "Tranzo Backend \u00e2\u20ac\u201d Openfort-powered wallet API",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -11,7 +11,8 @@
     "db:generate": "prisma generate",
     "db:push": "prisma db push",
     "db:migrate": "prisma migrate dev",
-    "db:studio": "prisma studio"
+    "db:studio": "prisma studio",
+    "postinstall": "prisma generate"
   },
   "dependencies": {
     "@openfort/openfort-node": "^0.7.0",
