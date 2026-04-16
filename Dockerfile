@@ -1,17 +1,13 @@
 FROM node:20-alpine
 
-WORKDIR /app/backend
+WORKDIR /app
 
-# Copy dist folder (pre-compiled code)
+# Copy backend source structure
 COPY backend/dist ./dist
-
-# Copy Prisma schema (required for runtime)
 COPY backend/prisma ./prisma
-
-# Copy package files
 COPY backend/package*.json ./
 
-# Install only production dependencies + generate Prisma client
+# Install production dependencies only
 RUN npm ci --omit=dev
 
 EXPOSE 3000
