@@ -1,0 +1,23 @@
+import "dotenv/config";
+export declare const ENV: {
+    PORT?: number;
+    NODE_ENV?: "development" | "production" | "test";
+    DATABASE_URL?: string;
+    REDIS_URL?: string;
+    JWT_SECRET?: string;
+    JWT_REFRESH_SECRET?: string;
+    OPENFORT_API_KEY?: string;
+    OPENFORT_POLICY_ID?: string;
+    OPENFORT_CONTRACT_ID?: string;
+    SMTP_HOST?: string;
+    SMTP_PORT?: number;
+    SMTP_USER?: string;
+    SMTP_PASS?: string;
+    EMAIL_FROM?: string;
+    GOOGLE_CLIENT_ID?: string;
+    ZERODEV_PROJECT_ID?: string;
+    ZERODEV_RPC_URL?: string;
+    POLYGON_RPC_URL?: string;
+    BASE_RPC_URL?: string;
+    DEFAULT_CHAIN_ID?: number;
+};
