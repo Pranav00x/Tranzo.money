@@ -1,5 +1,6 @@
 package com.tranzo.app.ui.home
 
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tranzo.app.data.api.TranzoApi
@@ -33,41 +34,45 @@ class HomeViewModel @Inject constructor(
 
     fun loadDashboard() {
         viewModelScope.launch {
-            _state.value = _state.value.copy(isLoading = true)
+            _state.value = _state.value.copy(isLoading = true, error = null)
             try {
-                // Load user and balances in parallel
-                val userDeferred = viewModelScope.launch {
-                    try {
-                        val user = api.getMe()
-                        _state.value = _state.value.copy(user = user)
-                    } catch (_: Exception) { }
+                // Load user
+                try {
+                    val user = api.getMe()
+                    _state.value = _state.value.copy(user = user)
+                    Log.d("HomeViewModel", "Loaded user: ${user.email}")
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Failed to load user", e)
+                    _state.value = _state.value.copy(error = "Failed to load user: ${e.message}")
                 }
 
-                val balancesDeferred = viewModelScope.launch {
-                    try {
-                        val response = api.getBalances()
-                        val total = response.balances.sumOf {
-                            try {
-                                it.formatted.toDouble()
-                            } catch (e: Exception) {
-                                0.0
-                            }
+                // Load balances
+                try {
+                    val response = api.getBalances()
+                    val total = response.balances.sumOf {
+                        try {
+                            it.formatted.toDoubleOrNull() ?: 0.0
+                        } catch (e: Exception) {
+                            0.0
                         }
-                        _state.value = _state.value.copy(
-                            balances = response.balances,
-                            totalUsdBalance = total,
-                        )
-                    } catch (_: Exception) { }
+                    }
+                    _state.value = _state.value.copy(
+                        balances = response.balances,
+                        totalUsdBalance = total,
+                    )
+                    Log.d("HomeViewModel", "Loaded ${response.balances.size} balances")
+                } catch (e: Exception) {
+                    Log.e("HomeViewModel", "Failed to load balances", e)
+                    // Don't fail completely, just show empty balances
+                    _state.value = _state.value.copy(balances = emptyList())
                 }
-
-                userDeferred.join()
-                balancesDeferred.join()
 
                 _state.value = _state.value.copy(isLoading = false)
             } catch (e: Exception) {
+                Log.e("HomeViewModel", "Unexpected error in loadDashboard", e)
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    error = e.message,
+                    error = "Unexpected error: ${e.message}",
                 )
             }
         }
