@@ -5,10 +5,13 @@ WORKDIR /app
 # Copy entire repo
 COPY . .
 
-# Install dependencies and build backend
+# Install dependencies in backend
 WORKDIR /app/backend
-RUN npm install --production=false
+RUN npm ci --production=false
 RUN npm run build
 
-# Start backend
-CMD ["npm", "start"]
+# Expose port (Railway will override with PORT env var)
+EXPOSE 3000
+
+# Start backend  
+CMD ["node", "dist/index.js"]
