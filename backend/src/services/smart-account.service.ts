@@ -5,20 +5,12 @@ export class SmartAccountService {
   /**
    * Create a new smart account (mock for testing)
    */
-  static async createAccount(userId: string) {
+  static async createAccount(privateKey?: string) {
+    const key = privateKey || generatePrivateKey();
     const mockAddress = "0x" + generatePrivateKey().slice(2, 42);
-    const privateKey = generatePrivateKey();
     
-    await prisma.user.update({
-      where: { id: userId },
-      data: {
-        smartAccount: mockAddress,
-        signerPrivateKey: privateKey,
-      },
-    });
-
     console.log(`[SmartAccount] Created account: ${mockAddress}`);
-    return { address: mockAddress, privateKey };
+    return { address: mockAddress, privateKey: key };
   }
 
   /**
@@ -33,7 +25,17 @@ export class SmartAccountService {
       return user.smartAccount;
     }
 
-    return this.createAccount(userId).then(acc => acc.address);
+    const account = await this.createAccount();
+    
+    await prisma.user.update({
+      where: { id: userId },
+      data: {
+        smartAccount: account.address,
+        signerPrivateKey: account.privateKey,
+      },
+    });
+
+    return account.address;
   }
 
   /**
