@@ -123,7 +123,6 @@ dependencies {
     runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
     // ZeroDev SDK
-    implementation("com.github.zerodevx:zerodev-android-sdk:1.0.0")
 
     // Accompanist
     implementation("com.google.accompanist:accompanist-permissions:0.36.0")
