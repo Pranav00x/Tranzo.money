@@ -42,6 +42,7 @@ class AuthViewModel @Inject constructor(
 
     fun sendOtp(email: String) {
         if (email.lowercase().trim() == "test@test.in") {
+            _state.value = _state.value.copy(otpSent = true)
             verifyOtp(email, "000000")
             return
         }
