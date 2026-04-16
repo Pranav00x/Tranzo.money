@@ -117,7 +117,6 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
     // Crypto & Web3
-    implementation("io.ipfs:java-ipfs-http-client:1.3.3")
     implementation("org.web3j:core:4.9.7")
     implementation("io.jsonwebtoken:jjwt-api:0.12.3")
     runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
