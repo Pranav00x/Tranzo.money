@@ -1,9 +1,9 @@
 plugins {
-    alias(libs.plugins.android.application)
-    alias(libs.plugins.kotlin.android)
-    alias(libs.plugins.kotlin.compose)
-    alias(libs.plugins.hilt)
-    alias(libs.plugins.ksp)
+    id("com.android.application")
+    id("kotlin-android")
+    id("dagger.hilt.android.plugin")
+    kotlin("kapt")
+    id("kotlin-parcelize")
 }
 
 android {
@@ -17,7 +17,7 @@ android {
         versionCode = 1
         versionName = "1.0.0"
 
-        buildConfigField("String", "BASE_URL", ""https://favorably-smoking-giddy.ngrok-free.dev")")
+        buildConfigField("String", "BASE_URL", "\"https://favorably-smoking-giddy.ngrok-free.dev\"")
     }
 
     buildTypes {
@@ -27,7 +27,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
-            buildConfigField("String", "BASE_URL", ""https://favorably-smoking-giddy.ngrok-free.dev")")
+            buildConfigField("String", "BASE_URL", "\"https://favorably-smoking-giddy.ngrok-free.dev\"")
         }
     }
 
@@ -44,64 +44,74 @@ android {
         compose = true
         buildConfig = true
     }
+
+    composeOptions {
+        kotlinCompilerExtensionVersion = "1.5.11"
+    }
 }
 
 dependencies {
     // Compose BOM
-    val composeBom = platform(libs.compose.bom)
-    implementation(composeBom)
-    implementation(libs.compose.ui)
-    implementation(libs.compose.ui.graphics)
-    implementation(libs.compose.ui.tooling.preview)
-    implementation(libs.compose.material3)
-    implementation(libs.compose.material.icons)
-    implementation(libs.compose.animation)
-    debugImplementation(libs.compose.ui.tooling)
-
-    // Core
-    implementation(libs.core.ktx)
-    implementation(libs.activity.compose)
-    implementation(libs.core.splashscreen)
+    implementation(platform("androidx.compose:compose-bom:2024.09.02"))
+    implementation("androidx.compose.ui:ui")
+    implementation("androidx.compose.material3:material3")
+    implementation("androidx.compose.material:material-icons-extended")
+    implementation("androidx.compose.ui:ui-tooling-preview")
+    implementation("androidx.activity:activity-compose:1.9.2")
+    implementation("androidx.lifecycle:lifecycle-runtime-compose:2.8.7")
 
     // Navigation
-    implementation(libs.navigation.compose)
+    implementation("androidx.navigation:navigation-compose:2.8.4")
 
     // Lifecycle
-    implementation(libs.lifecycle.runtime)
-    implementation(libs.lifecycle.viewmodel)
+    implementation("androidx.lifecycle:lifecycle-runtime-ktx:2.8.7")
+    implementation("androidx.lifecycle:lifecycle-viewmodel-ktx:2.8.7")
 
-    // Hilt DI
-    implementation(libs.hilt.android)
-    ksp(libs.hilt.compiler)
-    implementation(libs.hilt.navigation)
+    // Material Design 3
+    implementation("androidx.compose.material3:material3-window-size-class:1.2.1")
 
-    // Network
-    implementation(libs.retrofit)
-    implementation(libs.retrofit.gson)
-    implementation(libs.okhttp)
-    implementation(libs.okhttp.logging)
+    // Dagger Hilt
+    implementation("com.google.dagger:hilt-android:2.52")
+    kapt("com.google.dagger:hilt-compiler:2.52")
+    implementation("androidx.hilt:hilt-navigation-compose:1.2.0")
 
-    // Room
-    implementation(libs.room.runtime)
-    implementation(libs.room.ktx)
-    ksp(libs.room.compiler)
+    // Retrofit & OkHttp
+    implementation("com.squareup.retrofit2:retrofit:2.11.0")
+    implementation("com.squareup.retrofit2:converter-gson:2.11.0")
+    implementation("com.squareup.okhttp3:okhttp:4.12.0")
+    implementation("com.squareup.okhttp3:logging-interceptor:4.12.0")
 
-    // DataStore
-    implementation(libs.datastore)
+    // Jetpack Security
+    implementation("androidx.security:security-crypto:1.1.0-alpha06")
 
-    // Biometric
-    implementation(libs.biometric)
+    // JSON
+    implementation("com.google.code.gson:gson:2.10.1")
 
-    // Images
-    implementation(libs.coil)
+    // Coroutines
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-android:1.7.1")
 
-    // QR Code
-    implementation(libs.zxing)
+    // Testing
+    testImplementation("junit:junit:4.13.2")
+    androidTestImplementation("androidx.test.ext:junit:1.1.5")
+    androidTestImplementation("androidx.test.espresso:espresso-core:3.5.1")
+    androidTestImplementation(platform("androidx.compose:compose-bom:2024.09.02"))
+    androidTestImplementation("androidx.compose.ui:ui-test-junit4")
+    debugImplementation("androidx.compose.ui:ui-tooling")
+    debugImplementation("androidx.compose.ui:ui-test-manifest")
 
-    // Lottie
-    implementation(libs.lottie)
+    // Crypto & Web3
+    implementation("io.ipfs:java-ipfs-http-client:1.3.3")
+    implementation("org.web3j:core:4.9.7")
+    implementation("io.jsonwebtoken:jjwt-api:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.3")
+    runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.3")
 
-    // Google Auth
-    implementation(libs.google.auth)
-    implementation(libs.credential.manager)
+    // Google Play Services
+    implementation("com.google.android.gms:play-services-auth:21.1.1")
+
+    // ZeroDev SDK
+    implementation("com.github.zerodevx:zerodev-android-sdk:1.0.0")
+
+    // Accompanist
+    implementation("com.google.accompanist:accompanist-permissions:0.36.0")
 }
