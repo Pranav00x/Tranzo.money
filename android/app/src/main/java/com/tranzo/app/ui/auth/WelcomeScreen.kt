@@ -55,12 +55,15 @@ fun WelcomeScreen(
     onLoginWithAnotherNumber: () -> Unit = {},
     onCreateWallet: () -> Unit = {},
     onPasskeyLogin: () -> Unit = {},
+    onBiometricLogin: () -> Unit = {},
+    onGoogleLogin: () -> Unit = {},
     onImportWallet: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
     var email by remember { mutableStateOf("") }
     var acceptedTerms by remember { mutableStateOf(true) }
     var submittedEmail by remember { mutableStateOf("") }
+    var showEmailOption by remember { mutableStateOf(false) }
 
     LaunchedEffect(state.otpSent, submittedEmail) {
         if (state.otpSent && submittedEmail.isNotBlank()) {
@@ -84,7 +87,7 @@ fun WelcomeScreen(
             Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(210.dp)
+                    .height(180.dp)
                     .background(
                         brush = Brush.linearGradient(
                             colors = listOf(Color(0xFF050505), Color(0xFF202020), Color(0xFF050505))
@@ -100,16 +103,16 @@ fun WelcomeScreen(
                             .padding(horizontal = 10.dp, vertical = 4.dp),
                     ) {
                         Text(
-                            text = "Tranzo Secure Login",
+                            text = "🔐 Non-Custodial Wallet",
                             style = MaterialTheme.typography.labelMedium,
                             color = TranzoColors.White,
                         )
                     }
 
-                    Spacer(modifier = Modifier.height(16.dp))
+                    Spacer(modifier = Modifier.height(12.dp))
 
                     Text(
-                        text = if (isReturningUser) "Welcome Back" else "Email Verification",
+                        text = if (isReturningUser) "Welcome Back" else "Secure Login",
                         style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.SemiBold,
                         color = TranzoColors.White,
@@ -119,11 +122,11 @@ fun WelcomeScreen(
 
                     Text(
                         text = if (isReturningUser) {
-                            "Continue with your account details."
+                            "You control your wallet. Choose your login method."
                         } else {
-                            "Enter your email and we will send a one-time passcode."
+                            "Choose how you want to secure your account."
                         },
-                        style = MaterialTheme.typography.bodyMedium,
+                        style = MaterialTheme.typography.bodySmall,
                         color = TranzoColors.White.copy(alpha = 0.86f),
                     )
                 }
@@ -141,7 +144,7 @@ fun WelcomeScreen(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(18.dp),
-                    verticalArrangement = Arrangement.spacedBy(14.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     if (isReturningUser) {
                         ReadOnlyField(label = "Name", value = userName.ifBlank { "-" })
@@ -156,7 +159,53 @@ fun WelcomeScreen(
                             text = "Use Another Number",
                             onClick = onLoginWithAnotherNumber,
                         )
+                    } else if (!showEmailOption) {
+                        // Auth method selection
+                        Text(
+                            text = "Choose Login Method",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.SemiBold,
+                            color = TranzoColors.TextPrimary,
+                        )
+
+                        AuthMethodButton(
+                            icon = "👆",
+                            title = "Biometric",
+                            subtitle = "Face ID / Fingerprint",
+                            onClick = onBiometricLogin,
+                        )
+
+                        AuthMethodButton(
+                            icon = "🔑",
+                            title = "Passkey",
+                            subtitle = "WebAuthn / FIDO2",
+                            onClick = onPasskeyLogin,
+                        )
+
+                        AuthMethodButton(
+                            icon = "🔵",
+                            title = "Google",
+                            subtitle = "Sign in with Google",
+                            onClick = onGoogleLogin,
+                        )
+
+                        HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(vertical = 8.dp))
+
+                        AuthMethodButton(
+                            icon = "✉️",
+                            title = "Email OTP",
+                            subtitle = "One-time passcode",
+                            onClick = { showEmailOption = true },
+                        )
                     } else {
+                        // Email OTP option
+                        TranzoSecondaryButton(
+                            text = "← Back to Methods",
+                            onClick = { showEmailOption = false },
+                        )
+
+                        Spacer(modifier = Modifier.height(8.dp))
+
                         TranzoTextField(
                             value = email,
                             onValueChange = { email = it.trim() },
@@ -176,7 +225,7 @@ fun WelcomeScreen(
                             )
                             Spacer(modifier = Modifier.width(8.dp))
                             Text(
-                                text = "I authorize Tranzo to create a smart wallet account on my behalf.",
+                                text = "I authorize Tranzo to create a smart wallet on my behalf.",
                                 style = MaterialTheme.typography.bodySmall,
                                 color = TranzoColors.TextSecondary,
                                 modifier = Modifier.padding(top = 11.dp),
@@ -200,7 +249,7 @@ fun WelcomeScreen(
                         }
 
                         TranzoButton(
-                            text = "Get OTP",
+                            text = "Send OTP",
                             onClick = {
                                 val cleanEmail = email.trim()
                                 submittedEmail = cleanEmail
@@ -216,6 +265,57 @@ fun WelcomeScreen(
             Spacer(modifier = Modifier.weight(1f))
             SecurityBadges()
             Spacer(modifier = Modifier.height(16.dp))
+        }
+    }
+}
+
+@Composable
+private fun AuthMethodButton(
+    icon: String,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+) {
+    Card(
+        modifier = Modifier
+            .fillMaxWidth()
+            .height(64.dp),
+        shape = RoundedCornerShape(14.dp),
+        colors = CardDefaults.cardColors(containerColor = TranzoColors.LightGray),
+        onClick = onClick,
+    ) {
+        Row(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(horizontal = 14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.SpaceBetween,
+        ) {
+            Row(verticalAlignment = Alignment.CenterVertically) {
+                Text(
+                    text = icon,
+                    style = MaterialTheme.typography.headlineMedium,
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Column {
+                    Text(
+                        text = title,
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.TextPrimary,
+                    )
+                    Text(
+                        text = subtitle,
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TranzoColors.TextSecondary,
+                    )
+                }
+            }
+            Text(
+                text = "→",
+                style = MaterialTheme.typography.headlineSmall,
+                color = TranzoColors.TextTertiary,
+            )
         }
     }
 }

@@ -146,13 +146,13 @@ fun SettingsScreen(
             SettingsMenuItem(
                 icon = Icons.Outlined.HelpOutline,
                 label = "Help & Support",
-                subtitle = "Contact us",
+                subtitle = "Get answers and report issues",
                 onClick = onHelp,
             )
 
             SettingsMenuItem(
                 icon = Icons.Outlined.Info,
-                label = "About Tranzo",
+                label = "About",
                 subtitle = "Version 1.0.0",
             )
 
@@ -162,65 +162,30 @@ fun SettingsScreen(
             )
 
             Text(
-                text = "Contact & Legal",
-                style = MaterialTheme.typography.titleMedium,
-                fontWeight = FontWeight.Bold,
-                color = TranzoColors.TextPrimary,
-                modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp),
-            )
-
-            ContactCard(
-                title = "Founder",
-                email = "pranav@tranzo.money",
-                description = "For partnerships, press, and direct inquiries.",
-                onClick = { openEmail("pranav@tranzo.money") },
-            )
-
-            ContactCard(
-                title = "Team",
-                email = "hi@tranzo.money",
-                description = "Product questions and onboarding support.",
-                onClick = { openEmail("hi@tranzo.money") },
-            )
-
-            ContactCard(
-                title = "Legal",
-                email = "legal@tranzo.money",
-                description = "Compliance, regulatory, and legal matters.",
-                onClick = { openEmail("legal@tranzo.money") },
-            )
-
-            ContactCard(
-                title = "Security",
-                email = "security@tranzo.money",
-                description = "Report security vulnerabilities responsibly.",
-                onClick = { openEmail("security@tranzo.money") },
+                text = "Legal",
+                style = MaterialTheme.typography.labelSmall,
+                color = TranzoColors.TextTertiary,
+                modifier = Modifier.padding(horizontal = 24.dp, vertical = 12.dp),
             )
 
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 24.dp, vertical = 12.dp),
+                    .padding(horizontal = 24.dp, vertical = 8.dp),
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                OutlinedButton(
+                LegalButton(
+                    text = "Privacy",
                     onClick = { openUrl("https://www.tranzo.money/privacy") },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text("Privacy")
-                }
-                OutlinedButton(
+                )
+                LegalButton(
+                    text = "Terms",
                     onClick = { openUrl("https://www.tranzo.money/terms") },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text("Terms")
-                }
-                OutlinedButton(
+                )
+                LegalButton(
+                    text = "Manifesto",
                     onClick = { openUrl("https://www.tranzo.money/manifesto.html") },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text("Manifesto")
-                }
+                )
             }
 
             HorizontalDivider(
@@ -236,29 +201,7 @@ fun SettingsScreen(
                 onClick = { showLogoutDialog = true },
             )
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp)
-                    .padding(bottom = 100.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-            ) {
-                TextButton(onClick = {}) {
-                    Text(
-                        text = "Terms & Policies",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.TextSecondary,
-                    )
-                }
-                Text(
-                    text = "Build V1.0.0",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.TextTertiary,
-                    modifier = Modifier.padding(top = 12.dp),
-                )
-            }
+            Spacer(modifier = Modifier.height(40.dp))
         }
     }
 
@@ -402,61 +345,19 @@ private fun SettingsMenuItem(
 }
 
 @Composable
-private fun ContactCard(
-    title: String,
-    email: String,
-    description: String,
+private fun LegalButton(
+    text: String,
     onClick: () -> Unit,
 ) {
-    Surface(
+    OutlinedButton(
         onClick = onClick,
-        shape = RoundedCornerShape(16.dp),
-        color = TranzoColors.LightGray,
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(horizontal = 24.dp, vertical = 6.dp),
+            .height(36.dp),
+        shape = RoundedCornerShape(12.dp),
     ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(16.dp),
-            verticalAlignment = Alignment.Top,
-        ) {
-            Box(
-                modifier = Modifier
-                    .size(44.dp)
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(TranzoColors.PrimaryBlack),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = Icons.Outlined.Email,
-                    contentDescription = null,
-                    tint = TranzoColors.White,
-                    modifier = Modifier.size(22.dp),
-                )
-            }
-            Spacer(modifier = Modifier.width(12.dp))
-            Column {
-                Text(
-                    text = title.uppercase(),
-                    style = MaterialTheme.typography.labelMedium,
-                    color = TranzoColors.TextSecondary,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = email,
-                    style = MaterialTheme.typography.titleMedium,
-                    color = TranzoColors.TextPrimary,
-                    fontWeight = FontWeight.Bold,
-                )
-                Spacer(modifier = Modifier.height(4.dp))
-                Text(
-                    text = description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.TextSecondary,
-                )
-            }
-        }
+        Text(
+            text = text,
+            style = MaterialTheme.typography.labelSmall,
+        )
     }
 }
