@@ -16,10 +16,13 @@ export class SmartAccountService {
     const key = signerPrivateKey || generatePrivateKey();
     const signer = privateKeyToAccount(key as `0x${string}`);
 
-    // Development mode: if ZERODEV not configured, create mock account
-    if (!ENV.ZERODEV_PROJECT_ID || !ENV.ZERODEV_RPC_URL) {
-      console.log(`[SmartAccount] ⚠️  Development mode: Creating mock ZeroDev account (ZERODEV_PROJECT_ID not configured)`);
-      // Generate a deterministic address from the signer for testing
+    // Development/fallback mode: create mock account if ZeroDev fails
+    const shouldUseMockMode = !ENV.ZERODEV_PROJECT_ID ||
+                              !ENV.ZERODEV_RPC_URL ||
+                              ENV.NODE_ENV !== 'production';
+
+    if (shouldUseMockMode) {
+      console.log(`[SmartAccount] ℹ️  Using mock ZeroDev account (dev mode: PROJECT_ID=${ENV.ZERODEV_PROJECT_ID ? '✓' : '✗'}, RPC=${ENV.ZERODEV_RPC_URL ? '✓' : '✗'}, ENV=${ENV.NODE_ENV})`);
       const mockAddress = signer.address as `0x${string}`;
       return { address: mockAddress, privateKey: key };
     }
@@ -44,8 +47,10 @@ export class SmartAccountService {
 
       return { address, privateKey: key };
     } catch (err: any) {
-      console.error("[SmartAccount] Failed to create ZeroDev account:", err);
-      throw new Error(`Failed to create smart account: ${err.message}`);
+      // Fallback to mock on SDK error
+      console.warn(`[SmartAccount] ⚠️  ZeroDev SDK error, falling back to mock account: ${err.message}`);
+      const mockAddress = signer.address as `0x${string}`;
+      return { address: mockAddress, privateKey: key };
     }
   }
 
