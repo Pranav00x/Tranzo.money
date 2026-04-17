@@ -46,6 +46,7 @@ fun SettingsScreen(
     onWallet: () -> Unit = {},
     onSecurity: () -> Unit = {},
     onHelp: () -> Unit = {},
+    onContact: () -> Unit = {},
 ) {
     val state by viewModel.state.collectAsState()
     var showLogoutDialog by remember { mutableStateOf(false) }
@@ -146,8 +147,8 @@ fun SettingsScreen(
             SettingsMenuItem(
                 icon = Icons.Outlined.HelpOutline,
                 label = "Help & Support",
-                subtitle = "Get answers and report issues",
-                onClick = onHelp,
+                subtitle = "Contact us anytime",
+                onClick = onContact,
             )
 
             SettingsMenuItem(
