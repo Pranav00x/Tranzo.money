@@ -1,17 +1,17 @@
 export declare class SmartAccountService {
     /**
-     * Create a new smart account (mock for testing)
+     * Create a new ZeroDev smart account
      */
-    static createAccount(privateKey?: string): Promise<{
-        address: string;
+    static createAccount(signerPrivateKey?: string): Promise<{
+        address: any;
         privateKey: string;
     }>;
     /**
      * Get or create a ZeroDev smart account for a user.
      */
-    static getOrCreateSmartAccount(userId: string, email: string): Promise<string>;
+    static getOrCreateSmartAccount(userId: string, email: string): Promise<any>;
     /**
-     * Send a gasless transaction (mock)
+     * Send a gasless transaction via ZeroDev
      */
     static sendGaslessTransaction(userId: string, tx: any): Promise<{
         hash: string;

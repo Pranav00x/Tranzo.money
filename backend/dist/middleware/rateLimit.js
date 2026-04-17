@@ -1,4 +1,11 @@
 import rateLimit from "express-rate-limit";
+const getClientIp = (req) => {
+    const forwarded = req.headers["x-forwarded-for"];
+    if (typeof forwarded === "string") {
+        return forwarded.split(",")[0].trim();
+    }
+    return req.ip || "unknown";
+};
 /** General API rate limit: 100 req/min per IP */
 export const generalLimiter = rateLimit({
     windowMs: 60_000,
@@ -6,6 +13,11 @@ export const generalLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: "Too many requests, please try again later" },
+    keyGenerator: (req) => getClientIp(req),
+    skip: (req) => {
+        // Skip rate limiting for health checks
+        return req.path === "/health";
+    },
 });
 /** Auth endpoints rate limit: 10 req/min per IP */
 export const authLimiter = rateLimit({
@@ -14,6 +26,7 @@ export const authLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: "Too many auth attempts, please try again later" },
+    keyGenerator: (req) => getClientIp(req),
 });
 /** Sensitive operations: 5 req/min per IP */
 export const sensitiveLimiter = rateLimit({
@@ -22,5 +35,6 @@ export const sensitiveLimiter = rateLimit({
     standardHeaders: true,
     legacyHeaders: false,
     message: { error: "Rate limit exceeded for this operation" },
+    keyGenerator: (req) => getClientIp(req),
 });
 //# sourceMappingURL=rateLimit.js.map

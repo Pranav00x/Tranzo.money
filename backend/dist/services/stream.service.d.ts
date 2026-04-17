@@ -10,21 +10,7 @@ export declare class StreamService {
         startTime: Date;
         endTime: Date;
     }): Promise<{
-        stream: {
-            status: import("@prisma/client").$Enums.StreamStatus;
-            id: string;
-            createdAt: Date;
-            tokenAddress: string;
-            txHash: string | null;
-            onChainStreamId: number | null;
-            employeeAddress: string;
-            amountPerSecond: string;
-            startTime: Date;
-            endTime: Date;
-            totalWithdrawn: string;
-            employerId: string;
-            employeeId: string | null;
-        };
+        stream: any;
         intent: import("@openfort/openfort-node").TransactionIntentResponse;
     }>;
     /**
@@ -42,37 +28,9 @@ export declare class StreamService {
     /**
      * List streams for a user (as employer or employee).
      */
-    static listStreams(userId: string, role: "employer" | "employee"): Promise<{
-        status: import("@prisma/client").$Enums.StreamStatus;
-        id: string;
-        createdAt: Date;
-        tokenAddress: string;
-        txHash: string | null;
-        onChainStreamId: number | null;
-        employeeAddress: string;
-        amountPerSecond: string;
-        startTime: Date;
-        endTime: Date;
-        totalWithdrawn: string;
-        employerId: string;
-        employeeId: string | null;
-    }[]>;
+    static listStreams(userId: string, role: "employer" | "employee"): Promise<any>;
     /**
      * Get a single stream by ID.
      */
-    static getStream(streamId: string): Promise<{
-        status: import("@prisma/client").$Enums.StreamStatus;
-        id: string;
-        createdAt: Date;
-        tokenAddress: string;
-        txHash: string | null;
-        onChainStreamId: number | null;
-        employeeAddress: string;
-        amountPerSecond: string;
-        startTime: Date;
-        endTime: Date;
-        totalWithdrawn: string;
-        employerId: string;
-        employeeId: string | null;
-    }>;
+    static getStream(streamId: string): Promise<any>;
 }
