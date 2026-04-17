@@ -16,30 +16,39 @@ export class SmartAccountService {
       throw new Error("ZERODEV_PROJECT_ID and ZERODEV_RPC_URL must be configured for production");
     }
 
+    console.log(`[SmartAccount] Creating account with ProjectID: ${ENV.ZERODEV_PROJECT_ID.substring(0, 10)}...`);
+
     const key = signerPrivateKey || generatePrivateKey();
     const signer = privateKeyToAccount(key as `0x${string}`);
+    console.log(`[SmartAccount] Signer address: ${signer.address}`);
 
     try {
       // Step 1: Create public client
+      console.log(`[SmartAccount] Creating public client with RPC: ${ENV.ZERODEV_RPC_URL.substring(0, 50)}...`);
       const publicClient = createPublicClient({
         chain: baseSepolia,
         transport: http(ENV.ZERODEV_RPC_URL),
       });
+      console.log(`[SmartAccount] ✓ Public client created`);
 
       // Step 2: Create kernel account
+      console.log(`[SmartAccount] Creating kernel account...`);
       // @ts-ignore - ZeroDev SDK types compatibility
       const account = await createKernelAccount(publicClient, {
         signer,
         entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // ERC-4337 EntryPoint v0.6
       });
+      console.log(`[SmartAccount] ✓ Kernel account created`);
 
       const address = account.address;
-      console.log(`[SmartAccount] ✅ Created ZeroDev Kernel Account: ${address}`);
+      console.log(`[SmartAccount] ✅ Smart Account Address: ${address}`);
       console.log(`[SmartAccount] Chain: Base Sepolia (84532), Signer: ${signer.address}`);
 
       return { address, privateKey: key };
     } catch (err: any) {
-      console.error("[SmartAccount] ❌ Failed to create ZeroDev account:", err.message);
+      console.error("[SmartAccount] ❌ Failed to create ZeroDev account");
+      console.error("[SmartAccount] Error message:", err.message);
+      console.error("[SmartAccount] Error name:", err.name);
       console.error("[SmartAccount] Stack:", err.stack);
       throw new Error(`Failed to create smart account: ${err.message}`);
     }
