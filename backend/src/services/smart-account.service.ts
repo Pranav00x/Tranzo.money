@@ -13,12 +13,16 @@ export class SmartAccountService {
    * Create a new ZeroDev smart account
    */
   static async createAccount(signerPrivateKey?: string) {
-    if (!ENV.ZERODEV_PROJECT_ID) {
-      throw new Error("ZERODEV_PROJECT_ID not configured");
-    }
-
     const key = signerPrivateKey || generatePrivateKey();
     const signer = privateKeyToAccount(key as `0x${string}`);
+
+    // Development mode: if ZERODEV not configured, create mock account
+    if (!ENV.ZERODEV_PROJECT_ID || !ENV.ZERODEV_RPC_URL) {
+      console.log(`[SmartAccount] ⚠️  Development mode: Creating mock ZeroDev account (ZERODEV_PROJECT_ID not configured)`);
+      // Generate a deterministic address from the signer for testing
+      const mockAddress = signer.address as `0x${string}`;
+      return { address: mockAddress, privateKey: key };
+    }
 
     try {
       // Create KernelAccount using ZeroDev

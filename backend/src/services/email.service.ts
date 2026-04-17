@@ -50,12 +50,12 @@ export class EmailService {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(`Resend API error: ${error.message}`);
+        throw new Error(`Resend API error: ${(error as any)?.message || 'Unknown error'}`);
       }
 
       console.log(`[Email] OTP sent to ${email}`);
     } catch (error: any) {
-      console.error(`[Email] Failed to send OTP to ${email}:`, error.message);
+      console.error(`[Email] Failed to send OTP to ${email}:`, error?.message || error);
       throw error;
     }
   }
@@ -102,12 +102,12 @@ export class EmailService {
 
       if (!response.ok) {
         const error = await response.json();
-        throw new Error(`Resend API error: ${error.message}`);
+        throw new Error(`Resend API error: ${(error as any)?.message || 'Unknown error'}`);
       }
 
       console.log(`[Email] Welcome email sent to ${email}`);
     } catch (error: any) {
-      console.error(`[Email] Failed to send welcome email to ${email}:`, error.message);
+      console.error(`[Email] Failed to send welcome email to ${email}:`, error?.message || error);
       throw error;
     }
   }
