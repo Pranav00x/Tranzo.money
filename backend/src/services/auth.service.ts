@@ -32,7 +32,8 @@ export class AuthService {
       return { success: true };
     }
 
-    const otp = crypto.randomBytes(3).toString("hex").toUpperCase();
+    // Generate 6-digit OTP (000000-999999)
+    const otp = Math.floor(Math.random() * 1000000).toString().padStart(6, "0");
     const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
     const expiresAt = new Date(Date.now() + 10 * 60_000);
 
