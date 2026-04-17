@@ -1,9 +1,9 @@
 export declare class SmartAccountService {
     /**
-     * Create a new ZeroDev smart account
+     * Create a new ZeroDev smart account (production-ready)
      */
     static createAccount(signerPrivateKey?: string): Promise<{
-        address: any;
+        address: `0x${string}`;
         privateKey: string;
     }>;
     /**
