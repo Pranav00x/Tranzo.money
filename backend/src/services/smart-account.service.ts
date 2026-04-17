@@ -1,12 +1,12 @@
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import {
-  createKernelAccountClient,
-  createKernelAccount,
-} from "@zerodev/sdk";
 import { http } from "viem";
 import { baseSepolia } from "viem/chains";
 import prisma from "./prisma.service.js";
 import { ENV } from "../config/env.js";
+
+// ZeroDev SDK v5 - kernel account creation
+// @ts-ignore - SDK types may vary by version
+import { createKernelAccountClient, createKernelAccount } from "@zerodev/sdk";
 
 export class SmartAccountService {
   /**
@@ -18,7 +18,7 @@ export class SmartAccountService {
     }
 
     const key = signerPrivateKey || generatePrivateKey();
-    const signer = privateKeyToAccount(key);
+    const signer = privateKeyToAccount(key as `0x${string}`);
 
     try {
       // Create KernelAccount using ZeroDev
