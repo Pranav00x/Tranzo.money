@@ -37,6 +37,8 @@ export class AuthService {
     const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
     const expiresAt = new Date(Date.now() + 10 * 60_000);
 
+    console.log(`[Auth] Generated OTP for ${normalizedEmail}: ${otp} (expires at ${expiresAt.toISOString()})`);
+
     // Save OTP immediately
     await prisma.otpToken.create({
       data: {
@@ -46,6 +48,8 @@ export class AuthService {
         expiresAt,
       },
     });
+
+    console.log(`[Auth] OTP saved to database for ${normalizedEmail}`);
 
     // Send email asynchronously (don't block the response)
     EmailService.sendOTP(email, otp).catch((err) => {
@@ -69,6 +73,7 @@ export class AuthService {
       console.log(`[Auth] OTP Verified via Bypas for test account`);
     } else {
       const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
+      console.log(`[Auth] Looking for OTP hash: ${tokenHash} for email: ${normalizedEmail}`);
 
       const record = await prisma.otpToken.findFirst({
         where: {
@@ -81,8 +86,11 @@ export class AuthService {
       });
 
       if (!record) {
+        console.error(`[Auth] OTP not found or expired for ${normalizedEmail}`);
         throw new Error("Invalid or expired OTP");
       }
+
+      console.log(`[Auth] OTP found and valid for ${normalizedEmail}`);
 
       // Mark OTP as used
       await prisma.otpToken.update({

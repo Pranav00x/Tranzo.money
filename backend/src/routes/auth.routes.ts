@@ -30,9 +30,12 @@ const verifyOtpSchema = z.object({
 router.post("/verify-otp", async (req: Request, res: Response) => {
   try {
     const { email, otp } = verifyOtpSchema.parse(req.body);
+    console.log(`[Auth] Verifying OTP for ${email}: ${otp}`);
     const result = await AuthService.verifyOtp(email, otp);
+    console.log(`[Auth] OTP verified successfully for ${email}`);
     res.json(result);
   } catch (err: any) {
+    console.error(`[Auth] OTP verification failed:`, err.message);
     res.status(400).json({ error: err.message });
   }
 });
