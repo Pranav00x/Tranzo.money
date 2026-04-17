@@ -25,13 +25,32 @@ export class AuthService {
    * Send an OTP to the given email. Creates user if not exists (lazy signup).
    */
   static async sendOtp(email: string) {
-    if (email.toLowerCase().trim() === "test@test.in") {
+    const normalizedEmail = email.toLowerCase().trim();
+
+    if (normalizedEmail === "test@test.in") {
       console.log(`[Auth] OTP Bypass for test account: 000000`);
       return { success: true };
     }
-    
+
     const otp = crypto.randomBytes(3).toString("hex").toUpperCase();
-    await EmailService.sendOTP(email, otp);
+    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
+    const expiresAt = new Date(Date.now() + 10 * 60_000);
+
+    // Save OTP immediately
+    await prisma.otpToken.create({
+      data: {
+        target: normalizedEmail,
+        tokenHash,
+        type: "EMAIL_VERIFICATION",
+        expiresAt,
+      },
+    });
+
+    // Send email asynchronously (don't block the response)
+    EmailService.sendOTP(email, otp).catch((err) => {
+      console.error(`[Auth] Failed to send OTP to ${email}:`, err.message);
+    });
+
     return { success: true };
   }
 
