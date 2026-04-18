@@ -1,7 +1,6 @@
 package com.tranzo.app.ui.auth
 
 import android.app.Activity
-import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -263,12 +262,8 @@ fun WelcomeScreen(
                         AuthMethodButtonWithIcon(
                             icon = Icons.Outlined.Lock,
                             title = "Passkey",
-                            subtitle = "Coming Soon",
-                            onClick = {
-                                // Passkey support - will be enabled in next release
-                                viewModel.clearError()
-                            },
-                            isDisabled = true,
+                            subtitle = "WebAuthn / FIDO2",
+                            onClick = onPasskeyLogin,
                         )
 
                         AuthMethodButtonWithIcon(
@@ -299,10 +294,7 @@ fun WelcomeScreen(
                         // Email OTP option
                         TranzoSecondaryButton(
                             text = "Back to Methods",
-                            onClick = {
-                                showEmailOption = false
-                                email = ""
-                            },
+                            onClick = { showEmailOption = false },
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -376,15 +368,14 @@ private fun AuthMethodButtonWithIcon(
     title: String,
     subtitle: String,
     onClick: () -> Unit,
-    isDisabled: Boolean = false,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = if (isDisabled) TranzoColors.LightGray.copy(alpha = 0.5f) else TranzoColors.LightGray),
-        onClick = if (!isDisabled) onClick else {},
+        colors = CardDefaults.cardColors(containerColor = TranzoColors.LightGray),
+        onClick = onClick,
     ) {
         Row(
             modifier = Modifier
@@ -397,7 +388,7 @@ private fun AuthMethodButtonWithIcon(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = if (isDisabled) TranzoColors.TextTertiary.copy(alpha = 0.5f) else TranzoColors.TextSecondary,
+                    tint = TranzoColors.TextSecondary,
                     modifier = Modifier.size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -406,23 +397,21 @@ private fun AuthMethodButtonWithIcon(
                         text = title,
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = if (isDisabled) TranzoColors.TextSecondary.copy(alpha = 0.6f) else TranzoColors.TextPrimary,
+                        color = TranzoColors.TextPrimary,
                     )
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (isDisabled) TranzoColors.TextTertiary.copy(alpha = 0.6f) else TranzoColors.TextSecondary,
+                        color = TranzoColors.TextSecondary,
                     )
                 }
             }
-            if (!isDisabled) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
-                    contentDescription = null,
-                    tint = TranzoColors.TextTertiary,
-                    modifier = Modifier.size(20.dp),
-                )
-            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                contentDescription = null,
+                tint = TranzoColors.TextTertiary,
+                modifier = Modifier.size(20.dp),
+            )
         }
     }
 }

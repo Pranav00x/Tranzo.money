@@ -26,7 +26,6 @@ object NetworkModule {
         @ApplicationContext context: Context
     ): Interceptor {
         return Interceptor { chain ->
-            // Must use same SharedPreferences key as SessionManager
             val prefs = context.getSharedPreferences("tranzo_session", Context.MODE_PRIVATE)
             val token = prefs.getString("access_token", null)
 

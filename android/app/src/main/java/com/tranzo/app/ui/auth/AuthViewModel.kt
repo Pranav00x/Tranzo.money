@@ -144,7 +144,6 @@ class AuthViewModel @Inject constructor(
         }
     }
 
-
     fun logout() {
         viewModelScope.launch {
             try {
