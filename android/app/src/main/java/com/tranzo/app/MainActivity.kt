@@ -27,6 +27,7 @@ import com.tranzo.app.ui.security.PinScreen
 import com.tranzo.app.ui.navigation.Screen
 import com.tranzo.app.ui.navigation.TranzoBottomBar
 import com.tranzo.app.ui.onboarding.OnboardingScreen
+import com.tranzo.app.ui.profile.ProfileScreen
 import com.tranzo.app.ui.receive.ReceiveScreen
 import com.tranzo.app.ui.send.SendConfirmationScreen
 import com.tranzo.app.ui.send.SendScreen
@@ -252,6 +253,14 @@ class MainActivity : FragmentActivity() {
                             )
                         }
 
+                        // ── Profile ──────────────────────────────────
+                        composable(Screen.Profile.route) {
+                            ProfileScreen(
+                                onBack = { navController.popBackStack() },
+                                onEdit = { /* Edit profile feature */ },
+                            )
+                        }
+
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
                             SettingsScreen(
@@ -265,6 +274,9 @@ class MainActivity : FragmentActivity() {
                                 },
                                 onSecurity = {
                                     navController.navigate(Screen.Security.route)
+                                },
+                                onProfile = {
+                                    navController.navigate(Screen.Profile.route)
                                 },
                             )
                         }

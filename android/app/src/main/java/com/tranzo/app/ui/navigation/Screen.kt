@@ -22,6 +22,7 @@ sealed class Screen(val route: String) {
         fun createRoute(streamId: String) = "stream/$streamId"
     }
     data object CreateStream : Screen("create_stream")
+    data object Profile : Screen("profile")
     data object Settings : Screen("settings")
     data object Security : Screen("security")
     data object TransactionHistory : Screen("transaction_history")

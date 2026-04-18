@@ -43,6 +43,7 @@ fun SettingsScreen(
     viewModel: HomeViewModel = hiltViewModel(),
     onLogout: () -> Unit = {},
     onTransactionHistory: () -> Unit = {},
+    onProfile: () -> Unit = {},
     onWallet: () -> Unit = {},
     onSecurity: () -> Unit = {},
     onHelp: () -> Unit = {},
@@ -111,10 +112,17 @@ fun SettingsScreen(
                 .padding(top = 8.dp),
         ) {
             SettingsMenuItem(
+                icon = Icons.Outlined.Person,
+                label = "My Profile",
+                subtitle = "View and manage account",
+                onClick = onProfile,
+            )
+
+            SettingsMenuItem(
                 icon = Icons.Outlined.AccountBalanceWallet,
                 label = "Wallet",
-                subtitle = state.user?.smartAccount?.let { 
-                    "${it.take(6)}...${it.takeLast(4)}" 
+                subtitle = state.user?.smartAccount?.let {
+                    "${it.take(6)}...${it.takeLast(4)}"
                 } ?: "Address, backup, export keys",
                 onClick = onWallet,
             )
