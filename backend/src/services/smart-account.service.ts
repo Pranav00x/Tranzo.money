@@ -6,8 +6,6 @@ import { ENV } from "../config/env.js";
 
 // ZeroDev SDK - kernel account creation
 import { createKernelAccount, createKernelAccountClient } from "@zerodev/sdk";
-import { signerToEcdsaValidator } from "@zerodev/ecdsa-validator";
-import { KERNEL_V3_1 } from "@zerodev/sdk/constants";
 
 export class SmartAccountService {
   /**
@@ -33,23 +31,11 @@ export class SmartAccountService {
       });
       console.log(`[SmartAccount] ✓ Public client created`);
 
-      // Step 2: Create ECDSA validator from signer
-      console.log(`[SmartAccount] Creating ECDSA validator...`);
-      // @ts-ignore - ZeroDev SDK types compatibility
-      const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
-        signer,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-        kernelVersion: KERNEL_V3_1,
-      });
-      console.log(`[SmartAccount] ✓ ECDSA validator created`);
-
-      // Step 3: Create kernel account with validator
+      // Step 2: Create kernel account (v0.6 EntryPoint with kernel 0.2.4)
       console.log(`[SmartAccount] Creating kernel account...`);
       // @ts-ignore - ZeroDev SDK types compatibility
       const account = await createKernelAccount(publicClient, {
-        plugins: { sudo: ecdsaValidator },
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789" as `0x${string}`,
-        kernelVersion: KERNEL_V3_1,
+        signer,
       });
       console.log(`[SmartAccount] ✓ Kernel account created`);
 
@@ -118,20 +104,10 @@ export class SmartAccountService {
         transport: http(ENV.ZERODEV_RPC_URL),
       });
 
-      // Recreate ECDSA validator
-      // @ts-ignore - ZeroDev SDK types compatibility
-      const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
-        signer,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-        kernelVersion: KERNEL_V3_1,
-      });
-
       // Recreate kernel account
       // @ts-ignore - ZeroDev SDK types compatibility
       const account = await createKernelAccount(publicClient, {
-        plugins: { sudo: ecdsaValidator },
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789" as `0x${string}`,
-        kernelVersion: KERNEL_V3_1,
+        signer,
       });
 
       // Create kernel account client for sending transactions
