@@ -38,6 +38,7 @@ export class SmartAccountService {
         signer,
         entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // ERC-4337 EntryPoint v0.6
         kernelVersion: "0.3.0", // ZeroDev Kernel v0.3
+        sudo: signer, // Use signer as sudo validator
       });
       console.log(`[SmartAccount] ✓ Kernel account created`);
 
@@ -112,6 +113,7 @@ export class SmartAccountService {
         signer,
         entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
         kernelVersion: "0.3.0",
+        sudo: signer,
       });
 
       // Create kernel account client for sending transactions
