@@ -252,7 +252,3 @@ fun OtpScreenPro(
         }
     }
 }
-
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.material3.TextField
-import androidx.compose.ui.unit.sp

@@ -284,11 +284,5 @@ private fun StepItem(
         }
     }
 }
-
-import androidx.compose.material3.BorderStroke
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.TextButton
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.animation.core.LinearEasing
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.tween

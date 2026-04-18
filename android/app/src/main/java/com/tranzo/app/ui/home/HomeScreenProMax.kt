@@ -467,12 +467,6 @@ private fun QuickActionButtonMax(
         }
     }
 }
-
-import androidx.compose.animation.core.LinearEasing
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.spring
-import androidx.compose.animation.core.tween
-import androidx.compose.material3.Divider
 import androidx.compose.material3.IconButton
 import androidx.compose.ui.graphics.graphicsLayer
 import kotlinx.coroutines.delay

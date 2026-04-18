@@ -349,11 +349,5 @@ private fun ProfileInputField(
         }
     }
 }
-
-import androidx.compose.foundation.border
-import androidx.compose.material.icons.outlined.ChevronRight
-import androidx.compose.material.icons.outlined.Language
-import androidx.compose.material.icons.outlined.Phone
-import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.material3.TextField
