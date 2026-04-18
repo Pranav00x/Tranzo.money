@@ -3,8 +3,10 @@ import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import prisma from "./prisma.service.js";
 import { ENV } from "../config/env.js";
-// ZeroDev SDK v5 - kernel account creation
+// ZeroDev SDK - kernel account creation
 import { createKernelAccount } from "@zerodev/sdk";
+import { signerToEcdsaValidator } from "@zerodev/ecdsa-validator";
+import { KERNEL_V3_1 } from "@zerodev/sdk/constants";
 export class SmartAccountService {
     /**
      * Create a new ZeroDev smart account (production-ready)
@@ -25,11 +27,22 @@ export class SmartAccountService {
                 transport: http(ENV.ZERODEV_RPC_URL),
             });
             console.log(`[SmartAccount] ✓ Public client created`);
-            // Step 2: Create kernel account (deterministic address based on signer)
+            // Step 2: Create ECDSA validator from signer
+            console.log(`[SmartAccount] Creating ECDSA validator...`);
+            // @ts-ignore - ZeroDev SDK types compatibility
+            const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
+                signer,
+                entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+                kernelVersion: KERNEL_V3_1,
+            });
+            console.log(`[SmartAccount] ✓ ECDSA validator created`);
+            // Step 3: Create kernel account with validator
             console.log(`[SmartAccount] Creating kernel account...`);
             // @ts-ignore - ZeroDev SDK types compatibility
             const account = await createKernelAccount(publicClient, {
-                signer,
+                plugins: { sudo: ecdsaValidator },
+                entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+                kernelVersion: KERNEL_V3_1,
             });
             console.log(`[SmartAccount] ✓ Kernel account created`);
             const address = account.address;
@@ -87,10 +100,19 @@ export class SmartAccountService {
                 chain: baseSepolia,
                 transport: http(ENV.ZERODEV_RPC_URL),
             });
+            // Recreate ECDSA validator
+            // @ts-ignore - ZeroDev SDK types compatibility
+            const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
+                signer,
+                entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+                kernelVersion: KERNEL_V3_1,
+            });
             // Recreate kernel account
             // @ts-ignore - ZeroDev SDK types compatibility
             const account = await createKernelAccount(publicClient, {
-                signer,
+                plugins: { sudo: ecdsaValidator },
+                entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+                kernelVersion: KERNEL_V3_1,
             });
             // Create kernel account client for sending transactions
             const walletClient = createWalletClient({

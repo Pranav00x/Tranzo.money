@@ -17,6 +17,7 @@
   "dependencies": {
     "@openfort/openfort-node": "^0.7.0",
     "@prisma/client": "^6.0.0",
+    "@zerodev/ecdsa-validator": "^5.4.9",
     "@zerodev/sdk": "^5.5.10",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
