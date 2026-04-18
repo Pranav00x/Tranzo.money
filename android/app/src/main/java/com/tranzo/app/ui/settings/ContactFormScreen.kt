@@ -133,8 +133,7 @@ fun ContactFormScreen(
                     onValueChange = { message = it },
                     label = "Message",
                     placeholder = "Tell us what we can help with...",
-                    minLines = 6,
-                    maxLines = 8,
+                    singleLine = false,
                 )
 
                 Text(
