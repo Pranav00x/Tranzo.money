@@ -348,6 +348,7 @@ class MainActivity : FragmentActivity() {
                         // ── Theme Selector ──────────────────────────────
                         composable(Screen.ThemeSelector.route) {
                             ThemeSelectorScreen(
+                                themeManager = themeManager,
                                 onBack = { navController.popBackStack() },
                             )
                         }

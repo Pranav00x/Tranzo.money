@@ -37,7 +37,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
-import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.theme.TranzoColors
 import com.tranzo.app.util.ThemeManager
 
@@ -47,7 +46,7 @@ import com.tranzo.app.util.ThemeManager
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemeSelectorScreen(
-    themeManager: ThemeManager = hiltViewModel(),
+    themeManager: ThemeManager,
     onBack: () -> Unit = {},
 ) {
     val currentThemeId by themeManager.currentThemeId.collectAsState()
