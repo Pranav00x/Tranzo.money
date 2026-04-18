@@ -12,7 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tranzo.app.ui.card.CardScreen
+import com.tranzo.app.ui.card.CardScreenPro
 import com.tranzo.app.ui.card.OrderCardScreen
 import com.tranzo.app.ui.auth.OtpScreenPro
 import com.tranzo.app.ui.auth.ProfileSetupScreenPro
@@ -31,11 +31,11 @@ import com.tranzo.app.ui.onboarding.OnboardingScreen
 import com.tranzo.app.ui.profile.ProfileScreen
 import com.tranzo.app.ui.receive.ReceiveScreen
 import com.tranzo.app.ui.send.SendConfirmationScreen
-import com.tranzo.app.ui.send.SendScreen
-import com.tranzo.app.ui.settings.SettingsScreenPro
+import com.tranzo.app.ui.send.SendScreenPro
+import com.tranzo.app.ui.settings.SettingsScreenProMax
 import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreen
-import com.tranzo.app.ui.swap.SwapScreen
+import com.tranzo.app.ui.swap.SwapScreenPro
 import com.tranzo.app.ui.theme.TranzoTheme
 import dagger.hilt.android.AndroidEntryPoint
 
@@ -237,7 +237,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Send Flow ────────────────────────────────
                         composable(Screen.Send.route) {
-                            SendScreen(
+                            SendScreenPro(
                                 onBack = { navController.popBackStack() },
                                 onReview = { to, token, amount ->
                                     navController.navigate("send_confirm/$to/$token/$amount")
@@ -270,7 +270,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Swap ─────────────────────────────────────
                         composable(Screen.Swap.route) {
-                            SwapScreen(
+                            SwapScreenPro(
                                 onBack = { navController.popBackStack() },
                                 onSwapComplete = { navController.popBackStack() },
                             )
@@ -322,7 +322,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
-                            SettingsScreenPro(
+                            SettingsScreenProMax(
                                 themeManager = themeManager,
                                 onLogout = {
                                     navController.navigate(Screen.Welcome.route) {
@@ -355,7 +355,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Card Flow ────────────────────────────────
                         composable(Screen.Card.route) {
-                            CardScreen(
+                            CardScreenPro(
                                 onBack = { navController.popBackStack() },
                                 onOrderCard = { navController.navigate(Screen.OrderCard.route) },
                                 onCardDetails = { cardId ->
