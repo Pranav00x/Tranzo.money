@@ -1,6 +1,7 @@
 package com.tranzo.app.util
 
 import android.content.Context
+import androidx.annotation.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -10,7 +11,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class SessionManager @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
 ) {
     private val prefs = context.getSharedPreferences("tranzo_session", Context.MODE_PRIVATE)
 

@@ -1,6 +1,7 @@
 package com.tranzo.app.util
 
 import android.content.Context
+import androidx.annotation.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -13,7 +14,7 @@ import javax.inject.Singleton
  */
 @Singleton
 class ThemeManager @Inject constructor(
-    private val context: Context,
+    @ApplicationContext private val context: Context,
 ) {
     private val prefs = context.getSharedPreferences("tranzo_theme", Context.MODE_PRIVATE)
 
