@@ -21,9 +21,9 @@ class GoogleSignInHelper @Inject constructor() {
 
     companion object {
         private const val TAG = "GoogleSignInHelper"
-        // Replace with your actual Google Cloud Console Web Client ID
-        // You can get this from Google Cloud Console > APIs & Services > Credentials
-        private const val GOOGLE_CLIENT_ID = "YOUR_GOOGLE_CLIENT_ID.apps.googleusercontent.com"
+        // Google Cloud Console Web Client ID for Tranzo Android app
+        // Project: tranzo-493512
+        private const val GOOGLE_CLIENT_ID = "753093250645-mjghuinh2qrjfi5mrlqtjq3kei4ecqbn.apps.googleusercontent.com"
     }
 
     /**
