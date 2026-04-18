@@ -2,6 +2,7 @@ package com.tranzo.app.ui.theme
 
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.graphics.Color
 
 // Bold, modern crypto wallet color palette
 object TranzoColors {
@@ -41,8 +42,6 @@ object TranzoColors {
     val Warning = Color(0xFFFBBF24)
     val Info = Color(0xFF3B82F6)
 }
-
-import androidx.compose.ui.graphics.Color
 
 @Composable
 fun TranzoTheme(
