@@ -55,17 +55,25 @@ import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
+import com.tranzo.app.util.BiometricHelper
 import com.tranzo.app.util.GoogleSignInHelper
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import dagger.hilt.android.EntryPointAccessors
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
 interface GoogleSignInEntryPoint {
     fun googleSignInHelper(): GoogleSignInHelper
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface BiometricEntryPoint {
+    fun biometricHelper(): BiometricHelper
 }
 
 @Composable
@@ -96,6 +104,15 @@ fun WelcomeScreen(
             GoogleSignInEntryPoint::class.java
         ).googleSignInHelper()
     }
+    val biometricHelper = remember {
+        EntryPointAccessors.fromApplication(
+            context,
+            BiometricEntryPoint::class.java
+        ).biometricHelper()
+    }
+
+    // Get last authenticated email for biometric fallback
+    val lastEmail = remember { viewModel.getLastEmail() }
 
     LaunchedEffect(state.otpSent, submittedEmail) {
         if (state.otpSent && submittedEmail.isNotBlank()) {
@@ -219,7 +236,27 @@ fun WelcomeScreen(
                             icon = Icons.Outlined.Fingerprint,
                             title = "Biometric",
                             subtitle = "Face ID / Fingerprint",
-                            onClick = onBiometricLogin,
+                            onClick = {
+                                if (lastEmail.isNullOrEmpty()) {
+                                    viewModel.clearError()
+                                    // No previous login, show error
+                                    return@AuthMethodButtonWithIcon
+                                }
+                                coroutineScope.launch {
+                                    biometricHelper.showPrompt(
+                                        activity = context as? Activity ?: return@launch,
+                                        title = "Biometric Authentication",
+                                        subtitle = "Use your biometric to log in",
+                                        onSuccess = {
+                                            // Biometric succeeded, attempt login
+                                            viewModel.biometricLogin(lastEmail!!)
+                                        },
+                                        onError = { errorMsg ->
+                                            viewModel.clearError()
+                                        },
+                                    )
+                                }
+                            },
                         )
 
                         AuthMethodButtonWithIcon(
