@@ -1,5 +1,7 @@
 package com.tranzo.app.ui.settings
 
+import androidx.compose.material.icons.AutoMirroredIcons
+import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -43,6 +45,7 @@ import com.tranzo.app.util.ThemeManager
 /**
  * Theme Selector Screen - Let users choose from 8 themes
  */
+@OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ThemeSelectorScreen(
     themeManager: ThemeManager = hiltViewModel(),

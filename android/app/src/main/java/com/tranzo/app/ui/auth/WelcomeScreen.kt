@@ -244,7 +244,7 @@ fun WelcomeScreen(
                                 }
                                 coroutineScope.launch {
                                     biometricHelper.showPrompt(
-                                        activity = context as? Activity ?: return@launch,
+                                        activity = context as? androidx.fragment.app.FragmentActivity ?: return@launch,
                                         title = "Biometric Authentication",
                                         subtitle = "Use your biometric to log in",
                                         onSuccess = {

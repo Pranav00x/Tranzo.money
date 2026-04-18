@@ -63,16 +63,11 @@ class AuthViewModel @Inject constructor(
             try {
                 val response = api.verifyOtp(VerifyOtpRequest(email, otp))
 
-                // Save tokens and user data
+                // Save tokens and email
                 saveTokens(response.accessToken, response.refreshToken)
                 sessionManager.saveUserData(
-                    userId = response.userId ?: "",
+                    userId = "",  // Will be set after profile setup
                     email = email,
-                    firstName = response.user?.firstName,
-                    lastName = response.user?.lastName,
-                    phone = response.user?.phone,
-                    avatarUrl = response.user?.avatarUrl,
-                    walletAddress = response.user?.walletAddress,
                 )
 
                 _state.value = _state.value.copy(
@@ -97,16 +92,11 @@ class AuthViewModel @Inject constructor(
             try {
                 val response = api.loginWithGoogle(GoogleLoginRequest(idToken))
 
-                // Save tokens and user data
+                // Save tokens and email
                 saveTokens(response.accessToken, response.refreshToken)
                 sessionManager.saveUserData(
-                    userId = response.userId ?: "",
-                    email = response.user?.email ?: "",
-                    firstName = response.user?.firstName,
-                    lastName = response.user?.lastName,
-                    phone = response.user?.phone,
-                    avatarUrl = response.user?.avatarUrl,
-                    walletAddress = response.user?.walletAddress,
+                    userId = "",  // Will be set after profile setup or returned by API
+                    email = "",  // Will be filled from Google profile or profile setup
                 )
 
                 _state.value = _state.value.copy(
@@ -128,9 +118,8 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
-                // For biometric login, use stored refresh token for silent re-auth
-                val refreshToken = prefs.getString("refresh_token", null)
-                if (refreshToken != null) {
+                // For biometric login, check if user has stored session
+                if (sessionManager.isLoggedIn()) {
                     // In a real implementation, would call a refresh endpoint
                     // For now, just mark as authenticated if token exists
                     _state.value = _state.value.copy(
@@ -206,9 +195,8 @@ class AuthViewModel @Inject constructor(
 
     fun enableBiometric() {
         _state.value = _state.value.copy(biometricEnabled = true)
-        prefs.edit()
-            .putBoolean("biometric_enabled", true)
-            .apply()
+        // Biometric preference is stored in system keystore
+        // This is handled by BiometricHelper, not SharedPreferences
     }
 
     fun clearError() {
