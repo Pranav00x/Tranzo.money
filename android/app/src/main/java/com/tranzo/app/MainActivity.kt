@@ -15,6 +15,7 @@ import androidx.navigation.compose.rememberNavController
 import com.tranzo.app.ui.card.CardScreen
 import com.tranzo.app.ui.card.OrderCardScreen
 import com.tranzo.app.ui.auth.OtpScreen
+import com.tranzo.app.ui.auth.ProfileSetupScreen
 import com.tranzo.app.ui.auth.WalletCreationScreen
 import com.tranzo.app.ui.auth.WelcomeScreen
 import com.tranzo.app.ui.dripper.CreateStreamScreen
@@ -95,7 +96,18 @@ class MainActivity : FragmentActivity() {
                                 },
                                 onCreateWallet = {
                                     navController.navigate(Screen.WalletCreation.route)
-                                }
+                                },
+                                onAuthenticationSuccess = { isNewUser ->
+                                    if (isNewUser) {
+                                        navController.navigate(Screen.ProfileSetup.createRoute("")) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    } else {
+                                        navController.navigate(Screen.WalletCreation.route) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    }
+                                },
                             )
                         }
 
@@ -103,15 +115,40 @@ class MainActivity : FragmentActivity() {
                             val email = backStackEntry.arguments?.getString("email") ?: ""
                             OtpScreen(
                                 email = email,
-                                onNavigateToHome = {
-                                    navController.navigate(Screen.WalletCreation.route) {
-                                        popUpTo(0) { inclusive = true }
+                                onNavigateToHome = { isNewUser ->
+                                    if (isNewUser) {
+                                        // New user: route to profile setup
+                                        navController.navigate(Screen.ProfileSetup.createRoute(email)) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
+                                    } else {
+                                        // Returning user: skip to wallet creation
+                                        navController.navigate(Screen.WalletCreation.route) {
+                                            popUpTo(0) { inclusive = true }
+                                        }
                                     }
                                 },
                                 onResend = { /* Handled in VM */ },
                                 onSkip = {
                                     navController.navigate(Screen.Home.route) {
                                         popUpTo(0) { inclusive = true }
+                                    }
+                                },
+                            )
+                        }
+
+                        composable(Screen.ProfileSetup.route) { backStackEntry ->
+                            val email = backStackEntry.arguments?.getString("email") ?: ""
+                            ProfileSetupScreen(
+                                prefilledEmail = email,
+                                onContinue = { firstName, lastName, email, _, _ ->
+                                    navController.navigate(Screen.WalletCreation.route) {
+                                        popUpTo(Screen.ProfileSetup.route) { inclusive = true }
+                                    }
+                                },
+                                onSkip = {
+                                    navController.navigate(Screen.WalletCreation.route) {
+                                        popUpTo(Screen.ProfileSetup.route) { inclusive = true }
                                     }
                                 },
                             )

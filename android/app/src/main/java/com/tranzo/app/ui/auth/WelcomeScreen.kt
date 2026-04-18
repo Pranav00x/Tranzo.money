@@ -77,6 +77,7 @@ fun WelcomeScreen(
     onNavigateToOtp: (String) -> Unit = {},
     onLoginWithAnotherNumber: () -> Unit = {},
     onCreateWallet: () -> Unit = {},
+    onAuthenticationSuccess: (isNewUser: Boolean) -> Unit = {},
     onPasskeyLogin: () -> Unit = {},
     onBiometricLogin: () -> Unit = {},
     onGoogleLogin: () -> Unit = {},
@@ -100,6 +101,12 @@ fun WelcomeScreen(
         if (state.otpSent && submittedEmail.isNotBlank()) {
             onNavigateToOtp(submittedEmail)
             submittedEmail = ""
+        }
+    }
+
+    LaunchedEffect(state.isAuthenticated) {
+        if (state.isAuthenticated) {
+            onAuthenticationSuccess(state.isNewUser)
         }
     }
 

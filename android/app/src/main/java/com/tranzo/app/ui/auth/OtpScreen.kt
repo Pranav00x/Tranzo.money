@@ -51,7 +51,7 @@ import kotlinx.coroutines.delay
 fun OtpScreen(
     viewModel: AuthViewModel = hiltViewModel(),
     email: String,
-    onNavigateToHome: () -> Unit,
+    onNavigateToHome: (isNewUser: Boolean) -> Unit,
     onResend: () -> Unit,
     onSkip: (() -> Unit)? = null,
 ) {
@@ -61,7 +61,7 @@ fun OtpScreen(
     val focusRequester = remember { FocusRequester() }
 
     LaunchedEffect(state.isAuthenticated) {
-        if (state.isAuthenticated) onNavigateToHome()
+        if (state.isAuthenticated) onNavigateToHome(state.isNewUser)
     }
 
     LaunchedEffect(resendTimer) {
