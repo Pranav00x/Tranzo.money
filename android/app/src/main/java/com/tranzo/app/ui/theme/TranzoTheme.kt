@@ -1,11 +1,7 @@
 package com.tranzo.app.ui.theme
 
-import androidx.compose.foundation.isSystemInDarkMode
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.lightColorScheme
-import androidx.compose.material3.darkColorScheme
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.graphics.Color
 
 // Bold, modern crypto wallet color palette
 object TranzoColors {
@@ -46,58 +42,30 @@ object TranzoColors {
     val Info = Color(0xFF3B82F6)
 }
 
-private val LightColors = lightColorScheme(
-    primary = TranzoColors.PrimaryBlue,
-    onPrimary = Color.White,
-    primaryContainer = Color(0xFFDEE9FF),
-    onPrimaryContainer = TranzoColors.PrimaryBlue,
-    secondary = TranzoColors.PrimaryPurple,
-    onSecondary = Color.White,
-    tertiary = TranzoColors.PrimaryGreen,
-    onTertiary = Color.White,
-    error = TranzoColors.Error,
-    onError = Color.White,
-    background = TranzoColors.BackgroundLight,
-    onBackground = TranzoColors.TextPrimary,
-    surface = TranzoColors.SurfaceLight,
-    onSurface = TranzoColors.TextPrimary,
-    surfaceVariant = TranzoColors.SurfaceAlt,
-    onSurfaceVariant = TranzoColors.TextSecondary,
-    scrim = Color.Black.copy(alpha = 0.32f)
-)
-
-private val DarkColors = darkColorScheme(
-    primary = TranzoColors.AccentCyan,
-    onPrimary = Color.Black,
-    primaryContainer = TranzoColors.PrimaryBlue,
-    onPrimaryContainer = Color.White,
-    secondary = TranzoColors.PrimaryPurple,
-    onSecondary = Color.White,
-    tertiary = TranzoColors.PrimaryGreen,
-    onTertiary = Color.White,
-    error = TranzoColors.Error,
-    onError = Color.White,
-    background = TranzoColors.BackgroundDark,
-    onBackground = TranzoColors.TextDarkPrimary,
-    surface = TranzoColors.SurfaceDark,
-    onSurface = TranzoColors.TextDarkPrimary,
-    surfaceVariant = Color(0xFF21262D),
-    onSurfaceVariant = TranzoColors.TextDarkSecondary,
-    scrim = Color.Black.copy(alpha = 0.32f)
-)
+import androidx.compose.ui.graphics.Color
 
 @Composable
 fun TranzoTheme(
     themeId: String = "default_dark",
     content: @Composable () -> Unit
 ) {
-    // Apply theme based on themeId (for now, just use light/dark system theme)
-    val isDarkMode = isSystemInDarkMode()
-    val colorScheme = if (isDarkMode) DarkColors else LightColors
+    // Get the color scheme based on theme ID from AppThemes.kt
+    val colorScheme = when (themeId) {
+        "default_dark" -> DarkThemeColors
+        "purple_night" -> PurpleThemeColors
+        "ocean" -> OceanThemeColors
+        "sunset" -> SunsetThemeColors
+        "mint" -> MintThemeColors
+        "pink" -> PinkThemeColors
+        "gold" -> GoldThemeColors
+        "cyberpunk" -> CyberpunkThemeColors
+        else -> DarkThemeColors
+    }
 
     MaterialTheme(
         colorScheme = colorScheme,
         typography = TranzoTypography,
+        shapes = TranzoShapes,
         content = content
     )
 }
