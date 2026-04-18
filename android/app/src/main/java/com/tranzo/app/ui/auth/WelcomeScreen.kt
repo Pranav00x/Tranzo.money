@@ -1,5 +1,6 @@
 package com.tranzo.app.ui.auth
 
+import android.app.Activity
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -47,11 +48,25 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.ui.platform.LocalContext
 import com.tranzo.app.ui.components.SecurityBadges
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
+import com.tranzo.app.util.GoogleSignInHelper
+import dagger.hilt.EntryPoint
+import dagger.hilt.InstallIn
+import dagger.hilt.components.SingletonComponent
+import dagger.hilt.android.EntryPointAccessors
+import kotlinx.coroutines.launch
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface GoogleSignInEntryPoint {
+    fun googleSignInHelper(): GoogleSignInHelper
+}
 
 @Composable
 fun WelcomeScreen(
@@ -72,6 +87,14 @@ fun WelcomeScreen(
     var acceptedTerms by remember { mutableStateOf(true) }
     var submittedEmail by remember { mutableStateOf("") }
     var showEmailOption by remember { mutableStateOf(false) }
+    val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val googleSignInHelper = remember {
+        EntryPointAccessors.fromApplication(
+            context,
+            GoogleSignInEntryPoint::class.java
+        ).googleSignInHelper()
+    }
 
     LaunchedEffect(state.otpSent, submittedEmail) {
         if (state.otpSent && submittedEmail.isNotBlank()) {
@@ -203,7 +226,16 @@ fun WelcomeScreen(
                             icon = Icons.Outlined.Email,
                             title = "Google",
                             subtitle = "Sign in with Google",
-                            onClick = onGoogleLogin,
+                            onClick = {
+                                coroutineScope.launch {
+                                    val idToken = googleSignInHelper.signIn(
+                                        context as? Activity ?: return@launch
+                                    )
+                                    if (idToken != null) {
+                                        viewModel.loginWithGoogle(idToken)
+                                    }
+                                }
+                            },
                         )
 
                         HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(vertical = 8.dp))
