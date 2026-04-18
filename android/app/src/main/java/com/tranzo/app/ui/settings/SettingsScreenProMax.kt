@@ -18,6 +18,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -245,7 +246,7 @@ private fun SettingsSectionHeader(title: String) {
 
 @Composable
 private fun SettingItemRow(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: ImageVector,
     label: String,
     description: String,
     onClick: () -> Unit
@@ -344,5 +345,3 @@ private fun ThemeSelectorInline(
         }
     }
 }
-
-private val androidx.compose.material.icons.Icons.Outlined get() = androidx.compose.material.icons.outlined
