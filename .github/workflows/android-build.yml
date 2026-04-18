@@ -52,13 +52,25 @@ jobs:
       - name: Make gradlew executable
         run: chmod +x ./gradlew
 
-      - name: Setup Gradle
-        uses: gradle/actions/setup-gradle@v4
+      - name: Setup Gradle with caching
+        uses: gradle/actions/setup-gradle@v2
         with:
-          cache-read-only: ${{ github.ref != 'refs/heads/main' }}
+          cache-read-only: false
+          gradle-home-cache-cleanup: true
+
+      - name: Create gradle.properties for optimization
+        run: |
+          cat >> gradle.properties << EOF
+          org.gradle.parallel=true
+          org.gradle.workers.max=4
+          org.gradle.caching=true
+          org.gradle.jvmargs=-Xmx4096m
+          android.useDexArchive=true
+          android.enableBuildCache=true
+          EOF
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: ./gradlew assembleDebug --stacktrace --build-cache --parallel --daemon
 
       - name: Get APK path and info
         id: apk_info
