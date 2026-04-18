@@ -63,7 +63,7 @@ fun SplashScreen(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.CardSurface) // Clean white
+            .background(TranzoColors.SurfaceLight) // Clean white
             .systemBarsPadding(),
     ) {
         // Centered logo + wordmark
@@ -83,7 +83,7 @@ fun SplashScreen(
             Text(
                 text = "Tranzo",
                 modifier = Modifier.alpha(wordmarkAlpha.value),
-                color = TranzoColors.PrimaryBlack,
+                color = TranzoColors.TextPrimary,
                 style = MaterialTheme.typography.displayMedium,
                 fontWeight = FontWeight.Bold,
                 letterSpacing = (-1.5).sp

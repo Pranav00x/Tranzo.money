@@ -44,7 +44,7 @@ fun TranzoBottomBar(navController: NavHostController) {
 
     if (showBottomBar) {
         NavigationBar(
-            containerColor = TranzoColors.CardSurface,
+            containerColor = TranzoColors.SurfaceLight,
             tonalElevation = 0.dp,
         ) {
             bottomNavItems.forEach { item ->
@@ -79,7 +79,7 @@ fun TranzoBottomBar(navController: NavHostController) {
                         selectedTextColor = TranzoColors.NavActive,
                         unselectedIconColor = TranzoColors.NavInactive,
                         unselectedTextColor = TranzoColors.NavInactive,
-                        indicatorColor = TranzoColors.PaleTeal,
+                        indicatorColor = TranzoColors.BackgroundLight,
                     ),
                 )
             }

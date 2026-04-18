@@ -114,7 +114,7 @@ fun SwapScreen(
                     modifier = Modifier.size(48.dp),
                     shape = CircleShape,
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = TranzoColors.PrimaryBlack,
+                        containerColor = TranzoColors.TextPrimary,
                         contentColor = TranzoColors.White,
                     ),
                 ) {
@@ -139,7 +139,7 @@ fun SwapScreen(
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.LightGray,
+                color = TranzoColors.SurfaceLight,
             ) {
                 Column(
                     modifier = Modifier
@@ -191,7 +191,7 @@ private fun SwapTokenCard(
 ) {
     Surface(
         shape = RoundedCornerShape(16.dp),
-        color = TranzoColors.CardSurface,
+        color = TranzoColors.SurfaceLight,
         tonalElevation = 1.dp,
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -209,7 +209,7 @@ private fun SwapTokenCard(
             ) {
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = TranzoColors.LightGray,
+                    color = TranzoColors.SurfaceLight,
                 ) {
                     Row(
                         modifier = Modifier.padding(horizontal = 12.dp, vertical = 8.dp),
@@ -255,7 +255,7 @@ private fun SwapTokenCard(
                         modifier = Modifier.fillMaxWidth(0.48f),
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
-                            focusedBorderColor = TranzoColors.PrimaryBlack,
+                            focusedBorderColor = TranzoColors.TextPrimary,
                             unfocusedBorderColor = TranzoColors.BorderGray.copy(alpha = 0f),
                         ),
                     )
@@ -269,7 +269,7 @@ private fun SwapTokenCard(
                         Surface(
                             onClick = { onTokenChanged(option) },
                             shape = RoundedCornerShape(10.dp),
-                            color = if (token == option) TranzoColors.PrimaryBlack else TranzoColors.LightGray,
+                            color = if (token == option) TranzoColors.TextPrimary else TranzoColors.SurfaceLight,
                         ) {
                             Text(
                                 text = option,
@@ -287,7 +287,7 @@ private fun SwapTokenCard(
                         Surface(
                             onClick = { onTokenChanged(option) },
                             shape = RoundedCornerShape(10.dp),
-                            color = if (token == option) TranzoColors.PrimaryBlack else TranzoColors.LightGray,
+                            color = if (token == option) TranzoColors.TextPrimary else TranzoColors.SurfaceLight,
                         ) {
                             Text(
                                 text = option,

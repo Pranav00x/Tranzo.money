@@ -85,7 +85,7 @@ fun ReceiveScreen(
             // ── Network Badge (Base Sepolia) ──────────────────────
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.LightGray,
+                color = TranzoColors.SurfaceLight,
                 modifier = Modifier.align(Alignment.CenterHorizontally),
             ) {
                 Row(
@@ -113,7 +113,7 @@ fun ReceiveScreen(
             if (smartAccount.isNotEmpty()) {
                 Surface(
                     shape = RoundedCornerShape(20.dp),
-                    color = TranzoColors.CardSurface,
+                    color = TranzoColors.SurfaceLight,
                     tonalElevation = 2.dp,
                 ) {
                     Column(
@@ -138,7 +138,7 @@ fun ReceiveScreen(
                                 modifier = Modifier
                                     .size(220.dp)
                                     .clip(RoundedCornerShape(12.dp))
-                                    .background(TranzoColors.LightGray),
+                                    .background(TranzoColors.SurfaceLight),
                                 contentAlignment = Alignment.Center,
                             ) {
                                 Text("QR Code", color = TranzoColors.TextSecondary)
@@ -160,7 +160,7 @@ fun ReceiveScreen(
                 // ── Smart Account Address ──────────────────────────────
                 Surface(
                     shape = RoundedCornerShape(12.dp),
-                    color = TranzoColors.LightGray,
+                    color = TranzoColors.SurfaceLight,
                 ) {
                     Row(
                         modifier = Modifier
@@ -183,7 +183,7 @@ fun ReceiveScreen(
                                     Icons.Outlined.CheckCircle
                                 else Icons.Outlined.ContentCopy,
                                 contentDescription = "Copy Address",
-                                tint = TranzoColors.PrimaryBlack,
+                                tint = TranzoColors.TextPrimary,
                                 modifier = Modifier.size(20.dp),
                             )
                         }
@@ -195,7 +195,7 @@ fun ReceiveScreen(
                     Text(
                         text = "Address copied!",
                         style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.PrimaryBlack,
+                        color = TranzoColors.TextPrimary,
                     )
                 }
 
@@ -211,7 +211,7 @@ fun ReceiveScreen(
                 Spacer(modifier = Modifier.weight(1f))
                 CircularProgressIndicator(
                     modifier = Modifier.align(Alignment.CenterHorizontally),
-                    color = TranzoColors.PrimaryBlack,
+                    color = TranzoColors.TextPrimary,
                 )
                 Spacer(modifier = Modifier.weight(1f))
             }

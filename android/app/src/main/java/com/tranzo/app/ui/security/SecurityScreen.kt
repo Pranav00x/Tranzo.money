@@ -73,7 +73,7 @@ fun SecurityScreen(
             // ── Security Score Card ──────────────────────────────
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = TranzoColors.PaleTeal,
+                color = TranzoColors.BackgroundLight,
             ) {
                 Row(
                     modifier = Modifier
@@ -85,7 +85,7 @@ fun SecurityScreen(
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
-                            .background(TranzoColors.PrimaryBlack),
+                            .background(TranzoColors.TextPrimary),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -236,7 +236,7 @@ private fun SecurityToggleRow(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
-                    checkedTrackColor = TranzoColors.PrimaryBlack,
+                    checkedTrackColor = TranzoColors.TextPrimary,
                     checkedThumbColor = TranzoColors.White,
                 ),
             )
@@ -291,7 +291,7 @@ private fun SecurityActionRow(
                     Text(
                         text = badge,
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (badgeIsError) TranzoColors.Error else TranzoColors.PrimaryBlack,
+                        color = if (badgeIsError) TranzoColors.Error else TranzoColors.TextPrimary,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }

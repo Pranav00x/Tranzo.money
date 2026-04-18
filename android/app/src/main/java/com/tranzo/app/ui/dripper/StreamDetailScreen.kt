@@ -194,7 +194,7 @@ fun StreamDetailScreen(
                 Text(
                     text = "${(progress * 100).toInt()}%",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.PrimaryBlack,
+                    color = TranzoColors.TextPrimary,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
@@ -207,15 +207,15 @@ fun StreamDetailScreen(
                     .fillMaxWidth()
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
-                color = TranzoColors.PrimaryBlack,
-                trackColor = TranzoColors.PaleTeal,
+                color = TranzoColors.TextPrimary,
+                trackColor = TranzoColors.BackgroundLight,
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = TranzoColors.CardSurface,
+                color = TranzoColors.SurfaceLight,
                 tonalElevation = 1.dp,
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {

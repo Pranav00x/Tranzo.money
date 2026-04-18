@@ -42,7 +42,7 @@ fun TranzoLogo(
                 .fillMaxSize()
                 .rotate(45f)
                 .clip(RoundedCornerShape(size * 0.05f))
-                .background(TranzoColors.PrimaryBlack)
+                .background(TranzoColors.TextPrimary)
         )
     }
 }
@@ -66,9 +66,9 @@ fun TranzoButton(
         enabled = enabled && !isLoading,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.PrimaryBlack,
+            containerColor = TranzoColors.TextPrimary,
             contentColor = TranzoColors.White,
-            disabledContainerColor = TranzoColors.PrimaryBlack.copy(alpha = 0.4f),
+            disabledContainerColor = TranzoColors.TextPrimary.copy(alpha = 0.4f),
             disabledContentColor = TranzoColors.White.copy(alpha = 0.6f),
         ),
         elevation = ButtonDefaults.buttonElevation(
@@ -107,7 +107,7 @@ fun TranzoSecondaryButton(
             .height(52.dp),
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.LightGray,
+            containerColor = TranzoColors.SurfaceLight,
             contentColor = TranzoColors.TextPrimary,
         ),
         elevation = ButtonDefaults.buttonElevation(
@@ -156,12 +156,12 @@ fun TranzoTextField(
             keyboardActions = keyboardActions,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = TranzoColors.PrimaryBlack,
+                focusedBorderColor = TranzoColors.TextPrimary,
                 unfocusedBorderColor = TranzoColors.BorderGray,
                 errorBorderColor = TranzoColors.Error,
-                focusedLabelColor = TranzoColors.PrimaryBlack,
+                focusedLabelColor = TranzoColors.TextPrimary,
                 unfocusedLabelColor = TranzoColors.TextSecondary,
-                cursorColor = TranzoColors.PrimaryBlack,
+                cursorColor = TranzoColors.TextPrimary,
             ),
         )
 
@@ -191,7 +191,7 @@ fun TranzoCard(
             modifier = modifier,
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = TranzoColors.CardSurface,
+                containerColor = TranzoColors.SurfaceLight,
             ),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 1.dp,
@@ -207,7 +207,7 @@ fun TranzoCard(
             modifier = modifier,
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = TranzoColors.CardSurface,
+                containerColor = TranzoColors.SurfaceLight,
             ),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 1.dp,

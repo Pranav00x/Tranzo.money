@@ -69,7 +69,7 @@ fun DripperDashboardScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         if (state.isLoading && state.streams.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = TranzoColors.PrimaryBlack)
+                CircularProgressIndicator(color = TranzoColors.TextPrimary)
             }
             return@Box
         }
@@ -150,7 +150,7 @@ fun DripperDashboardScreen(
                             enabled = activeStreams.isNotEmpty(),
                             shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = TranzoColors.PrimaryBlack,
+                                containerColor = TranzoColors.TextPrimary,
                             ),
                             modifier = Modifier.fillMaxWidth(0.6f),
                         ) {
@@ -229,7 +229,7 @@ fun DripperDashboardScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 24.dp, bottom = 100.dp),
-            containerColor = TranzoColors.PrimaryBlack,
+            containerColor = TranzoColors.TextPrimary,
             contentColor = TranzoColors.White,
             shape = CircleShape,
         ) {
@@ -260,7 +260,7 @@ private fun StreamCard(
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 6.dp),
         shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = TranzoColors.CardSurface),
+        colors = CardDefaults.cardColors(containerColor = TranzoColors.SurfaceLight),
         elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
@@ -293,13 +293,13 @@ private fun StreamCard(
                     .fillMaxWidth()
                     .height(6.dp),
                 shape = RoundedCornerShape(3.dp),
-                color = TranzoColors.PaleTeal,
+                color = TranzoColors.BackgroundLight,
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(progress)
                         .height(6.dp)
-                        .background(TranzoColors.PrimaryBlack),
+                        .background(TranzoColors.TextPrimary),
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))

@@ -115,7 +115,7 @@ private fun ThemeCard(
             .clickable(onClick = onClick),
         shape = RoundedCornerShape(14.dp),
         colors = CardDefaults.cardColors(
-            containerColor = if (isSelected) Color(0xFFF5F5F5) else TranzoColors.LightGray,
+            containerColor = if (isSelected) Color(0xFFF5F5F5) else TranzoColors.SurfaceLight,
         ),
         elevation = CardDefaults.cardElevation(
             defaultElevation = if (isSelected) 4.dp else 0.dp,
@@ -147,7 +147,7 @@ private fun ThemeCard(
                 Box(
                     modifier = Modifier
                         .size(32.dp)
-                        .background(TranzoColors.PrimaryBlack, CircleShape),
+                        .background(TranzoColors.TextPrimary, CircleShape),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(

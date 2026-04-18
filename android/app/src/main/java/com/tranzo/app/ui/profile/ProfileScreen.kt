@@ -143,7 +143,7 @@ fun ProfileScreen(
             if (!user?.smartAccount.isNullOrEmpty()) {
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = TranzoColors.CardSurface,
+                    color = TranzoColors.SurfaceLight,
                     tonalElevation = 2.dp,
                     modifier = Modifier
                         .fillMaxWidth(0.9f)
@@ -181,7 +181,7 @@ fun ProfileScreen(
                         Text(
                             text = "Non-custodial • Base Sepolia",
                             style = MaterialTheme.typography.labelSmall,
-                            color = TranzoColors.PrimaryBlack,
+                            color = TranzoColors.TextPrimary,
                         )
                     }
                 }
@@ -283,7 +283,7 @@ private fun ProfileSection(
 private fun ProfileItemRow(item: ProfileItem) {
     Surface(
         shape = RoundedCornerShape(12.dp),
-        color = TranzoColors.LightGray,
+        color = TranzoColors.SurfaceLight,
     ) {
         Row(
             modifier = Modifier
@@ -322,7 +322,7 @@ private fun ProfileItemRow(item: ProfileItem) {
                 Text(
                     text = item.badge!!,
                     style = MaterialTheme.typography.labelSmall,
-                    color = TranzoColors.PrimaryBlack,
+                    color = TranzoColors.TextPrimary,
                     fontWeight = FontWeight.Bold,
                 )
             }
