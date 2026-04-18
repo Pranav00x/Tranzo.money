@@ -1,7 +1,6 @@
 package com.tranzo.app.util
 
 import android.app.Activity
-import android.util.Base64
 import android.util.Log
 import androidx.credentials.CredentialManager
 import androidx.credentials.CreatePublicKeyCredentialRequest
@@ -9,11 +8,11 @@ import androidx.credentials.CreatePublicKeyCredentialResponse
 import androidx.credentials.GetCredentialRequest
 import androidx.credentials.GetPublicKeyCredentialOption
 import androidx.credentials.PublicKeyCredential
+import com.google.gson.JsonParser
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
 import javax.inject.Singleton
-import org.json.JSONObject
 
 /**
  * Helper for Passkey/WebAuthn authentication.

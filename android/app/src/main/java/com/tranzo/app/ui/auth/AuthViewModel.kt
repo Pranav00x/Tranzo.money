@@ -148,9 +148,9 @@ class AuthViewModel @Inject constructor(
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
-                // Parse assertion JSON to extract id and response
-                val assertion = org.json.JSONObject(assertionJson)
-                val id = assertion.optString("id", "")
+                // Parse assertion JSON to extract id
+                val assertion = com.google.gson.JsonParser.parseString(assertionJson).asJsonObject
+                val id = assertion.get("id")?.asString ?: ""
 
                 val response = api.loginWithPasskey(
                     com.tranzo.app.data.model.PasskeyLoginVerifyRequest(
