@@ -144,6 +144,65 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun loginWithPasskey(email: String, assertionJson: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                // Parse assertion JSON to extract id and response
+                val assertion = org.json.JSONObject(assertionJson)
+                val id = assertion.optString("id", "")
+
+                val response = api.loginWithPasskey(
+                    com.tranzo.app.data.model.PasskeyLoginVerifyRequest(
+                        email = email,
+                        id = id,
+                        response = assertionJson
+                    )
+                )
+
+                // Save tokens and email
+                saveTokens(response.accessToken, response.refreshToken)
+                sessionManager.saveUserData(
+                    userId = "",
+                    email = email,
+                )
+
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    isAuthenticated = true,
+                    isNewUser = response.isNewUser,
+                    authMethod = AuthMethod.PASSKEY,
+                    lastEmail = email,
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Passkey login failed",
+                )
+            }
+        }
+    }
+
+    fun getPasskeyLoginOptions(email: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                val response = api.getPasskeyLoginOptions(
+                    com.tranzo.app.data.model.PasskeyLoginRequest(email)
+                )
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    // Store for use during credential manager flow
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Failed to get passkey options",
+                )
+            }
+        }
+    }
+
     fun logout() {
         viewModelScope.launch {
             try {

@@ -11,6 +11,24 @@ data class VerifyOtpRequest(val email: String, val otp: String)
 data class GoogleLoginRequest(val idToken: String)
 data class RefreshTokenRequest(val refreshToken: String)
 
+// ─── Passkey / WebAuthn ──────────────────────────────────────
+data class PasskeyRegistrationRequest(val email: String)
+data class PasskeyRegistrationVerifyRequest(
+    val email: String,
+    val id: String,
+    val response: String  // attestationObject as JSON
+)
+data class PasskeyLoginRequest(val email: String)
+data class PasskeyLoginVerifyRequest(
+    val email: String,
+    val id: String,
+    val response: String  // assertion object as JSON
+)
+data class PasskeyOptionsResponse(
+    val challenge: String,
+    val options: String  // Full WebAuthn options JSON from server
+)
+
 // ─── Auth Responses ──────────────────────────────────────────
 
 data class AuthResponse(

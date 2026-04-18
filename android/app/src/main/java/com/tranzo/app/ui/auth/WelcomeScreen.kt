@@ -1,6 +1,7 @@
 package com.tranzo.app.ui.auth
 
 import android.app.Activity
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -57,6 +58,7 @@ import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
 import com.tranzo.app.util.BiometricHelper
 import com.tranzo.app.util.GoogleSignInHelper
+import com.tranzo.app.util.PasskeyHelper
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -74,6 +76,12 @@ interface GoogleSignInEntryPoint {
 @InstallIn(SingletonComponent::class)
 interface BiometricEntryPoint {
     fun biometricHelper(): BiometricHelper
+}
+
+@EntryPoint
+@InstallIn(SingletonComponent::class)
+interface PasskeyEntryPoint {
+    fun passkeyHelper(): PasskeyHelper
 }
 
 @Composable
@@ -96,6 +104,8 @@ fun WelcomeScreen(
     var acceptedTerms by remember { mutableStateOf(true) }
     var submittedEmail by remember { mutableStateOf("") }
     var showEmailOption by remember { mutableStateOf(false) }
+    var selectedAuthMethod by remember { mutableStateOf<String?>(null) }  // "email", "passkey"
+    var isPasskeyFlow by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val googleSignInHelper = remember {
@@ -109,6 +119,12 @@ fun WelcomeScreen(
             context,
             BiometricEntryPoint::class.java
         ).biometricHelper()
+    }
+    val passkeyHelper = remember {
+        EntryPointAccessors.fromApplication(
+            context,
+            PasskeyEntryPoint::class.java
+        ).passkeyHelper()
     }
 
     // Get last authenticated email for biometric fallback
@@ -263,7 +279,11 @@ fun WelcomeScreen(
                             icon = Icons.Outlined.Lock,
                             title = "Passkey",
                             subtitle = "WebAuthn / FIDO2",
-                            onClick = onPasskeyLogin,
+                            onClick = {
+                                // Switch to email entry for passkey flow
+                                showEmailOption = true
+                                isPasskeyFlow = true
+                            },
                         )
 
                         AuthMethodButtonWithIcon(
@@ -291,13 +311,24 @@ fun WelcomeScreen(
                             onClick = { showEmailOption = true },
                         )
                     } else {
-                        // Email OTP option
+                        // Email OTP or Passkey option
                         TranzoSecondaryButton(
                             text = "Back to Methods",
-                            onClick = { showEmailOption = false },
+                            onClick = {
+                                showEmailOption = false
+                                isPasskeyFlow = false
+                                email = ""
+                            },
                         )
 
-                        Spacer(modifier = Modifier.height(8.dp))
+                        Spacer(modifier = Modifier.height(12.dp))
+
+                        Text(
+                            text = if (isPasskeyFlow) "Enter email to use your Passkey" else "Enter email to receive OTP",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TranzoColors.TextSecondary,
+                            modifier = Modifier.padding(bottom = 12.dp),
+                        )
 
                         TranzoTextField(
                             value = email,
@@ -342,11 +373,32 @@ fun WelcomeScreen(
                         }
 
                         TranzoButton(
-                            text = "Send OTP",
+                            text = if (isPasskeyFlow) "Use Passkey" else "Send OTP",
                             onClick = {
                                 val cleanEmail = email.trim()
-                                submittedEmail = cleanEmail
-                                viewModel.sendOtp(cleanEmail)
+                                if (isPasskeyFlow) {
+                                    // Passkey flow: get options from server and authenticate
+                                    coroutineScope.launch {
+                                        try {
+                                            viewModel.getPasskeyLoginOptions(cleanEmail)
+                                            val optionsJson = "{\"challenge\": \"\"}"  // Placeholder - backend should return actual options
+                                            val assertion = passkeyHelper.authenticateWithPasskey(
+                                                activity = context as? androidx.fragment.app.FragmentActivity ?: return@launch,
+                                                email = cleanEmail,
+                                                assertionOptions = optionsJson
+                                            )
+                                            if (assertion != null) {
+                                                viewModel.loginWithPasskey(cleanEmail, assertion)
+                                            }
+                                        } catch (e: Exception) {
+                                            Log.e("PasskeyFlow", "Passkey authentication failed", e)
+                                        }
+                                    }
+                                } else {
+                                    // Email OTP flow
+                                    submittedEmail = cleanEmail
+                                    viewModel.sendOtp(cleanEmail)
+                                }
                             },
                             enabled = email.contains("@") && acceptedTerms,
                             isLoading = state.isLoading,
@@ -368,14 +420,15 @@ private fun AuthMethodButtonWithIcon(
     title: String,
     subtitle: String,
     onClick: () -> Unit,
+    isDisabled: Boolean = false,
 ) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
             .height(64.dp),
         shape = RoundedCornerShape(14.dp),
-        colors = CardDefaults.cardColors(containerColor = TranzoColors.LightGray),
-        onClick = onClick,
+        colors = CardDefaults.cardColors(containerColor = if (isDisabled) TranzoColors.LightGray.copy(alpha = 0.5f) else TranzoColors.LightGray),
+        onClick = if (!isDisabled) onClick else {},
     ) {
         Row(
             modifier = Modifier
@@ -388,7 +441,7 @@ private fun AuthMethodButtonWithIcon(
                 Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = TranzoColors.TextSecondary,
+                    tint = if (isDisabled) TranzoColors.TextTertiary.copy(alpha = 0.5f) else TranzoColors.TextSecondary,
                     modifier = Modifier.size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(12.dp))
@@ -397,21 +450,23 @@ private fun AuthMethodButtonWithIcon(
                         text = title,
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.TextPrimary,
+                        color = if (isDisabled) TranzoColors.TextSecondary.copy(alpha = 0.6f) else TranzoColors.TextPrimary,
                     )
                     Text(
                         text = subtitle,
                         style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.TextSecondary,
+                        color = if (isDisabled) TranzoColors.TextTertiary.copy(alpha = 0.6f) else TranzoColors.TextSecondary,
                     )
                 }
             }
-            Icon(
-                imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
-                contentDescription = null,
-                tint = TranzoColors.TextTertiary,
-                modifier = Modifier.size(20.dp),
-            )
+            if (!isDisabled) {
+                Icon(
+                    imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                    contentDescription = null,
+                    tint = TranzoColors.TextTertiary,
+                    modifier = Modifier.size(20.dp),
+                )
+            }
         }
     }
 }

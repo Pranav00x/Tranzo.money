@@ -19,6 +19,18 @@ interface TranzoApi {
     @POST("auth/google")
     suspend fun loginWithGoogle(@Body request: GoogleLoginRequest): AuthResponse
 
+    @POST("auth/passkey/register-options")
+    suspend fun getPasskeyRegistrationOptions(@Body request: PasskeyRegistrationRequest): PasskeyOptionsResponse
+
+    @POST("auth/passkey/register")
+    suspend fun registerPasskey(@Body request: PasskeyRegistrationVerifyRequest): AuthResponse
+
+    @POST("auth/passkey/login-options")
+    suspend fun getPasskeyLoginOptions(@Body request: PasskeyLoginRequest): PasskeyOptionsResponse
+
+    @POST("auth/passkey/login")
+    suspend fun loginWithPasskey(@Body request: PasskeyLoginVerifyRequest): AuthResponse
+
     @POST("auth/refresh")
     suspend fun refreshToken(@Body request: RefreshTokenRequest): TokenResponse
 
