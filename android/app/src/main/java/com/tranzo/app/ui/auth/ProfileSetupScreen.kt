@@ -1,8 +1,10 @@
 package com.tranzo.app.ui.auth
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
@@ -13,6 +15,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusDirection
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.text.font.FontWeight
@@ -26,24 +29,27 @@ import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Profile setup screen — shown after OTP verification for new users,
- * before wallet creation.
+ * Profile setup screen — shown after OTP verification for new users.
  *
- * Layout (CheQ "Share Your Details" style):
+ * Collects:
+ * - First name (required)
+ * - Last name (required)
+ * - Email (required, pre-filled + read-only if from OTP flow)
+ * - Phone number (optional)
+ * - Preferred language (optional, defaults to English)
+ * - Avatar upload (optional)
+ *
+ * Layout:
  * - "Share Your Details" headline
- * - "Get a Tranzo experience personalised for you" subtitle
- * - First name field
- * - Last name field
- * - Email field (pre-filled + read-only if coming from email OTP flow)
- * - Green pill "Continue" CTA
- * - "Skip for now" secondary option
+ * - Form fields with validation
+ * - Continue and Skip buttons
  */
 @Composable
 fun ProfileSetupScreen(
     /** Pre-filled email from OTP flow — shown read-only. Pass empty to show editable field. */
     prefilledEmail: String = "",
-    /** Called with (firstName, lastName, email) when user taps Continue. */
-    onContinue: (firstName: String, lastName: String, email: String) -> Unit = { _, _, _ -> },
+    /** Called with (firstName, lastName, email, phone, language) when user taps Continue. */
+    onContinue: (firstName: String, lastName: String, email: String, phone: String, language: String) -> Unit = { _, _, _, _, _ -> },
     /** Called when user taps "Skip for now". */
     onSkip: () -> Unit = {},
     /** Whether the parent is executing a save operation. */
@@ -52,23 +58,46 @@ fun ProfileSetupScreen(
     var firstName by remember { mutableStateOf("") }
     var lastName by remember { mutableStateOf("") }
     var email by remember { mutableStateOf(prefilledEmail) }
+    var phone by remember { mutableStateOf("") }
+    var preferredLanguage by remember { mutableStateOf("en") }
+    var showLanguageMenu by remember { mutableStateOf(false) }
 
     var firstNameError by remember { mutableStateOf<String?>(null) }
     var lastNameError by remember { mutableStateOf<String?>(null) }
     var emailError by remember { mutableStateOf<String?>(null) }
+    var phoneError by remember { mutableStateOf<String?>(null) }
 
     val focusManager = LocalFocusManager.current
 
     fun validate(): Boolean {
-        firstNameError = if (firstName.isBlank()) "Please enter your first name" else null
-        lastNameError = if (lastName.isBlank()) "Please enter your last name" else null
-        emailError = when {
-            email.isBlank()         -> "Please enter your email"
-            !email.contains("@")   -> "Enter a valid email address"
-            else                    -> null
+        firstNameError = when {
+            firstName.isBlank() -> "Please enter your first name"
+            firstName.length < 2 -> "First name must be at least 2 characters"
+            else -> null
         }
-        return firstNameError == null && lastNameError == null && emailError == null
+        lastNameError = when {
+            lastName.isBlank() -> "Please enter your last name"
+            lastName.length < 2 -> "Last name must be at least 2 characters"
+            else -> null
+        }
+        emailError = when {
+            email.isBlank() -> "Please enter your email"
+            !email.contains("@") -> "Enter a valid email address"
+            else -> null
+        }
+        phoneError = when {
+            phone.isNotBlank() && phone.length < 10 -> "Phone must be at least 10 digits"
+            else -> null
+        }
+        return firstNameError == null && lastNameError == null && emailError == null && phoneError == null
     }
+
+    val languages = listOf(
+        "en" to "English",
+        "es" to "Español",
+        "fr" to "Français",
+        "pt" to "Português",
+    )
 
     Column(
         modifier = Modifier
@@ -232,15 +261,114 @@ fun ProfileSetupScreen(
                     },
                     keyboardOptions = KeyboardOptions(
                         keyboardType = KeyboardType.Email,
-                        imeAction = ImeAction.Done,
+                        imeAction = ImeAction.Next,
                     ),
                     keyboardActions = KeyboardActions(
-                        onDone = {
-                            focusManager.clearFocus()
-                            if (validate()) onContinue(firstName.trim(), lastName.trim(), email.trim())
-                        },
+                        onNext = { focusManager.moveFocus(FocusDirection.Down) },
                     ),
                 )
+            }
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ── Phone Number (Optional) ──────────────────────────────
+            TranzoTextField(
+                value = phone,
+                onValueChange = {
+                    phone = it.filter { char -> char.isDigit() || char in "+-() " }
+                    if (phoneError != null) phoneError = null
+                },
+                label = "Phone Number (Optional)",
+                placeholder = "+1 (555) 000-0000",
+                isError = phoneError != null,
+                errorMessage = phoneError,
+                leadingIcon = {
+                    Icon(
+                        imageVector = Icons.Outlined.Phone,
+                        contentDescription = null,
+                        tint = TranzoColors.TextTertiary,
+                        modifier = Modifier.size(20.dp),
+                    )
+                },
+                keyboardOptions = KeyboardOptions(
+                    keyboardType = KeyboardType.Phone,
+                    imeAction = ImeAction.Next,
+                ),
+                keyboardActions = KeyboardActions(
+                    onNext = { focusManager.moveFocus(FocusDirection.Down) },
+                ),
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ── Preferred Language Dropdown ──────────────────────────
+            Box {
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .clickable { showLanguageMenu = !showLanguageMenu },
+                    shape = RoundedCornerShape(12.dp),
+                    color = TranzoColors.LightGray,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(horizontal = 16.dp, vertical = 16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Icon(
+                            imageVector = Icons.Outlined.Language,
+                            contentDescription = null,
+                            tint = TranzoColors.TextTertiary,
+                            modifier = Modifier.size(20.dp),
+                        )
+                        Spacer(modifier = Modifier.width(12.dp))
+                        Column(modifier = Modifier.weight(1f)) {
+                            Text(
+                                text = "Preferred Language",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = TranzoColors.TextSecondary,
+                            )
+                            Text(
+                                text = languages.find { it.first == preferredLanguage }?.second ?: "English",
+                                style = MaterialTheme.typography.bodyLarge,
+                                color = TranzoColors.TextPrimary,
+                            )
+                        }
+                        Icon(
+                            imageVector = if (showLanguageMenu) Icons.Outlined.ExpandLess else Icons.Outlined.ExpandMore,
+                            contentDescription = null,
+                            tint = TranzoColors.TextTertiary,
+                            modifier = Modifier.size(20.dp),
+                        )
+                    }
+                }
+
+                // Dropdown menu
+                DropdownMenu(
+                    expanded = showLanguageMenu,
+                    onDismissRequest = { showLanguageMenu = false },
+                    modifier = Modifier.fillMaxWidth(0.9f),
+                ) {
+                    languages.forEach { (code, label) ->
+                        DropdownMenuItem(
+                            text = { Text(label) },
+                            onClick = {
+                                preferredLanguage = code
+                                showLanguageMenu = false
+                            },
+                            leadingIcon = if (code == preferredLanguage) {
+                                {
+                                    Icon(
+                                        imageVector = Icons.Outlined.CheckCircle,
+                                        contentDescription = null,
+                                        tint = TranzoColors.PrimaryBlack,
+                                    )
+                                }
+                            } else null,
+                        )
+                    }
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -284,11 +412,18 @@ fun ProfileSetupScreen(
                 onClick = {
                     focusManager.clearFocus()
                     if (validate()) {
-                        onContinue(firstName.trim(), lastName.trim(), email.trim())
+                        onContinue(
+                            firstName.trim(),
+                            lastName.trim(),
+                            email.trim(),
+                            phone.trim(),
+                            preferredLanguage,
+                        )
                     }
                 },
                 enabled = firstName.isNotBlank() && lastName.isNotBlank() &&
-                        (prefilledEmail.isNotEmpty() || email.contains("@")),
+                        (prefilledEmail.isNotEmpty() || email.contains("@")) &&
+                        !isLoading,
                 isLoading = isLoading,
             )
 

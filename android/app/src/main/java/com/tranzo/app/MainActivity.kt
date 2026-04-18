@@ -141,7 +141,9 @@ class MainActivity : FragmentActivity() {
                             val email = backStackEntry.arguments?.getString("email") ?: ""
                             ProfileSetupScreen(
                                 prefilledEmail = email,
-                                onContinue = { firstName, lastName, email, _, _ ->
+                                onContinue = { firstName, lastName, emailAddr, phone, language ->
+                                    // TODO: Save profile to backend via AuthViewModel
+                                    // For now, proceed to wallet creation
                                     navController.navigate(Screen.WalletCreation.route) {
                                         popUpTo(Screen.ProfileSetup.route) { inclusive = true }
                                     }
