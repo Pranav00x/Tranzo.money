@@ -84,7 +84,7 @@ fun CreateStreamScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Row(

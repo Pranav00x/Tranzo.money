@@ -95,7 +95,7 @@ fun PinScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
@@ -167,7 +167,7 @@ fun PinScreen(
                 val color = when {
                     showError -> TranzoColors.Error
                     isFilled -> TranzoColors.TextPrimary
-                    else -> TranzoColors.BorderGray
+                    else -> TranzoColors.DividerGray
                 }
                 
                 Box(

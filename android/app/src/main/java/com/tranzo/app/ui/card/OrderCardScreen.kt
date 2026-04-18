@@ -48,7 +48,7 @@ fun OrderCardScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         // ── Top Bar ──────────────────────────────────────────────
@@ -171,7 +171,7 @@ fun OrderCardScreen(
             // ── KYC Requirement Badge ────────────────────────────
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.WarningLight,
+                color = TranzoColors.Warning,
             ) {
                 Row(
                     modifier = Modifier
@@ -233,7 +233,7 @@ private fun CardTypeOption(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val borderColor = if (isSelected) TranzoColors.TextPrimary else TranzoColors.BorderGray
+    val borderColor = if (isSelected) TranzoColors.TextPrimary else TranzoColors.DividerGray
 
     Surface(
         onClick = onClick,

@@ -47,7 +47,7 @@ fun ProfileScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background),
+            .background(TranzoColors.BackgroundLight),
     ) {
         // ── Header ────────────────────────────────────────────────
         Box(
@@ -56,8 +56,8 @@ fun ProfileScreen(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            TranzoColors.Navy,
-                            TranzoColors.DarkTeal,
+                            TranzoColors.PrimaryBlue,
+                            TranzoColors.AccentCyan,
                         ),
                     ),
                 )
@@ -72,7 +72,7 @@ fun ProfileScreen(
                     Icon(
                         imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                         contentDescription = "Back",
-                        tint = TranzoColors.TextOnDark,
+                        tint = TranzoColors.TextDarkPrimary,
                     )
                 }
                 Spacer(modifier = Modifier.weight(1f))
@@ -80,7 +80,7 @@ fun ProfileScreen(
                     text = "Profile",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextOnDark,
+                    color = TranzoColors.TextDarkPrimary,
                 )
                 Spacer(modifier = Modifier.weight(1f))
                 Spacer(modifier = Modifier.size(32.dp))
@@ -94,7 +94,7 @@ fun ProfileScreen(
                 .weight(1f)
                 .offset(y = (-24).dp)
                 .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                .background(TranzoColors.Background)
+                .background(TranzoColors.BackgroundLight)
                 .verticalScroll(rememberScrollState())
                 .padding(top = 24.dp, bottom = 24.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
@@ -102,7 +102,7 @@ fun ProfileScreen(
             // ── Profile Avatar ───────────────────────────────────
             Surface(
                 shape = CircleShape,
-                color = TranzoColors.Navy,
+                color = TranzoColors.PrimaryBlue,
                 modifier = Modifier.size(80.dp),
             ) {
                 Box(
@@ -113,7 +113,7 @@ fun ProfileScreen(
                         text = getInitials(user?.displayName ?: "User"),
                         style = MaterialTheme.typography.headlineLarge,
                         fontWeight = FontWeight.Bold,
-                        color = TranzoColors.TextOnDark,
+                        color = TranzoColors.TextDarkPrimary,
                     )
                 }
             }
@@ -160,7 +160,7 @@ fun ProfileScreen(
                             Icon(
                                 imageVector = Icons.Outlined.AccountBalanceWallet,
                                 contentDescription = null,
-                                tint = TranzoColors.Navy,
+                                tint = TranzoColors.PrimaryBlue,
                                 modifier = Modifier.size(20.dp),
                             )
                             Text(

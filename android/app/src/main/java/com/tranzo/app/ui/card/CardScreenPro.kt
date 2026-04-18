@@ -181,15 +181,13 @@ fun CardScreenPro(
                 TranzoButton(
                     text = if (cardFrozen) "Unfreeze Card" else "Freeze Card",
                     onClick = { cardFrozen = !cardFrozen },
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = if (cardFrozen) TranzoColors.Warning else TranzoColors.Error
+                    modifier = Modifier.fillMaxWidth()
                 )
 
                 TranzoButton(
                     text = "View Transactions",
                     onClick = { },
-                    modifier = Modifier.fillMaxWidth(),
-                    containerColor = TranzoColors.PrimaryBlue
+                    modifier = Modifier.fillMaxWidth()
                 )
             }
 

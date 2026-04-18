@@ -157,7 +157,7 @@ fun TranzoTextField(
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
                 focusedBorderColor = TranzoColors.TextPrimary,
-                unfocusedBorderColor = TranzoColors.BorderGray,
+                unfocusedBorderColor = TranzoColors.DividerGray,
                 errorBorderColor = TranzoColors.Error,
                 focusedLabelColor = TranzoColors.TextPrimary,
                 unfocusedLabelColor = TranzoColors.TextSecondary,
@@ -292,8 +292,8 @@ fun StatusBadge(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
 ) {
-    val bgColor = if (isError) TranzoColors.BadgeRedBg else TranzoColors.BadgeGreenBg
-    val textColor = if (isError) TranzoColors.BadgeRed else TranzoColors.BadgeGreen
+    val bgColor = if (isError) TranzoColors.ErrorBg else TranzoColors.SuccessBg
+    val textColor = if (isError) TranzoColors.Error else TranzoColors.Success
 
     Box(
         modifier = modifier

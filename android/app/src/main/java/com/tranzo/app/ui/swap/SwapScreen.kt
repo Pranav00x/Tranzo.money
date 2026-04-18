@@ -64,7 +64,7 @@ fun SwapScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Row(
@@ -256,7 +256,7 @@ private fun SwapTokenCard(
                         singleLine = true,
                         colors = OutlinedTextFieldDefaults.colors(
                             focusedBorderColor = TranzoColors.TextPrimary,
-                            unfocusedBorderColor = TranzoColors.BorderGray.copy(alpha = 0f),
+                            unfocusedBorderColor = TranzoColors.DividerGray.copy(alpha = 0f),
                         ),
                     )
                 }
@@ -331,7 +331,7 @@ private fun SwapSuccessView(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .padding(24.dp),
         horizontalAlignment = Alignment.CenterHorizontally,
         verticalArrangement = Arrangement.Center,

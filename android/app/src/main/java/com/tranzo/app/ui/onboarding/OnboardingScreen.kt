@@ -156,7 +156,7 @@ fun OnboardingScreen(
                         .clip(CircleShape)
                         .background(
                             if (isSelected) TranzoColors.TextPrimary
-                            else TranzoColors.BorderGray
+                            else TranzoColors.DividerGray
                         )
                         .animateContentSize(),
                 )

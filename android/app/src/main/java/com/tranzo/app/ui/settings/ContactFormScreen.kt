@@ -47,7 +47,7 @@ fun ContactFormScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background),
+            .background(TranzoColors.BackgroundLight),
     ) {
         // Top bar
         TopAppBar(
@@ -68,7 +68,7 @@ fun ContactFormScreen(
                 }
             },
             colors = TopAppBarDefaults.topAppBarColors(
-                containerColor = TranzoColors.Background,
+                containerColor = TranzoColors.BackgroundLight,
             ),
         )
 

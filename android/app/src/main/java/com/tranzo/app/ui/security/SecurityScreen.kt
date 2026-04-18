@@ -40,7 +40,7 @@ fun SecurityScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         // ── Top Bar ──────────────────────────────────────────────
@@ -204,7 +204,7 @@ private fun SecurityToggleRow(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     Surface(
-        color = TranzoColors.Background,
+        color = TranzoColors.BackgroundLight,
         modifier = Modifier.padding(vertical = 4.dp),
     ) {
         Row(
@@ -255,7 +255,7 @@ private fun SecurityActionRow(
 ) {
     Surface(
         onClick = onClick,
-        color = TranzoColors.Background,
+        color = TranzoColors.BackgroundLight,
         modifier = Modifier.padding(vertical = 4.dp),
     ) {
         Row(
@@ -286,7 +286,7 @@ private fun SecurityActionRow(
             if (badge != null) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = if (badgeIsError) TranzoColors.ErrorLight else TranzoColors.BadgeGreenBg,
+                    color = if (badgeIsError) TranzoColors.ErrorLight else TranzoColors.SuccessBg,
                 ) {
                     Text(
                         text = badge,

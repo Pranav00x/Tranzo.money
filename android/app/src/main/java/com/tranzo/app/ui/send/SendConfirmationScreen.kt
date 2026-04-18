@@ -75,7 +75,7 @@ fun SendConfirmationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Box(
@@ -83,7 +83,7 @@ fun SendConfirmationScreen(
                 .fillMaxWidth()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(TranzoColors.Navy, TranzoColors.DarkTeal),
+                        colors = listOf(TranzoColors.PrimaryBlue, TranzoColors.AccentCyan),
                     ),
                 )
                 .padding(horizontal = 24.dp)
@@ -98,13 +98,13 @@ fun SendConfirmationScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Back",
-                            tint = TranzoColors.TextOnDark,
+                            tint = TranzoColors.TextDarkPrimary,
                         )
                     }
                     Text(
                         text = "Review Transfer",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = TranzoColors.TextOnDark,
+                        color = TranzoColors.TextDarkPrimary,
                     )
                 }
 
@@ -112,7 +112,7 @@ fun SendConfirmationScreen(
                 Text(
                     text = "$amount $tokenSymbol",
                     style = MaterialTheme.typography.displayMedium,
-                    color = TranzoColors.TextOnDark,
+                    color = TranzoColors.TextDarkPrimary,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -121,7 +121,7 @@ fun SendConfirmationScreen(
                 Text(
                     text = usdValue,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = TranzoColors.LightTeal,
+                    color = TranzoColors.AccentEmerald,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
@@ -133,7 +133,7 @@ fun SendConfirmationScreen(
                 .weight(1f)
                 .offset(y = (-20).dp)
                 .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                .background(TranzoColors.Background)
+                .background(TranzoColors.BackgroundLight)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
                 .padding(top = 28.dp),
@@ -226,7 +226,7 @@ fun SendConfirmationScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(TranzoColors.Background)
+                .background(TranzoColors.BackgroundLight)
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 24.dp, top = 8.dp),
         ) {

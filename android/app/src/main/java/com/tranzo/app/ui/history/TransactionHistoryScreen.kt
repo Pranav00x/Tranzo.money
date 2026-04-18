@@ -105,7 +105,7 @@ fun TransactionHistoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Text(
@@ -117,7 +117,7 @@ fun TransactionHistoryScreen(
 
         ScrollableTabRow(
             selectedTabIndex = filters.indexOf(selectedFilter).coerceAtLeast(0),
-            containerColor = TranzoColors.Background,
+            containerColor = TranzoColors.BackgroundLight,
             contentColor = TranzoColors.TextPrimary,
             edgePadding = 24.dp,
             divider = {},
@@ -206,7 +206,7 @@ private fun TransactionRow(tx: TransactionUiItem) {
         else -> Icons.Outlined.Receipt
     }
 
-    Surface(color = TranzoColors.Background) {
+    Surface(color = TranzoColors.BackgroundLight) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()

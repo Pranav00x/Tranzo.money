@@ -77,7 +77,7 @@ fun DripperDashboardScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(TranzoColors.Background),
+                .background(TranzoColors.BackgroundLight),
         ) {
             item {
                 Box(
@@ -86,9 +86,9 @@ fun DripperDashboardScreen(
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(
-                                    TranzoColors.Navy,
+                                    TranzoColors.PrimaryBlue,
                                     TranzoColors.GradientMid,
-                                    TranzoColors.DarkTeal,
+                                    TranzoColors.AccentCyan,
                                 ),
                             ),
                         )
@@ -107,13 +107,13 @@ fun DripperDashboardScreen(
                             Text(
                                 text = "Dripper",
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = TranzoColors.TextOnDark,
+                                color = TranzoColors.TextDarkPrimary,
                                 fontWeight = FontWeight.Bold,
                             )
                             Icon(
                                 imageVector = Icons.Outlined.WaterDrop,
                                 contentDescription = null,
-                                tint = TranzoColors.LightTeal,
+                                tint = TranzoColors.AccentEmerald,
                                 modifier = Modifier.size(28.dp),
                             )
                         }
@@ -123,7 +123,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "Total Withdrawn",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextOnDarkMuted,
+                            color = TranzoColors.TextDarkPrimaryMuted,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -131,7 +131,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "$${totalEarned.formatMoney()}",
                             style = MaterialTheme.typography.displayLarge,
-                            color = TranzoColors.TextOnDark,
+                            color = TranzoColors.TextDarkPrimary,
                             fontWeight = FontWeight.Bold,
                         )
 
@@ -140,7 +140,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "${activeStreams.size} active stream(s)",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TranzoColors.LightTeal,
+                            color = TranzoColors.AccentEmerald,
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
@@ -171,7 +171,7 @@ fun DripperDashboardScreen(
                         .fillMaxWidth()
                         .offset(y = (-20).dp)
                         .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                        .background(TranzoColors.Background)
+                        .background(TranzoColors.BackgroundLight)
                         .padding(horizontal = 20.dp),
                 ) {
                     Column {

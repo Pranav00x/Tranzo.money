@@ -51,7 +51,7 @@ fun ReceiveScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         // ── Top Bar ──────────────────────────────────────────────
