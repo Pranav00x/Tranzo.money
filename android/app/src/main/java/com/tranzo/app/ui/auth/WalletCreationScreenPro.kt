@@ -284,5 +284,3 @@ private fun StepItem(
         }
     }
 }
-import androidx.compose.animation.core.infiniteRepeatable
-import androidx.compose.animation.core.tween
