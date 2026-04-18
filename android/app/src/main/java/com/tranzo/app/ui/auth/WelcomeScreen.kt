@@ -11,16 +11,24 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.systemBarsPadding
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowForward
+import androidx.compose.material.icons.outlined.Email
+import androidx.compose.material.icons.outlined.Fingerprint
+import androidx.compose.material.icons.outlined.Lock
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.Checkbox
 import androidx.compose.material3.CheckboxDefaults
 import androidx.compose.material3.HorizontalDivider
+import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -102,11 +110,20 @@ fun WelcomeScreen(
                             .background(Color(0x33FFFFFF), CircleShape)
                             .padding(horizontal = 10.dp, vertical = 4.dp),
                     ) {
-                        Text(
-                            text = "🔐 Non-Custodial Wallet",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = TranzoColors.White,
-                        )
+                        Row(verticalAlignment = androidx.compose.ui.Alignment.CenterVertically) {
+                            Icon(
+                                imageVector = Icons.Outlined.Lock,
+                                contentDescription = null,
+                                tint = TranzoColors.White,
+                                modifier = Modifier.size(14.dp),
+                            )
+                            Spacer(modifier = Modifier.width(4.dp))
+                            Text(
+                                text = "Non-Custodial Wallet",
+                                style = MaterialTheme.typography.labelMedium,
+                                color = TranzoColors.White,
+                            )
+                        }
                     }
 
                     Spacer(modifier = Modifier.height(12.dp))
@@ -168,22 +185,22 @@ fun WelcomeScreen(
                             color = TranzoColors.TextPrimary,
                         )
 
-                        AuthMethodButton(
-                            icon = "👆",
+                        AuthMethodButtonWithIcon(
+                            icon = Icons.Outlined.Fingerprint,
                             title = "Biometric",
                             subtitle = "Face ID / Fingerprint",
                             onClick = onBiometricLogin,
                         )
 
-                        AuthMethodButton(
-                            icon = "🔑",
+                        AuthMethodButtonWithIcon(
+                            icon = Icons.Outlined.Lock,
                             title = "Passkey",
                             subtitle = "WebAuthn / FIDO2",
                             onClick = onPasskeyLogin,
                         )
 
-                        AuthMethodButton(
-                            icon = "🔵",
+                        AuthMethodButtonWithIcon(
+                            icon = Icons.Outlined.Email,
                             title = "Google",
                             subtitle = "Sign in with Google",
                             onClick = onGoogleLogin,
@@ -191,8 +208,8 @@ fun WelcomeScreen(
 
                         HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(vertical = 8.dp))
 
-                        AuthMethodButton(
-                            icon = "✉️",
+                        AuthMethodButtonWithIcon(
+                            icon = Icons.Outlined.Email,
                             title = "Email OTP",
                             subtitle = "One-time passcode",
                             onClick = { showEmailOption = true },
@@ -200,7 +217,7 @@ fun WelcomeScreen(
                     } else {
                         // Email OTP option
                         TranzoSecondaryButton(
-                            text = "← Back to Methods",
+                            text = "Back to Methods",
                             onClick = { showEmailOption = false },
                         )
 
@@ -270,8 +287,8 @@ fun WelcomeScreen(
 }
 
 @Composable
-private fun AuthMethodButton(
-    icon: String,
+private fun AuthMethodButtonWithIcon(
+    icon: ImageVector,
     title: String,
     subtitle: String,
     onClick: () -> Unit,
@@ -292,9 +309,11 @@ private fun AuthMethodButton(
             horizontalArrangement = Arrangement.SpaceBetween,
         ) {
             Row(verticalAlignment = Alignment.CenterVertically) {
-                Text(
-                    text = icon,
-                    style = MaterialTheme.typography.headlineMedium,
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = TranzoColors.TextSecondary,
+                    modifier = Modifier.size(24.dp),
                 )
                 Spacer(modifier = Modifier.width(12.dp))
                 Column {
@@ -311,10 +330,11 @@ private fun AuthMethodButton(
                     )
                 }
             }
-            Text(
-                text = "→",
-                style = MaterialTheme.typography.headlineSmall,
-                color = TranzoColors.TextTertiary,
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                contentDescription = null,
+                tint = TranzoColors.TextTertiary,
+                modifier = Modifier.size(20.dp),
             )
         }
     }
