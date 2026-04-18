@@ -7,7 +7,6 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
-import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
@@ -34,6 +33,7 @@ import com.tranzo.app.ui.receive.ReceiveScreen
 import com.tranzo.app.ui.send.SendConfirmationScreen
 import com.tranzo.app.ui.send.SendScreen
 import com.tranzo.app.ui.settings.SettingsScreen
+import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreen
 import com.tranzo.app.ui.swap.SwapScreen
 import com.tranzo.app.ui.theme.TranzoTheme
@@ -41,11 +41,13 @@ import dagger.hilt.android.AndroidEntryPoint
 
 import androidx.fragment.app.FragmentActivity
 import com.tranzo.app.util.BiometricHelper
+import com.tranzo.app.util.ThemeManager
 import javax.inject.Inject
 
 @AndroidEntryPoint
 class MainActivity : FragmentActivity() {
     @Inject lateinit var biometricHelper: BiometricHelper
+    @Inject lateinit var themeManager: ThemeManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -53,7 +55,9 @@ class MainActivity : FragmentActivity() {
         enableEdgeToEdge()
 
         setContent {
-            TranzoTheme {
+            val themeId by themeManager.currentThemeId.collectAsState()
+
+            TranzoTheme(themeId = themeId) {
                 val navController = rememberNavController()
 
                 Scaffold(
@@ -335,6 +339,16 @@ class MainActivity : FragmentActivity() {
                                 onProfile = {
                                     navController.navigate(Screen.Profile.route)
                                 },
+                                onTheme = {
+                                    navController.navigate(Screen.ThemeSelector.route)
+                                },
+                            )
+                        }
+
+                        // ── Theme Selector ──────────────────────────────
+                        composable(Screen.ThemeSelector.route) {
+                            ThemeSelectorScreen(
+                                onBack = { navController.popBackStack() },
                             )
                         }
 

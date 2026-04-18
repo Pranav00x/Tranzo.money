@@ -27,11 +27,6 @@ export class AuthService {
   static async sendOtp(email: string) {
     const normalizedEmail = email.toLowerCase().trim();
 
-    if (normalizedEmail === "test@test.in") {
-      console.log(`[Auth] OTP Bypass for test account: 000000`);
-      return { success: true };
-    }
-
     // Generate 6-digit OTP (000000-999999)
     const otp = Math.floor(Math.random() * 1000000).toString().padStart(6, "0");
     const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
@@ -68,36 +63,31 @@ export class AuthService {
   ) {
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Bypass for test account
-    if (normalizedEmail === "test@test.in" && otp === "000000") {
-      console.log(`[Auth] OTP Verified via Bypas for test account`);
-    } else {
-      const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
-      console.log(`[Auth] Looking for OTP hash: ${tokenHash} for email: ${normalizedEmail}`);
+    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
+    console.log(`[Auth] Looking for OTP hash: ${tokenHash} for email: ${normalizedEmail}`);
 
-      const record = await prisma.otpToken.findFirst({
-        where: {
-          target: normalizedEmail,
-          tokenHash,
-          type: "EMAIL_VERIFICATION",
-          used: false,
-          expiresAt: { gt: new Date() },
-        },
-      });
+    const record = await prisma.otpToken.findFirst({
+      where: {
+        target: normalizedEmail,
+        tokenHash,
+        type: "EMAIL_VERIFICATION",
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+    });
 
-      if (!record) {
-        console.error(`[Auth] OTP not found or expired for ${normalizedEmail}`);
-        throw new Error("Invalid or expired OTP");
-      }
-
-      console.log(`[Auth] OTP found and valid for ${normalizedEmail}`);
-
-      // Mark OTP as used
-      await prisma.otpToken.update({
-        where: { id: record.id },
-        data: { used: true },
-      });
+    if (!record) {
+      console.error(`[Auth] OTP not found or expired for ${normalizedEmail}`);
+      throw new Error("Invalid or expired OTP");
     }
+
+    console.log(`[Auth] OTP found and valid for ${normalizedEmail}`);
+
+    // Mark OTP as used
+    await prisma.otpToken.update({
+      where: { id: record.id },
+      data: { used: true },
+    });
 
     // Find or create user
     let user = await prisma.user.findUnique({

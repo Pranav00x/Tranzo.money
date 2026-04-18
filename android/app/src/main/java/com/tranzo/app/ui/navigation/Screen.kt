@@ -26,6 +26,7 @@ sealed class Screen(val route: String) {
     data object CreateStream : Screen("create_stream")
     data object Profile : Screen("profile")
     data object Settings : Screen("settings")
+    data object ThemeSelector : Screen("theme_selector")
     data object Security : Screen("security")
     data object TransactionHistory : Screen("transaction_history")
     data object Card : Screen("card")

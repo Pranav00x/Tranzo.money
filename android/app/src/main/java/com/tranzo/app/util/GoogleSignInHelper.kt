@@ -9,6 +9,7 @@ import com.google.android.gms.common.api.CommonStatusCodes
 import com.google.android.gms.tasks.Task
 import com.google.android.libraries.identity.googleid.GetGoogleIdOption
 import com.google.android.libraries.identity.googleid.GoogleIdTokenCredential
+import com.tranzo.app.BuildConfig
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 import javax.inject.Inject
@@ -23,9 +24,6 @@ class GoogleSignInHelper @Inject constructor() {
 
     companion object {
         private const val TAG = "GoogleSignInHelper"
-        // Google Cloud Console Web Client ID for Tranzo Android app
-        // Project: tranzo-493512
-        private const val GOOGLE_CLIENT_ID = "753093250645-mjghuinh2qrjfi5mrlqtjq3kei4ecqbn.apps.googleusercontent.com"
     }
 
     /**
@@ -40,7 +38,7 @@ class GoogleSignInHelper @Inject constructor() {
 
             val googleIdOption = GetGoogleIdOption.Builder()
                 .setFilterByAuthorizedAccounts(false)
-                .setServerClientId(GOOGLE_CLIENT_ID)
+                .setServerClientId(BuildConfig.GOOGLE_CLIENT_ID)
                 .build()
 
             val request = GetCredentialRequest.Builder()

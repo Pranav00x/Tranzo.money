@@ -20,6 +20,9 @@ android {
         versionName = "1.0.0"
 
         buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
+        buildConfigField("String", "WEBAUTHN_RP_ID", "\"tranzo.app\"")
+        buildConfigField("String", "WEBAUTHN_ORIGIN", "\"https://tranzo.app\"")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"753093250645-mjghuinh2qrjfi5mrlqtjq3kei4ecqbn.apps.googleusercontent.com\"")
     }
 
     buildTypes {
@@ -30,6 +33,8 @@ android {
         }
         debug {
             buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
+            buildConfigField("String", "WEBAUTHN_RP_ID", "\"localhost\"")
+            buildConfigField("String", "WEBAUTHN_ORIGIN", "\"http://localhost:3000\"")
         }
     }
 
@@ -94,10 +99,13 @@ dependencies {
     // Lottie
     implementation(libs.lottie)
 
-    // Google Auth
+    // Google Auth & Credential Management
     implementation(libs.google.auth)
     implementation(libs.credential.manager)
     implementation("com.google.android.libraries.identity.googleid:googleid:1.0.0")
+
+    // WebAuthn / Passkey
+    implementation("com.google.android.gms:play-services-fido:20.1.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

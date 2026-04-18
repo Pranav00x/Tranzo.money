@@ -1,6 +1,5 @@
 package com.tranzo.app.ui.auth
 
-import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.tranzo.app.data.api.TranzoApi
@@ -8,8 +7,8 @@ import com.tranzo.app.data.model.GoogleLoginRequest
 import com.tranzo.app.data.model.SendOtpRequest
 import com.tranzo.app.data.model.UpdateProfileRequest
 import com.tranzo.app.data.model.VerifyOtpRequest
+import com.tranzo.app.util.SessionManager
 import dagger.hilt.android.lifecycle.HiltViewModel
-import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
@@ -34,25 +33,16 @@ data class AuthUiState(
 @HiltViewModel
 class AuthViewModel @Inject constructor(
     private val api: TranzoApi,
-    @ApplicationContext private val context: Context,
+    private val sessionManager: SessionManager,
 ) : ViewModel() {
 
     private val _state = MutableStateFlow(AuthUiState())
     val state = _state.asStateFlow()
 
-    private val prefs by lazy {
-        context.getSharedPreferences("tranzo_auth", Context.MODE_PRIVATE)
-    }
-
     val isLoggedIn: Boolean
-        get() = prefs.getString("access_token", null) != null
+        get() = sessionManager.isLoggedIn()
 
     fun sendOtp(email: String) {
-        if (email.lowercase().trim() == "test@test.in") {
-            _state.value = _state.value.copy(otpSent = true)
-            verifyOtp(email, "000000")
-            return
-        }
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
@@ -72,8 +62,19 @@ class AuthViewModel @Inject constructor(
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
                 val response = api.verifyOtp(VerifyOtpRequest(email, otp))
+
+                // Save tokens and user data
                 saveTokens(response.accessToken, response.refreshToken)
-                saveLastEmail(email)
+                sessionManager.saveUserData(
+                    userId = response.userId ?: "",
+                    email = email,
+                    firstName = response.user?.firstName,
+                    lastName = response.user?.lastName,
+                    phone = response.user?.phone,
+                    avatarUrl = response.user?.avatarUrl,
+                    walletAddress = response.user?.walletAddress,
+                )
+
                 _state.value = _state.value.copy(
                     isLoading = false,
                     isAuthenticated = true,
@@ -95,7 +96,19 @@ class AuthViewModel @Inject constructor(
             _state.value = _state.value.copy(isLoading = true, error = null)
             try {
                 val response = api.loginWithGoogle(GoogleLoginRequest(idToken))
+
+                // Save tokens and user data
                 saveTokens(response.accessToken, response.refreshToken)
+                sessionManager.saveUserData(
+                    userId = response.userId ?: "",
+                    email = response.user?.email ?: "",
+                    firstName = response.user?.firstName,
+                    lastName = response.user?.lastName,
+                    phone = response.user?.phone,
+                    avatarUrl = response.user?.avatarUrl,
+                    walletAddress = response.user?.walletAddress,
+                )
+
                 _state.value = _state.value.copy(
                     isLoading = false,
                     isAuthenticated = true,
@@ -147,7 +160,7 @@ class AuthViewModel @Inject constructor(
             try {
                 api.logout()
             } catch (_: Exception) { }
-            clearTokens()
+            sessionManager.clearSession()
             _state.value = AuthUiState()
         }
     }
@@ -203,32 +216,20 @@ class AuthViewModel @Inject constructor(
     }
 
     private fun saveTokens(accessToken: String, refreshToken: String) {
-        prefs.edit()
-            .putString("access_token", accessToken)
-            .putString("refresh_token", refreshToken)
-            .apply()
+        sessionManager.saveTokens(accessToken, refreshToken)
     }
 
     private fun clearTokens() {
-        prefs.edit()
-            .remove("access_token")
-            .remove("refresh_token")
-            .remove("last_email")
-            .remove("first_name")
-            .remove("last_name")
-            .remove("phone")
-            .remove("language")
-            .apply()
+        sessionManager.clearSession()
     }
 
     private fun saveLastEmail(email: String) {
-        prefs.edit()
-            .putString("last_email", email)
-            .apply()
+        // SessionManager saves email through saveUserData
+        sessionManager.saveUserData(userId = "", email = email)
     }
 
     fun getLastEmail(): String? {
-        return prefs.getString("last_email", null)
+        return sessionManager.getEmail()
     }
 
     private fun saveProfileLocally(
@@ -237,17 +238,20 @@ class AuthViewModel @Inject constructor(
         phone: String,
         language: String,
     ) {
-        prefs.edit()
-            .putString("first_name", firstName)
-            .putString("last_name", lastName)
-            .putString("phone", phone)
-            .putString("language", language)
-            .apply()
+        val currentProfile = sessionManager.getUserProfile()
+        sessionManager.saveUserData(
+            userId = currentProfile?.userId ?: "",
+            email = currentProfile?.email ?: "",
+            firstName = firstName,
+            lastName = lastName,
+            phone = phone,
+            avatarUrl = currentProfile?.avatarUrl,
+            walletAddress = currentProfile?.walletAddress,
+        )
     }
 
     fun getProfileLocally(): Pair<String, String> {
-        val firstName = prefs.getString("first_name", "") ?: ""
-        val lastName = prefs.getString("last_name", "") ?: ""
-        return firstName to lastName
+        val profile = sessionManager.getUserProfile()
+        return (profile?.firstName ?: "") to (profile?.lastName ?: "")
     }
 }

@@ -29,9 +29,25 @@ private val TranzoColorScheme = lightColorScheme(
 )
 
 @Composable
-fun TranzoTheme(content: @Composable () -> Unit) {
+fun TranzoTheme(
+    themeId: String = "default_dark",
+    content: @Composable () -> Unit,
+) {
+    // Get the color scheme based on theme ID
+    val colorScheme = when (themeId) {
+        "default_dark" -> DarkThemeColors
+        "purple_night" -> PurpleThemeColors
+        "ocean" -> OceanThemeColors
+        "sunset" -> SunsetThemeColors
+        "mint" -> MintThemeColors
+        "pink" -> PinkThemeColors
+        "gold" -> GoldThemeColors
+        "cyberpunk" -> CyberpunkThemeColors
+        else -> DarkThemeColors
+    }
+
     MaterialTheme(
-        colorScheme = TranzoColorScheme,
+        colorScheme = colorScheme,
         typography = TranzoTypography,
         shapes = TranzoShapes,
         content = content,

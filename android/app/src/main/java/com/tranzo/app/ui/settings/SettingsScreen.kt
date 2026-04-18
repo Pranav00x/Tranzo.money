@@ -11,6 +11,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.ExitToApp
 import androidx.compose.material.icons.outlined.*
+import androidx.compose.material.icons.outlined.Palette
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.collectAsState
@@ -44,6 +45,7 @@ fun SettingsScreen(
     onProfile: () -> Unit = {},
     onWallet: () -> Unit = {},
     onSecurity: () -> Unit = {},
+    onTheme: () -> Unit = {},
     onHelp: () -> Unit = {},
     onContact: () -> Unit = {},
 ) {
@@ -191,6 +193,18 @@ fun SettingsScreen(
                 label = "Two-Factor Auth",
                 subtitle = "Enable 2FA for extra security",
                 onClick = {},
+            )
+
+            Spacer(modifier = Modifier.height(20.dp))
+
+            // ── Appearance Section ───────────────────────────────
+            SettingsSectionTitle("Appearance")
+
+            SettingsAction(
+                icon = Icons.Outlined.Palette,
+                label = "Theme",
+                subtitle = "Choose your theme style",
+                onClick = onTheme,
             )
 
             Spacer(modifier = Modifier.height(20.dp))
