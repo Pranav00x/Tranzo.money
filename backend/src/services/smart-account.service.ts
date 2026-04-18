@@ -5,7 +5,7 @@ import prisma from "./prisma.service.js";
 import { ENV } from "../config/env.js";
 
 // ZeroDev SDK v5 - kernel account creation
-import { createKernelAccount, createKernelAccountClient, getKernelAccountAddress } from "@zerodev/sdk";
+import { createKernelAccount, createKernelAccountClient } from "@zerodev/sdk";
 
 export class SmartAccountService {
   /**
@@ -31,24 +31,16 @@ export class SmartAccountService {
       });
       console.log(`[SmartAccount] ✓ Public client created`);
 
-      // Step 2: Calculate kernel account address using ZeroDev SDK
-      console.log(`[SmartAccount] Calculating kernel account address...`);
-      // @ts-ignore - ZeroDev SDK types compatibility
-      const address = await getKernelAccountAddress(publicClient, {
-        signer,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-      });
-      console.log(`[SmartAccount] ✓ Address calculated: ${address}`);
-
-      // Step 3: Create the actual kernel account object (for later transaction signing)
-      console.log(`[SmartAccount] Creating kernel account object...`);
+      // Step 2: Create kernel account (deterministic address based on signer)
+      console.log(`[SmartAccount] Creating kernel account...`);
       // @ts-ignore - ZeroDev SDK types compatibility
       const account = await createKernelAccount(publicClient, {
         signer,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // ERC-4337 EntryPoint v0.6
       });
-      console.log(`[SmartAccount] ✓ Kernel account object created`);
+      console.log(`[SmartAccount] ✓ Kernel account created`);
 
+      const address = account.address;
       console.log(`[SmartAccount] ✅ Smart Account Address: ${address}`);
       console.log(`[SmartAccount] Chain: Base Sepolia (84532), Signer: ${signer.address}`);
       console.log(`[SmartAccount] Private key: ${key.substring(0, 10)}...`);
