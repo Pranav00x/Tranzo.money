@@ -1,7 +1,7 @@
 package com.tranzo.app.util
 
 import android.content.Context
-import androidx.annotation.ApplicationContext
+import dagger.hilt.android.qualifiers.ApplicationContext
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow

@@ -56,19 +56,9 @@ jobs:
         uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: false
-          gradle-home-cache-cleanup: true
-
-      - name: Create gradle.properties for optimization
-        run: |
-          cat >> gradle.properties << EOF
-          org.gradle.parallel=true
-          org.gradle.workers.max=4
-          org.gradle.caching=true
-          org.gradle.jvmargs=-Xmx4096m
-          EOF
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace --build-cache --parallel --daemon
+        run: ./gradlew assembleDebug --stacktrace
 
       - name: Get APK path and info
         id: apk_info
