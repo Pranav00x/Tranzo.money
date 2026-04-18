@@ -7,6 +7,7 @@ import androidx.activity.enableEdgeToEdge
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
+import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
@@ -139,20 +140,37 @@ class MainActivity : FragmentActivity() {
 
                         composable(Screen.ProfileSetup.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
+                            val authViewModel = androidx.hilt.navigation.compose.hiltViewModel<com.tranzo.app.ui.auth.AuthViewModel>()
+                            val authState by authViewModel.state.collectAsState()
+
+                            // Navigate when profile save completes
+                            LaunchedEffect(authState.isProfileSaved) {
+                                if (authState.isProfileSaved) {
+                                    navController.navigate(Screen.WalletCreation.route) {
+                                        popUpTo(Screen.ProfileSetup.route) { inclusive = true }
+                                    }
+                                }
+                            }
+
                             ProfileSetupScreen(
                                 prefilledEmail = email,
                                 onContinue = { firstName, lastName, emailAddr, phone, language ->
-                                    // TODO: Save profile to backend via AuthViewModel
-                                    // For now, proceed to wallet creation
-                                    navController.navigate(Screen.WalletCreation.route) {
-                                        popUpTo(Screen.ProfileSetup.route) { inclusive = true }
-                                    }
+                                    // Save profile to backend
+                                    authViewModel.saveProfile(
+                                        firstName = firstName,
+                                        lastName = lastName,
+                                        email = emailAddr,
+                                        phone = phone,
+                                        language = language,
+                                    )
                                 },
                                 onSkip = {
+                                    // Skip profile setup, go straight to wallet
                                     navController.navigate(Screen.WalletCreation.route) {
                                         popUpTo(Screen.ProfileSetup.route) { inclusive = true }
                                     }
                                 },
+                                isLoading = authState.isLoading,
                             )
                         }
 
