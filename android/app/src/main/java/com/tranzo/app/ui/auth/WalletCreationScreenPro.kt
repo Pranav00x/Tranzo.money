@@ -3,6 +3,7 @@ package com.tranzo.app.ui.auth
 import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
@@ -30,7 +31,7 @@ import kotlinx.coroutines.delay
  */
 @Composable
 fun WalletCreationScreenPro(
-    viewModel: HomeViewModel = hiltViewModel(),
+    viewModel: AuthViewModel = hiltViewModel(),
     onComplete: () -> Unit = {},
     onSkip: () -> Unit = {},
 ) {
