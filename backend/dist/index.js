@@ -30,8 +30,9 @@ app.use("/swap", requireAuth, swapRoutes);
 app.use(errorHandler);
 const PORT = process.env.PORT || ENV.PORT;
 app.listen(PORT, () => {
-    console.log(`\n  🟢 Tranzo Backend running on port ${PORT}`);
+    console.log(`\n  🟢 Tranzo Backend v1.0.1 running on port ${PORT}`);
     console.log(`  📡 Chain: ${ENV.DEFAULT_CHAIN_ID}`);
-    console.log(`  🌍 Environment: ${ENV.NODE_ENV}\n`);
+    console.log(`  🌍 Environment: ${ENV.NODE_ENV}`);
+    console.log(`  ✅ ZeroDev Integration: Kernel Accounts Active\n`);
 });
 //# sourceMappingURL=index.js.map
