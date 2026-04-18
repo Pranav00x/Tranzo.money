@@ -46,16 +46,13 @@ jobs:
           java-version: '17'
           distribution: 'temurin'
 
-      - name: Make gradlew executable
-        run: chmod +x ./gradlew
-
       - name: Setup Gradle with caching
         uses: gradle/actions/setup-gradle@v3
         with:
           cache-read-only: false
 
       - name: Build Debug APK
-        run: ./gradlew assembleDebug --stacktrace
+        run: gradle assembleDebug --stacktrace
 
       - name: Get APK path and info
         id: apk_info
