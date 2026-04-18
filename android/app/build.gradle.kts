@@ -97,7 +97,7 @@ dependencies {
     // Google Auth
     implementation(libs.google.auth)
     implementation(libs.credential.manager)
-    implementation("com.google.android.libraries.identity:googleid:1.1.0")
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.0.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")
