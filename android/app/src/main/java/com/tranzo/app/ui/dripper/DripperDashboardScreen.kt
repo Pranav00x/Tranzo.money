@@ -87,7 +87,7 @@ fun DripperDashboardScreen(
                             Brush.verticalGradient(
                                 colors = listOf(
                                     TranzoColors.PrimaryBlue,
-                                    TranzoColors.GradientMid,
+                                    TranzoColors.PrimaryPurple,
                                     TranzoColors.AccentCyan,
                                 ),
                             ),
@@ -123,7 +123,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "Total Withdrawn",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextDarkPrimaryMuted,
+                            color = TranzoColors.TextDarkSecondary,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))

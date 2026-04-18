@@ -286,7 +286,7 @@ private fun SecurityActionRow(
             if (badge != null) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = if (badgeIsError) TranzoColors.ErrorLight else TranzoColors.SuccessBg,
+                    color = if (badgeIsError) TranzoColors.ErrorLight else TranzoColors.Success,
                 ) {
                     Text(
                         text = badge,

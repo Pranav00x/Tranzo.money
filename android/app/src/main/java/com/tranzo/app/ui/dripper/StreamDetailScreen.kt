@@ -146,7 +146,7 @@ fun StreamDetailScreen(
                 Text(
                     text = "To ${stream.employeeAddress.shortAddress()}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextDarkPrimaryMuted,
+                    color = TranzoColors.TextDarkSecondary,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )

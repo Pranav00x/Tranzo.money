@@ -292,7 +292,7 @@ fun StatusBadge(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
 ) {
-    val bgColor = if (isError) TranzoColors.ErrorBg else TranzoColors.SuccessBg
+    val bgColor = if (isError) TranzoColors.Error else TranzoColors.Success
     val textColor = if (isError) TranzoColors.Error else TranzoColors.Success
 
     Box(
