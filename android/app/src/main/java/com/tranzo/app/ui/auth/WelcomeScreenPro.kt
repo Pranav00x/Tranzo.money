@@ -9,6 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowForward
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.*
@@ -18,6 +19,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -270,7 +272,7 @@ fun WelcomeScreenPro(
 
 @Composable
 private fun AuthMethodCard(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: ImageVector,
     title: String,
     description: String,
     onClick: () -> Unit
@@ -319,7 +321,7 @@ private fun AuthMethodCard(
             }
 
             Icon(
-                imageVector = androidx.compose.material.icons.automirrored.outlined.ArrowForward,
+                imageVector = ArrowForward,
                 contentDescription = null,
                 tint = TranzoColors.TextTertiary,
                 modifier = Modifier.size(20.dp)
@@ -327,5 +329,3 @@ private fun AuthMethodCard(
         }
     }
 }
-
-private val androidx.compose.material.icons.Icons.Outlined get() = androidx.compose.material.icons.outlined
