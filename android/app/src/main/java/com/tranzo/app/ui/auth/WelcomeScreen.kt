@@ -58,7 +58,6 @@ import com.tranzo.app.ui.components.TranzoTextField
 import com.tranzo.app.ui.theme.TranzoColors
 import com.tranzo.app.util.BiometricHelper
 import com.tranzo.app.util.GoogleSignInHelper
-import com.tranzo.app.util.PasskeyHelper
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
@@ -76,12 +75,6 @@ interface GoogleSignInEntryPoint {
 @InstallIn(SingletonComponent::class)
 interface BiometricEntryPoint {
     fun biometricHelper(): BiometricHelper
-}
-
-@EntryPoint
-@InstallIn(SingletonComponent::class)
-interface PasskeyEntryPoint {
-    fun passkeyHelper(): PasskeyHelper
 }
 
 @Composable
@@ -104,8 +97,6 @@ fun WelcomeScreen(
     var acceptedTerms by remember { mutableStateOf(true) }
     var submittedEmail by remember { mutableStateOf("") }
     var showEmailOption by remember { mutableStateOf(false) }
-    var selectedAuthMethod by remember { mutableStateOf<String?>(null) }  // "email", "passkey"
-    var isPasskeyFlow by remember { mutableStateOf(false) }
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val googleSignInHelper = remember {
@@ -119,12 +110,6 @@ fun WelcomeScreen(
             context,
             BiometricEntryPoint::class.java
         ).biometricHelper()
-    }
-    val passkeyHelper = remember {
-        EntryPointAccessors.fromApplication(
-            context,
-            PasskeyEntryPoint::class.java
-        ).passkeyHelper()
     }
 
     // Get last authenticated email for biometric fallback
@@ -278,12 +263,12 @@ fun WelcomeScreen(
                         AuthMethodButtonWithIcon(
                             icon = Icons.Outlined.Lock,
                             title = "Passkey",
-                            subtitle = "WebAuthn / FIDO2",
+                            subtitle = "Coming Soon",
                             onClick = {
-                                // Switch to email entry for passkey flow
-                                showEmailOption = true
-                                isPasskeyFlow = true
+                                // Passkey support - will be enabled in next release
+                                viewModel.clearError()
                             },
+                            isDisabled = true,
                         )
 
                         AuthMethodButtonWithIcon(
@@ -311,24 +296,16 @@ fun WelcomeScreen(
                             onClick = { showEmailOption = true },
                         )
                     } else {
-                        // Email OTP or Passkey option
+                        // Email OTP option
                         TranzoSecondaryButton(
                             text = "Back to Methods",
                             onClick = {
                                 showEmailOption = false
-                                isPasskeyFlow = false
                                 email = ""
                             },
                         )
 
-                        Spacer(modifier = Modifier.height(12.dp))
-
-                        Text(
-                            text = if (isPasskeyFlow) "Enter email to use your Passkey" else "Enter email to receive OTP",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextSecondary,
-                            modifier = Modifier.padding(bottom = 12.dp),
-                        )
+                        Spacer(modifier = Modifier.height(8.dp))
 
                         TranzoTextField(
                             value = email,
@@ -373,32 +350,11 @@ fun WelcomeScreen(
                         }
 
                         TranzoButton(
-                            text = if (isPasskeyFlow) "Use Passkey" else "Send OTP",
+                            text = "Send OTP",
                             onClick = {
                                 val cleanEmail = email.trim()
-                                if (isPasskeyFlow) {
-                                    // Passkey flow: get options from server and authenticate
-                                    coroutineScope.launch {
-                                        try {
-                                            viewModel.getPasskeyLoginOptions(cleanEmail)
-                                            val optionsJson = "{\"challenge\": \"\"}"  // Placeholder - backend should return actual options
-                                            val assertion = passkeyHelper.authenticateWithPasskey(
-                                                activity = context as? androidx.fragment.app.FragmentActivity ?: return@launch,
-                                                email = cleanEmail,
-                                                assertionOptions = optionsJson
-                                            )
-                                            if (assertion != null) {
-                                                viewModel.loginWithPasskey(cleanEmail, assertion)
-                                            }
-                                        } catch (e: Exception) {
-                                            Log.e("PasskeyFlow", "Passkey authentication failed", e)
-                                        }
-                                    }
-                                } else {
-                                    // Email OTP flow
-                                    submittedEmail = cleanEmail
-                                    viewModel.sendOtp(cleanEmail)
-                                }
+                                submittedEmail = cleanEmail
+                                viewModel.sendOtp(cleanEmail)
                             },
                             enabled = email.contains("@") && acceptedTerms,
                             isLoading = state.isLoading,
