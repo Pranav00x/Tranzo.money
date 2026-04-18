@@ -36,10 +36,6 @@ export class SmartAccountService {
       // @ts-ignore - ZeroDev SDK types compatibility
       const account = await createKernelAccount(publicClient, {
         signer,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-        plugins: {
-          sudo: signer, // ECDSA validator for sudo
-        },
       });
       console.log(`[SmartAccount] ✓ Kernel account created`);
 
@@ -112,10 +108,6 @@ export class SmartAccountService {
       // @ts-ignore - ZeroDev SDK types compatibility
       const account = await createKernelAccount(publicClient, {
         signer,
-        entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
-        plugins: {
-          sudo: signer,
-        },
       });
 
       // Create kernel account client for sending transactions
