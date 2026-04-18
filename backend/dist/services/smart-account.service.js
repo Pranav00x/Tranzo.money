@@ -31,6 +31,7 @@ export class SmartAccountService {
             const account = await createKernelAccount(publicClient, {
                 signer,
                 entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789", // ERC-4337 EntryPoint v0.6
+                kernelVersion: "0.3.0", // ZeroDev Kernel v0.3
             });
             console.log(`[SmartAccount] ✓ Kernel account created`);
             const address = account.address;
@@ -93,6 +94,7 @@ export class SmartAccountService {
             const account = await createKernelAccount(publicClient, {
                 signer,
                 entryPoint: "0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789",
+                kernelVersion: "0.3.0",
             });
             // Create kernel account client for sending transactions
             const walletClient = createWalletClient({
