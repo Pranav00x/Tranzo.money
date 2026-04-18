@@ -14,15 +14,15 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tranzo.app.ui.card.CardScreen
 import com.tranzo.app.ui.card.OrderCardScreen
-import com.tranzo.app.ui.auth.OtpScreen
-import com.tranzo.app.ui.auth.ProfileSetupScreen
-import com.tranzo.app.ui.auth.WalletCreationScreen
-import com.tranzo.app.ui.auth.WelcomeScreen
+import com.tranzo.app.ui.auth.OtpScreenPro
+import com.tranzo.app.ui.auth.ProfileSetupScreenPro
+import com.tranzo.app.ui.auth.WalletCreationScreenPro
+import com.tranzo.app.ui.auth.WelcomeScreenPro
 import com.tranzo.app.ui.dripper.CreateStreamScreen
 import com.tranzo.app.ui.dripper.DripperDashboardScreen
 import com.tranzo.app.ui.dripper.StreamDetailScreen
 import com.tranzo.app.ui.history.TransactionHistoryScreen
-import com.tranzo.app.ui.home.HomeScreen
+import com.tranzo.app.ui.home.HomeScreenProMax
 import com.tranzo.app.ui.security.PinMode
 import com.tranzo.app.ui.security.PinScreen
 import com.tranzo.app.ui.navigation.Screen
@@ -32,7 +32,7 @@ import com.tranzo.app.ui.profile.ProfileScreen
 import com.tranzo.app.ui.receive.ReceiveScreen
 import com.tranzo.app.ui.send.SendConfirmationScreen
 import com.tranzo.app.ui.send.SendScreen
-import com.tranzo.app.ui.settings.SettingsScreen
+import com.tranzo.app.ui.settings.SettingsScreenPro
 import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreen
 import com.tranzo.app.ui.swap.SwapScreen
@@ -95,12 +95,9 @@ class MainActivity : FragmentActivity() {
                         }
 
                         composable(Screen.Welcome.route) {
-                            WelcomeScreen(
+                            WelcomeScreenPro(
                                 onNavigateToOtp = { email ->
                                     navController.navigate(Screen.Otp.createRoute(email))
-                                },
-                                onCreateWallet = {
-                                    navController.navigate(Screen.WalletCreation.route)
                                 },
                                 onAuthenticationSuccess = { isNewUser ->
                                     if (isNewUser) {
@@ -118,7 +115,7 @@ class MainActivity : FragmentActivity() {
 
                         composable(Screen.Otp.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
-                            OtpScreen(
+                            OtpScreenPro(
                                 email = email,
                                 onNavigateToHome = { isNewUser ->
                                     if (isNewUser) {
@@ -156,8 +153,9 @@ class MainActivity : FragmentActivity() {
                                 }
                             }
 
-                            ProfileSetupScreen(
+                            ProfileSetupScreenPro(
                                 prefilledEmail = email,
+                                viewModel = authViewModel,
                                 onContinue = { firstName, lastName, emailAddr, phone, language ->
                                     // Save profile to backend
                                     authViewModel.saveProfile(
@@ -179,7 +177,7 @@ class MainActivity : FragmentActivity() {
                         }
 
                         composable(Screen.WalletCreation.route) {
-                            WalletCreationScreen(
+                            WalletCreationScreenPro(
                                 onComplete = {
                                     navController.navigate(Screen.PinSetup.route) {
                                         popUpTo(0) { inclusive = true }
@@ -227,13 +225,13 @@ class MainActivity : FragmentActivity() {
 
                         // ── Main Screens ─────────────────────────────
                         composable(Screen.Home.route) {
-                            HomeScreen(
+                            HomeScreenProMax(
                                 onSend = { navController.navigate(Screen.Send.route) },
                                 onReceive = { navController.navigate(Screen.Receive.route) },
                                 onSwap = { navController.navigate(Screen.Swap.route) },
                                 onDripper = { navController.navigate(Screen.DripperDashboard.route) },
                                 onCard = { navController.navigate(Screen.Card.route) },
-                                onOrderCard = { navController.navigate(Screen.OrderCard.route) },
+                                onSettings = { navController.navigate(Screen.Settings.route) },
                             )
                         }
 
@@ -324,20 +322,15 @@ class MainActivity : FragmentActivity() {
 
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
-                            SettingsScreen(
+                            SettingsScreenPro(
+                                themeManager = themeManager,
                                 onLogout = {
                                     navController.navigate(Screen.Welcome.route) {
                                         popUpTo(0) { inclusive = true }
                                     }
                                 },
-                                onTransactionHistory = {
-                                    navController.navigate(Screen.TransactionHistory.route)
-                                },
                                 onSecurity = {
                                     navController.navigate(Screen.Security.route)
-                                },
-                                onProfile = {
-                                    navController.navigate(Screen.Profile.route)
                                 },
                                 onTheme = {
                                     navController.navigate(Screen.ThemeSelector.route)

@@ -75,7 +75,8 @@ class SessionManager @Inject constructor(
     fun getEmail(): String? = prefs.getString("email", null)
 
     fun getUserProfile(): UserProfile? {
-        val userId = getUserId() ?: return null
+        val userId = getUserId()
+        if (userId.isNullOrBlank()) return null
         return UserProfile(
             userId = userId,
             email = getEmail() ?: "",
@@ -105,7 +106,8 @@ class SessionManager @Inject constructor(
     // ─────────────────────────────────────────────────────────
 
     fun isLoggedIn(): Boolean {
-        return isTokenValid() && getUserId() != null
+        val userId = getUserId()
+        return isTokenValid() && !userId.isNullOrBlank()
     }
 
     fun clearSession() {

@@ -63,11 +63,19 @@ class AuthViewModel @Inject constructor(
             try {
                 val response = api.verifyOtp(VerifyOtpRequest(email, otp))
 
-                // Save tokens and email
+                // Save tokens
                 saveTokens(response.accessToken, response.refreshToken)
+
+                // Fetch current user data to get userId and other profile info
+                val userResponse = api.getMe()
                 sessionManager.saveUserData(
-                    userId = "",  // Will be set after profile setup
-                    email = email,
+                    userId = userResponse.id,
+                    email = userResponse.email ?: email,
+                    firstName = userResponse.firstName,
+                    lastName = userResponse.lastName,
+                    phone = userResponse.phone,
+                    avatarUrl = userResponse.avatarUrl,
+                    walletAddress = userResponse.smartAccount,
                 )
 
                 _state.value = _state.value.copy(
@@ -92,11 +100,19 @@ class AuthViewModel @Inject constructor(
             try {
                 val response = api.loginWithGoogle(GoogleLoginRequest(idToken))
 
-                // Save tokens and email
+                // Save tokens
                 saveTokens(response.accessToken, response.refreshToken)
+
+                // Fetch current user data to get userId and profile info
+                val userResponse = api.getMe()
                 sessionManager.saveUserData(
-                    userId = "",  // Will be set after profile setup or returned by API
-                    email = "",  // Will be filled from Google profile or profile setup
+                    userId = userResponse.id,
+                    email = userResponse.email ?: "",
+                    firstName = userResponse.firstName,
+                    lastName = userResponse.lastName,
+                    phone = userResponse.phone,
+                    avatarUrl = userResponse.avatarUrl,
+                    walletAddress = userResponse.smartAccount,
                 )
 
                 _state.value = _state.value.copy(
@@ -104,6 +120,7 @@ class AuthViewModel @Inject constructor(
                     isAuthenticated = true,
                     isNewUser = response.isNewUser,
                     authMethod = AuthMethod.GOOGLE,
+                    lastEmail = userResponse.email ?: "",
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(
