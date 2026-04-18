@@ -65,7 +65,6 @@ jobs:
           org.gradle.workers.max=4
           org.gradle.caching=true
           org.gradle.jvmargs=-Xmx4096m
-          android.enableBuildCache=true
           EOF
 
       - name: Build Debug APK
