@@ -9,7 +9,7 @@ export declare class SmartAccountService {
     /**
      * Get or create a ZeroDev smart account for a user.
      */
-    static getOrCreateSmartAccount(userId: string, email: string): Promise<any>;
+    static getOrCreateSmartAccount(userId: string, email: string): Promise<string>;
     /**
      * Send a gasless transaction via ZeroDev
      */

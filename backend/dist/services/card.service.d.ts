@@ -45,8 +45,19 @@ export declare class CardService {
      * Get card transaction history for a user.
      */
     static getCardTransactions(userId: string, limit?: number, offset?: number): Promise<{
-        transactions: any;
-        total: any;
+        transactions: {
+            status: string;
+            id: string;
+            createdAt: Date;
+            amount: number;
+            userId: string;
+            txHash: string | null;
+            currency: string;
+            merchant: string;
+            cardId: string;
+            category: string | null;
+        }[];
+        total: number;
     }>;
     /**
      * Freeze a card — funds cannot be spent while frozen.
