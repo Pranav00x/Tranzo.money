@@ -41,6 +41,11 @@ object TranzoColors {
     val Error = Color(0xFFEF4444)
     val Warning = Color(0xFFFBBF24)
     val Info = Color(0xFF3B82F6)
+
+    // Navigation and specific UI colors
+    val NavActive = Color(0xFF0052CC)
+    val NavInactive = Color(0xFF64748B)
+    val ErrorLight = Color(0xFFFFEBEE)
 }
 
 @Composable

@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.theme.TranzoColors
@@ -57,8 +58,8 @@ fun TranzoButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isLoading: Boolean = false,
-    containerColor: Color = TranzoColors.TextPrimary,
-    contentColor: Color = TranzoColors.White,
+    btnColor: Color = TranzoColors.TextPrimary,
+    textColor: Color = TranzoColors.White,
 ) {
     Button(
         onClick = onClick,
@@ -68,10 +69,10 @@ fun TranzoButton(
         enabled = enabled && !isLoading,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = containerColor,
-            contentColor = contentColor,
-            disabledContainerColor = containerColor.copy(alpha = 0.4f),
-            disabledContentColor = contentColor.copy(alpha = 0.6f),
+            containerColor = btnColor,
+            contentColor = textColor,
+            disabledContainerColor = btnColor.copy(alpha = 0.4f),
+            disabledContentColor = textColor.copy(alpha = 0.6f),
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
@@ -294,7 +295,7 @@ fun StatusBadge(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
 ) {
-    val bgColor = if (isError) TranzoColors.Error else TranzoColors.Success
+    val bgColor = if (isError) TranzoColors.Error.copy(alpha = 0.1f) else TranzoColors.Success.copy(alpha = 0.1f)
     val textColor = if (isError) TranzoColors.Error else TranzoColors.Success
 
     Box(

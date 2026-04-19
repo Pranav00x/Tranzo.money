@@ -1,0 +1,969 @@
+﻿Build Debug APK	Set up job	∩╗┐2026-04-19T10:41:36.6939527Z Current runner version: '2.333.1'
+Build Debug APK	Set up job	2026-04-19T10:41:36.6965420Z ##[group]Runner Image Provisioner
+Build Debug APK	Set up job	2026-04-19T10:41:36.6966260Z Hosted Compute Agent
+Build Debug APK	Set up job	2026-04-19T10:41:36.6966834Z Version: 20260213.493
+Build Debug APK	Set up job	2026-04-19T10:41:36.6967604Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Build Debug APK	Set up job	2026-04-19T10:41:36.6968280Z Build Date: 2026-02-13T00:28:41Z
+Build Debug APK	Set up job	2026-04-19T10:41:36.6968970Z Worker ID: {1be2010c-4346-4fc7-8b55-1af990aee93a}
+Build Debug APK	Set up job	2026-04-19T10:41:36.6969693Z Azure Region: eastus2
+Build Debug APK	Set up job	2026-04-19T10:41:36.6970195Z ##[endgroup]
+Build Debug APK	Set up job	2026-04-19T10:41:36.6971988Z ##[group]Operating System
+Build Debug APK	Set up job	2026-04-19T10:41:36.6972699Z Ubuntu
+Build Debug APK	Set up job	2026-04-19T10:41:36.6973152Z 24.04.4
+Build Debug APK	Set up job	2026-04-19T10:41:36.6973880Z LTS
+Build Debug APK	Set up job	2026-04-19T10:41:36.6974442Z ##[endgroup]
+Build Debug APK	Set up job	2026-04-19T10:41:36.6974928Z ##[group]Runner Image
+Build Debug APK	Set up job	2026-04-19T10:41:36.6975496Z Image: ubuntu-24.04
+Build Debug APK	Set up job	2026-04-19T10:41:36.6976090Z Version: 20260413.86.1
+Build Debug APK	Set up job	2026-04-19T10:41:36.6977120Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260413.86/images/ubuntu/Ubuntu2404-Readme.md
+Build Debug APK	Set up job	2026-04-19T10:41:36.6978827Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260413.86
+Build Debug APK	Set up job	2026-04-19T10:41:36.6979763Z ##[endgroup]
+Build Debug APK	Set up job	2026-04-19T10:41:36.6980903Z ##[group]GITHUB_TOKEN Permissions
+Build Debug APK	Set up job	2026-04-19T10:41:36.6982994Z Contents: read
+Build Debug APK	Set up job	2026-04-19T10:41:36.6983750Z Metadata: read
+Build Debug APK	Set up job	2026-04-19T10:41:36.6984366Z Packages: read
+Build Debug APK	Set up job	2026-04-19T10:41:36.6984889Z ##[endgroup]
+Build Debug APK	Set up job	2026-04-19T10:41:36.6986859Z Secret source: Actions
+Build Debug APK	Set up job	2026-04-19T10:41:36.6987942Z Prepare workflow directory
+Build Debug APK	Set up job	2026-04-19T10:41:36.7383148Z Prepare all required actions
+Build Debug APK	Set up job	2026-04-19T10:41:36.7421687Z Getting action download info
+Build Debug APK	Set up job	2026-04-19T10:41:37.0782355Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Build Debug APK	Set up job	2026-04-19T10:41:37.1628489Z Download action repository 'actions/setup-java@v4' (SHA:c1e323688fd81a25caa38c78aa6df2d33d3e20d9)
+Build Debug APK	Set up job	2026-04-19T10:41:37.4935819Z Download action repository 'gradle/actions@v3' (SHA:d9c87d481d55275bb5441eef3fe0e46805f9ef70)
+Build Debug APK	Set up job	2026-04-19T10:41:38.0593761Z Download action repository 'actions/upload-artifact@v4' (SHA:ea165f8d65b6e75b540449e92b4886f43607fa02)
+Build Debug APK	Set up job	2026-04-19T10:41:38.3150236Z Complete job name: Build Debug APK
+Build Debug APK	Checkout repository	∩╗┐2026-04-19T10:41:38.4000600Z ##[group]Run actions/checkout@v4
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4002242Z with:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4003090Z   repository: Pranav00x/Tranzo.money
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4004582Z   token: ***
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4005352Z   ssh-strict: true
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4006139Z   ssh-user: git
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4006944Z   persist-credentials: true
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4007835Z   clean: true
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4008642Z   sparse-checkout-cone-mode: true
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4009618Z   fetch-depth: 1
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4010412Z   fetch-tags: false
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4011224Z   show-progress: true
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4012036Z   lfs: false
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4012782Z   submodules: false
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4013739Z   set-safe-directory: true
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.4014939Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5095320Z Syncing repository: Pranav00x/Tranzo.money
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5097957Z ##[group]Getting Git version info
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5099375Z Working directory is '/home/runner/work/Tranzo.money/Tranzo.money'
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5101389Z [command]/usr/bin/git version
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5112992Z git version 2.53.0
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5138921Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5153574Z Temporarily overriding HOME='/home/runner/work/_temp/0c6b2efa-d65b-4327-9a7c-78e9d7144e18' before making global git config changes
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5156299Z Adding repository directory to the temporary git global config as a safe directory
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5166431Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Tranzo.money/Tranzo.money
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5198300Z Deleting the contents of '/home/runner/work/Tranzo.money/Tranzo.money'
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5201162Z ##[group]Initializing the repository
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5205519Z [command]/usr/bin/git init /home/runner/work/Tranzo.money/Tranzo.money
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5268698Z hint: Using 'master' as the name for the initial branch. This default branch name
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5271643Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5273741Z hint: to use in all of your new repositories, which will suppress this warning,
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5275967Z hint: call:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5276735Z hint:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5277734Z hint: 	git config --global init.defaultBranch <name>
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5278991Z hint:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5280325Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5282194Z hint: 'development'. The just-created branch can be renamed via this command:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5284110Z hint:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5285079Z hint: 	git branch -m <name>
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5285979Z hint:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5287154Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5289174Z Initialized empty Git repository in /home/runner/work/Tranzo.money/Tranzo.money/.git/
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5292384Z [command]/usr/bin/git remote add origin https://github.com/Pranav00x/Tranzo.money
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5310593Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5312206Z ##[group]Disabling automatic garbage collection
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5313969Z [command]/usr/bin/git config --local gc.auto 0
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5342012Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5343665Z ##[group]Setting up auth
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5348532Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5380790Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5624485Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5656221Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5862533Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.5893634Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.6113643Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.6146467Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.6148888Z ##[group]Fetching the repository
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.6157829Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f7611c4c35a828ee153e8c09e67afa5c8389f08c:refs/remotes/origin/main
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8545252Z From https://github.com/Pranav00x/Tranzo.money
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8547862Z  * [new ref]         f7611c4c35a828ee153e8c09e67afa5c8389f08c -> origin/main
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8575861Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8578202Z ##[group]Determining the checkout info
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8580738Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8583740Z [command]/usr/bin/git sparse-checkout disable
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8620953Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8647324Z ##[group]Checking out the ref
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8651201Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8819012Z Switched to a new branch 'main'
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8821296Z branch 'main' set up to track 'origin/main'.
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8829465Z ##[endgroup]
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8862035Z [command]/usr/bin/git log -1 --format=%H
+Build Debug APK	Checkout repository	2026-04-19T10:41:38.8883022Z f7611c4c35a828ee153e8c09e67afa5c8389f08c
+Build Debug APK	Set up JDK 17	∩╗┐2026-04-19T10:41:38.9284201Z ##[group]Run actions/setup-java@v4
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9285238Z with:
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9285933Z   java-version: 17
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9286713Z   distribution: temurin
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9287537Z   java-package: jdk
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9288521Z   check-latest: false
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9289310Z   server-id: github
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9290114Z   server-username: GITHUB_ACTOR
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9291048Z   server-password: GITHUB_TOKEN
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9291983Z   overwrite-settings: true
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9292839Z   job-status: success
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9294041Z   token: ***
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:38.9294763Z ##[endgroup]
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1365849Z ##[group]Installed distributions
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1422316Z Resolved Java 17.0.18+8 from tool-cache
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1423827Z Setting Java 17.0.18+8 as the default
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1436198Z Creating toolchains.xml for JDK version 17 from temurin
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1512706Z Writing to /home/runner/.m2/toolchains.xml
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1513975Z 
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1514774Z Java configuration:
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1516305Z   Distribution: temurin
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1517602Z   Version: 17.0.18+8
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1518987Z   Path: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1520124Z 
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1521240Z ##[endgroup]
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1536238Z Creating settings.xml with server-id: github
+Build Debug APK	Set up JDK 17	2026-04-19T10:41:39.1539865Z Writing to /home/runner/.m2/settings.xml
+Build Debug APK	Setup Gradle	∩╗┐2026-04-19T10:41:39.1905619Z ##[group]Run gradle/actions/setup-gradle@v3
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1906657Z with:
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1907355Z   gradle-version: 8.9
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1908164Z   cache-disabled: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1908993Z   cache-read-only: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1909834Z   cache-write-only: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1910727Z   cache-overwrite-existing: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1911811Z   gradle-home-cache-includes: caches
+Build Debug APK	Setup Gradle	notifications
+Build Debug APK	Setup Gradle	
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1912974Z   gradle-home-cache-cleanup: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1914151Z   add-job-summary: always
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1915059Z   add-job-summary-as-pr-comment: never
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1916062Z   dependency-graph: disabled
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1917065Z   dependency-graph-continue-on-failure: true
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1918157Z   build-scan-publish: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1919050Z   validate-wrappers: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1919943Z   generate-job-summary: true
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1920899Z   gradle-home-cache-strict-match: false
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1921932Z   workflow-job-context: null
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1923158Z   github-token: ***
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1924090Z env:
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1925118Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1926798Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+Build Debug APK	Setup Gradle	2026-04-19T10:41:39.1928123Z ##[endgroup]
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.3361035Z Merged default JDK locations into /home/runner/.m2/toolchains.xml
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.3364043Z ##[group]Restore Gradle state from cache
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.5161945Z ##[warning]Failed to restore gradle-home-v1|Linux|android[9666a6256c472776b30a60021e359eda]-f7611c4c35a828ee153e8c09e67afa5c8389f08c: Error: Cache service responded with 400
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.5242597Z Gradle User Home cache not found. Will initialize empty.
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.5243824Z ##[endgroup]
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.7666643Z ##[group]Provision Gradle 8.9
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.8309136Z ##[warning]Restore Gradle distribution 8.9 failed: Error: Cache service responded with 400
+Build Debug APK	Setup Gradle	2026-04-19T10:41:40.8310907Z Gradle distribution 8.9 not found in cache. Will download.
+Build Debug APK	Setup Gradle	2026-04-19T10:41:41.7311456Z Downloaded https://services.gradle.org/distributions/gradle-8.9-bin.zip to /home/runner/gradle-installations/downloads/gradle-8.9-bin.zip (size 136114148)
+Build Debug APK	Setup Gradle	2026-04-19T10:41:41.7505567Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Setup Gradle	2026-04-19T10:41:41.9738007Z ##[warning]Save Gradle distribution 8.9 failed: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0ZbHkaQAAAADGuHkyH+r6QK8O+5Ps1paOUEhMMzBFREdFMDExMwBFZGdl
+Build Debug APK	Setup Gradle	2026-04-19T10:41:41.9760442Z [command]/usr/bin/unzip -o -q /home/runner/gradle-installations/downloads/gradle-8.9-bin.zip
+Build Debug APK	Setup Gradle	2026-04-19T10:41:42.9476043Z Extracted Gradle 8.9 to /home/runner/gradle-installations/installs/gradle-8.9
+Build Debug APK	Setup Gradle	2026-04-19T10:41:42.9477791Z Provisioned Gradle executable /home/runner/gradle-installations/installs/gradle-8.9/bin/gradle
+Build Debug APK	Setup Gradle	2026-04-19T10:41:42.9479006Z ##[endgroup]
+Build Debug APK	Build Debug APK	∩╗┐2026-04-19T10:41:42.9610588Z ##[group]Run gradle assembleDebug --stacktrace --no-daemon
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9611095Z [36;1mgradle assembleDebug --stacktrace --no-daemon[0m
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9634907Z shell: /usr/bin/bash -e {0}
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9635177Z env:
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9635478Z   JAVA_HOME: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9635958Z   JAVA_HOME_17_X64: /opt/hostedtoolcache/Java_Temurin-Hotspot_jdk/17.0.18-8/x64
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9636361Z   GRADLE_ACTION_ID: gradle/actions/setup-gradle
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9636665Z   GRADLE_BUILD_ACTION_SETUP_COMPLETED: true
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9636965Z   GRADLE_BUILD_ACTION_CACHE_RESTORED: true
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9637384Z   DEVELOCITY_INJECTION_INIT_SCRIPT_NAME: gradle-actions.inject-develocity.init.gradle
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9637857Z   DEVELOCITY_AUTO_INJECTION_CUSTOM_VALUE: gradle-actions
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9638184Z   GITHUB_DEPENDENCY_GRAPH_ENABLED: false
+Build Debug APK	Build Debug APK	2026-04-19T10:41:42.9638430Z ##[endgroup]
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9294598Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9301765Z Welcome to Gradle 8.9!
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9302330Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9302564Z Here are the highlights of this release:
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9303142Z  - Enhanced Error and Warning Messages
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9303925Z  - IDE Integration Improvements
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9304394Z  - Daemon JVM Information
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9304655Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9304975Z For more details see https://docs.gradle.org/8.9/release-notes.html
+Build Debug APK	Build Debug APK	2026-04-19T10:41:43.9305484Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:41:44.3236820Z To honour the JVM settings for this build a single-use Daemon process will be forked. For more on this, please refer to https://docs.gradle.org/8.9/userguide/gradle_daemon.html#sec:disabling_the_daemon in the Gradle documentation.
+Build Debug APK	Build Debug APK	2026-04-19T10:41:45.5235147Z Daemon will be stopped at the end of the build 
+Build Debug APK	Build Debug APK	2026-04-19T10:42:48.3264514Z > Task :app:preBuild UP-TO-DATE
+Build Debug APK	Build Debug APK	2026-04-19T10:42:48.3283921Z > Task :app:preDebugBuild UP-TO-DATE
+Build Debug APK	Build Debug APK	2026-04-19T10:42:48.3314015Z > Task :app:mergeDebugNativeDebugMetadata NO-SOURCE
+Build Debug APK	Build Debug APK	2026-04-19T10:42:48.3314780Z > Task :app:checkKotlinGradlePluginConfigurationErrors SKIPPED
+Build Debug APK	Build Debug APK	2026-04-19T10:42:48.4236982Z > Task :app:generateDebugBuildConfig
+Build Debug APK	Build Debug APK	2026-04-19T10:43:06.7248953Z > Task :app:generateDebugResValues
+Build Debug APK	Build Debug APK	2026-04-19T10:43:06.7272299Z > Task :app:checkDebugAarMetadata
+Build Debug APK	Build Debug APK	2026-04-19T10:43:06.8230976Z > Task :app:mapDebugSourceSetPaths
+Build Debug APK	Build Debug APK	2026-04-19T10:43:06.8231953Z > Task :app:generateDebugResources
+Build Debug APK	Build Debug APK	2026-04-19T10:43:08.2235125Z > Task :app:packageDebugResources
+Build Debug APK	Build Debug APK	2026-04-19T10:43:09.0244354Z > Task :app:createDebugCompatibleScreenManifests
+Build Debug APK	Build Debug APK	2026-04-19T10:43:09.1254286Z > Task :app:extractDeepLinksDebug
+Build Debug APK	Build Debug APK	2026-04-19T10:43:09.2234357Z > Task :app:parseDebugLocalResources
+Build Debug APK	Build Debug APK	2026-04-19T10:43:09.4234042Z > Task :app:mergeDebugResources
+Build Debug APK	Build Debug APK	2026-04-19T10:43:09.5230938Z > Task :app:processDebugMainManifest
+Build Debug APK	Build Debug APK	2026-04-19T10:43:09.6239120Z > Task :app:processDebugManifest
+Build Debug APK	Build Debug APK	2026-04-19T10:43:10.9234474Z > Task :app:processDebugManifestForPackage
+Build Debug APK	Build Debug APK	2026-04-19T10:43:10.9235105Z > Task :app:javaPreCompileDebug
+Build Debug APK	Build Debug APK	2026-04-19T10:43:12.0244457Z > Task :app:mergeDebugShaders
+Build Debug APK	Build Debug APK	2026-04-19T10:43:12.0273708Z > Task :app:compileDebugShaders NO-SOURCE
+Build Debug APK	Build Debug APK	2026-04-19T10:43:12.0284104Z > Task :app:generateDebugAssets UP-TO-DATE
+Build Debug APK	Build Debug APK	2026-04-19T10:43:12.2247898Z > Task :app:mergeDebugAssets
+Build Debug APK	Build Debug APK	2026-04-19T10:43:12.2248778Z > Task :app:compressDebugAssets
+Build Debug APK	Build Debug APK	2026-04-19T10:43:12.2250578Z > Task :app:desugarDebugFileDependencies
+Build Debug APK	Build Debug APK	2026-04-19T10:43:14.3230542Z > Task :app:processDebugResources
+Build Debug APK	Build Debug APK	2026-04-19T10:43:14.5257670Z > Task :app:checkDebugDuplicateClasses
+Build Debug APK	Build Debug APK	2026-04-19T10:43:44.5234222Z > Task :app:kaptGenerateStubsDebugKotlin
+Build Debug APK	Build Debug APK	2026-04-19T10:43:51.0244688Z w: Kapt currently doesn't support language version 2.0+. Falling back to 1.9.
+Build Debug APK	Build Debug APK	2026-04-19T10:43:51.5293870Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:43:51.5324284Z > Task :app:mergeExtDexDebug
+Build Debug APK	Build Debug APK	2026-04-19T10:45:22.2258837Z > Task :app:mergeDebugJniLibFolders
+Build Debug APK	Build Debug APK	2026-04-19T10:45:22.2259928Z > Task :app:mergeLibDexDebug
+Build Debug APK	Build Debug APK	2026-04-19T10:45:22.5254120Z > Task :app:mergeDebugNativeLibs
+Build Debug APK	Build Debug APK	2026-04-19T10:45:24.2230784Z > Task :app:validateSigningDebug
+Build Debug APK	Build Debug APK	2026-04-19T10:45:24.3237571Z > Task :app:writeDebugAppMetadata
+Build Debug APK	Build Debug APK	2026-04-19T10:45:24.3291585Z > Task :app:writeDebugSigningConfigVersions
+Build Debug APK	Build Debug APK	2026-04-19T10:45:24.3343655Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:24.3434168Z > Task :app:stripDebugDebugSymbols
+Build Debug APK	Build Debug APK	2026-04-19T10:45:24.3474944Z Unable to strip the following libraries, packaging them as they are: libandroidx.graphics.path.so, libdatastore_shared_counter.so.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:27.9232518Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:27.9294155Z > Task :app:kaptDebugKotlin
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0265255Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/card/CardScreenPro.kt:93:29 None of the following candidates is applicable:
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0266541Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0281025Z fun Text(text: AnnotatedString, modifier: Modifier = ..., color: Color = ..., fontSize: TextUnit = ..., fontStyle: FontStyle? = ..., fontWeight: FontWeight? = ..., fontFamily: FontFamily? = ..., letterSpacing: TextUnit = ..., textDecoration: TextDecoration? = ..., textAlign: TextAlign? = ..., lineHeight: TextUnit = ..., overflow: TextOverflow = ..., softWrap: Boolean = ..., maxLines: Int = ..., minLines: Int = ..., inlineContent: Map<String, InlineTextContent> = ..., onTextLayout: (TextLayoutResult) -> Unit = ..., style: TextStyle = ...): Unit
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0306626Z fun Text(text: String, modifier: Modifier = ..., color: Color = ..., fontSize: TextUnit = ..., fontStyle: FontStyle? = ..., fontWeight: FontWeight? = ..., fontFamily: FontFamily? = ..., letterSpacing: TextUnit = ..., textDecoration: TextDecoration? = ..., textAlign: TextAlign? = ..., lineHeight: TextUnit = ..., overflow: TextOverflow = ..., softWrap: Boolean = ..., maxLines: Int = ..., minLines: Int = ..., onTextLayout: ((TextLayoutResult) -> Unit)? = ..., style: TextStyle = ...): Unit
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0346108Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/components/TranzoComponents.kt:60:21 Unresolved reference 'Color'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0347399Z > Task :app:compileDebugKotlin
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0374745Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/components/TranzoComponents.kt:61:19 Unresolved reference 'Color'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0393700Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/components/TranzoComponents.kt:73:38 Argument type mismatch: actual type is 'androidx.compose.animation.core.AnimationState<kotlin.Float, androidx.compose.animation.core.AnimationVector1D>', but 'androidx.compose.ui.graphics.Color' was expected.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0434712Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/components/TranzoComponents.kt:73:58 No parameter with name 'alpha' found.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0437978Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/components/TranzoComponents.kt:74:36 Argument type mismatch: actual type is 'androidx.compose.animation.core.AnimationState<kotlin.Float, androidx.compose.animation.core.AnimationVector1D>', but 'androidx.compose.ui.graphics.Color' was expected.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0475018Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/components/TranzoComponents.kt:74:54 No parameter with name 'alpha' found.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0504662Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/navigation/BottomNavBar.kt:78:58 Unresolved reference 'NavActive'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0534603Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/navigation/BottomNavBar.kt:79:58 Unresolved reference 'NavActive'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0537203Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/navigation/BottomNavBar.kt:80:60 Unresolved reference 'NavInactive'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0564775Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/navigation/BottomNavBar.kt:81:60 Unresolved reference 'NavInactive'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0607051Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/security/SecurityScreen.kt:289:60 Unresolved reference 'ErrorLight'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.0634677Z e: file:///home/runner/work/Tranzo.money/Tranzo.money/android/app/src/main/java/com/tranzo/app/ui/settings/SettingsScreenPro.kt:232:11 Unresolved reference 'ImageVector'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.1298897Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.1334237Z > Task :app:compileDebugKotlin FAILED
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2240375Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2244519Z FAILURE: Build failed with an exception.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2245122Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2245440Z * What went wrong:
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2246196Z Execution failed for task ':app:compileDebugKotlin'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2247621Z > A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2249008Z    > Compilation error. See log for more details
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2249525Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2249768Z * Try:
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2253856Z > Run with --info or --debug option to get more log output.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2254880Z > Run with --scan to get full insights.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2255547Z > Get more help at https://help.gradle.org.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2255873Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2256021Z * Exception is:
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2256725Z org.gradle.api.tasks.TaskExecutionException: Execution failed for task ':app:compileDebugKotlin'.
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2258238Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.lambda$executeIfValid$1(ExecuteActionsTaskExecuter.java:130)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2259545Z 	at org.gradle.internal.Try$Failure.ifSuccessfulOrElse(Try.java:293)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2260807Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:128)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2262474Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2264427Z 	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2266378Z 	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2268028Z 	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2269424Z 	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2270824Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2272409Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2274154Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2275621Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2277310Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2279250Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2281400Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2282890Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2284630Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2286126Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2287817Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2289282Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2290599Z 	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2292095Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2294107Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2295887Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2297611Z 	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2299360Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2301259Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2302833Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2304285Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2305577Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2306827Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2308877Z Caused by: org.gradle.workers.internal.DefaultWorkerExecutor$WorkExecutionException: A failure occurred while executing org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2330752Z 	at org.gradle.workers.internal.DefaultWorkerExecutor$WorkItemExecution.waitForCompletion(DefaultWorkerExecutor.java:287)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2332434Z 	at org.gradle.internal.work.DefaultAsyncWorkTracker.lambda$waitForItemsAndGatherFailures$2(DefaultAsyncWorkTracker.java:130)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2333863Z 	at org.gradle.internal.Factories$1.create(Factories.java:31)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2334927Z 	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:339)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2336303Z 	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLocks(DefaultWorkerLeaseService.java:322)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2337672Z 	at org.gradle.internal.work.DefaultWorkerLeaseService.withoutLock(DefaultWorkerLeaseService.java:327)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2339188Z 	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:126)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2431177Z 	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForItemsAndGatherFailures(DefaultAsyncWorkTracker.java:92)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2432748Z 	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForAll(DefaultAsyncWorkTracker.java:78)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2434337Z 	at org.gradle.internal.work.DefaultAsyncWorkTracker.waitForCompletion(DefaultAsyncWorkTracker.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2435556Z 	at org.gradle.api.internal.tasks.execution.TaskExecution$3.run(TaskExecution.java:252)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2437178Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:29)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2438586Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$1.execute(DefaultBuildOperationRunner.java:26)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2440036Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2441698Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2443105Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2472806Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2474599Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.run(DefaultBuildOperationRunner.java:47)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2476014Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeAction(TaskExecution.java:229)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2477257Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeActions(TaskExecution.java:212)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2478637Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.executeWithPreviousOutputFiles(TaskExecution.java:195)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2480070Z 	at org.gradle.api.internal.tasks.execution.TaskExecution.execute(TaskExecution.java:162)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2481282Z 	at org.gradle.internal.execution.steps.ExecuteStep.executeInternal(ExecuteStep.java:105)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2482385Z 	at org.gradle.internal.execution.steps.ExecuteStep.access$000(ExecuteStep.java:44)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2483658Z 	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2484651Z 	at org.gradle.internal.execution.steps.ExecuteStep$1.call(ExecuteStep.java:56)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2486089Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2487992Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2489705Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2491184Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2492691Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2500782Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2502257Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2503729Z 	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:56)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2505159Z 	at org.gradle.internal.execution.steps.ExecuteStep.execute(ExecuteStep.java:44)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2506319Z 	at org.gradle.internal.execution.steps.CancelExecutionStep.execute(CancelExecutionStep.java:42)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2507609Z 	at org.gradle.internal.execution.steps.TimeoutStep.executeWithoutTimeout(TimeoutStep.java:75)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2508738Z 	at org.gradle.internal.execution.steps.TimeoutStep.execute(TimeoutStep.java:55)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2510009Z 	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:50)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2511538Z 	at org.gradle.internal.execution.steps.PreCreateOutputParentsStep.execute(PreCreateOutputParentsStep.java:28)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2513021Z 	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:67)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2514722Z 	at org.gradle.internal.execution.steps.RemovePreviousOutputsStep.execute(RemovePreviousOutputsStep.java:37)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2516527Z 	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:61)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2518127Z 	at org.gradle.internal.execution.steps.BroadcastChangingOutputsStep.execute(BroadcastChangingOutputsStep.java:26)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2519792Z 	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:69)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2544599Z 	at org.gradle.internal.execution.steps.CaptureOutputsAfterExecutionStep.execute(CaptureOutputsAfterExecutionStep.java:46)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2546197Z 	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:40)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2549038Z 	at org.gradle.internal.execution.steps.ResolveInputChangesStep.execute(ResolveInputChangesStep.java:29)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2550469Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithoutCache(BuildCacheStep.java:189)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2551839Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeAndStoreInCache(BuildCacheStep.java:145)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2553242Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$4(BuildCacheStep.java:101)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2554870Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$executeWithCache$5(BuildCacheStep.java:101)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2555876Z 	at org.gradle.internal.Try$Success.map(Try.java:175)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2556834Z 	at org.gradle.internal.execution.steps.BuildCacheStep.executeWithCache(BuildCacheStep.java:85)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2558088Z 	at org.gradle.internal.execution.steps.BuildCacheStep.lambda$execute$0(BuildCacheStep.java:74)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2559055Z 	at org.gradle.internal.Either$Left.fold(Either.java:115)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2559918Z 	at org.gradle.internal.execution.caching.CachingState.fold(CachingState.java:62)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2561298Z 	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:73)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2562464Z 	at org.gradle.internal.execution.steps.BuildCacheStep.execute(BuildCacheStep.java:48)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2564032Z 	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:46)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2565481Z 	at org.gradle.internal.execution.steps.StoreExecutionStateStep.execute(StoreExecutionStateStep.java:35)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2566812Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.executeBecause(SkipUpToDateStep.java:75)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2568085Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.lambda$execute$2(SkipUpToDateStep.java:53)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2569282Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:53)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2570434Z 	at org.gradle.internal.execution.steps.SkipUpToDateStep.execute(SkipUpToDateStep.java:35)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2571992Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:37)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2604339Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsFinishedStep.execute(MarkSnapshottingInputsFinishedStep.java:27)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2606520Z 	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:49)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2608450Z 	at org.gradle.internal.execution.steps.ResolveIncrementalCachingStateStep.executeDelegate(ResolveIncrementalCachingStateStep.java:27)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2610313Z 	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:71)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2611991Z 	at org.gradle.internal.execution.steps.AbstractResolveCachingStateStep.execute(AbstractResolveCachingStateStep.java:39)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2613708Z 	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:65)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2614968Z 	at org.gradle.internal.execution.steps.ResolveChangesStep.execute(ResolveChangesStep.java:36)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2616357Z 	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:105)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2617418Z 	at org.gradle.internal.execution.steps.ValidateStep.execute(ValidateStep.java:54)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2618942Z 	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:64)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2621124Z 	at org.gradle.internal.execution.steps.AbstractCaptureStateBeforeExecutionStep.execute(AbstractCaptureStateBeforeExecutionStep.java:43)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2623222Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.executeWithNonEmptySources(AbstractSkipEmptyWorkStep.java:125)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2625122Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:61)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2626594Z 	at org.gradle.internal.execution.steps.AbstractSkipEmptyWorkStep.execute(AbstractSkipEmptyWorkStep.java:36)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2628290Z 	at org.gradle.internal.execution.steps.legacy.MarkSnapshottingInputsStartedStep.execute(MarkSnapshottingInputsStartedStep.java:38)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2630068Z 	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:36)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2631721Z 	at org.gradle.internal.execution.steps.LoadPreviousExecutionStateStep.execute(LoadPreviousExecutionStateStep.java:23)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2633226Z 	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:75)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2650213Z 	at org.gradle.internal.execution.steps.HandleStaleOutputsStep.execute(HandleStaleOutputsStep.java:41)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2651752Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.lambda$execute$0(AssignMutableWorkspaceStep.java:35)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2653214Z 	at org.gradle.api.internal.tasks.execution.TaskExecution$4.withWorkspace(TaskExecution.java:289)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2654810Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:31)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2656337Z 	at org.gradle.internal.execution.steps.AssignMutableWorkspaceStep.execute(AssignMutableWorkspaceStep.java:22)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2657673Z 	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:40)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2658915Z 	at org.gradle.internal.execution.steps.ChoosePipelineStep.execute(ChoosePipelineStep.java:23)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2660526Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.lambda$execute$2(ExecuteWorkBuildOperationFiringStep.java:67)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2662426Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:67)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2664443Z 	at org.gradle.internal.execution.steps.ExecuteWorkBuildOperationFiringStep.execute(ExecuteWorkBuildOperationFiringStep.java:39)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2665968Z 	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:46)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2667188Z 	at org.gradle.internal.execution.steps.IdentityCacheStep.execute(IdentityCacheStep.java:34)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2668315Z 	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:48)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2669370Z 	at org.gradle.internal.execution.steps.IdentifyStep.execute(IdentifyStep.java:35)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2670592Z 	at org.gradle.internal.execution.impl.DefaultExecutionEngine$1.execute(DefaultExecutionEngine.java:61)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2672128Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.executeIfValid(ExecuteActionsTaskExecuter.java:127)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2694202Z 	at org.gradle.api.internal.tasks.execution.ExecuteActionsTaskExecuter.execute(ExecuteActionsTaskExecuter.java:116)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2695927Z 	at org.gradle.api.internal.tasks.execution.FinalizePropertiesTaskExecuter.execute(FinalizePropertiesTaskExecuter.java:46)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2698002Z 	at org.gradle.api.internal.tasks.execution.ResolveTaskExecutionModeExecuter.execute(ResolveTaskExecutionModeExecuter.java:51)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2699738Z 	at org.gradle.api.internal.tasks.execution.SkipTaskWithNoActionsExecuter.execute(SkipTaskWithNoActionsExecuter.java:57)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2701285Z 	at org.gradle.api.internal.tasks.execution.SkipOnlyIfTaskExecuter.execute(SkipOnlyIfTaskExecuter.java:74)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2703011Z 	at org.gradle.api.internal.tasks.execution.CatchExceptionTaskExecuter.execute(CatchExceptionTaskExecuter.java:36)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2704751Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.executeTask(EventFiringTaskExecuter.java:77)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2706207Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:55)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2707589Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter$1.call(EventFiringTaskExecuter.java:52)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2709205Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2711111Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2712787Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2714418Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2715861Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2717319Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2718757Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2720203Z 	at org.gradle.api.internal.tasks.execution.EventFiringTaskExecuter.execute(EventFiringTaskExecuter.java:52)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2721514Z 	at org.gradle.execution.plan.LocalTaskNodeExecutor.execute(LocalTaskNodeExecutor.java:42)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2723000Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:331)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2729360Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$InvokeNodeExecutorsAction.execute(DefaultTaskExecutionGraph.java:318)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2731272Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.lambda$execute$0(DefaultTaskExecutionGraph.java:314)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2732920Z 	at org.gradle.internal.operations.CurrentBuildOperationRef.with(CurrentBuildOperationRef.java:85)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2734738Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:314)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2736619Z 	at org.gradle.execution.taskgraph.DefaultTaskExecutionGraph$BuildOperationAwareExecutionAction.execute(DefaultTaskExecutionGraph.java:303)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2738195Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.execute(DefaultPlanExecutor.java:459)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2739426Z 	at org.gradle.execution.plan.DefaultPlanExecutor$ExecutorWorker.run(DefaultPlanExecutor.java:376)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2740700Z 	at org.gradle.internal.concurrent.ExecutorPolicy$CatchAndRecordFailures.onExecute(ExecutorPolicy.java:64)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2741973Z 	at org.gradle.internal.concurrent.AbstractManagedExecutor$1.run(AbstractManagedExecutor.java:48)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2743306Z Caused by: org.jetbrains.kotlin.gradle.tasks.CompilationErrorException: Compilation error. See log for more details
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2772414Z 	at org.jetbrains.kotlin.gradle.tasks.TasksUtilsKt.throwExceptionIfCompilationFailed(tasksUtils.kt:21)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2774109Z 	at org.jetbrains.kotlin.compilerRunner.GradleKotlinCompilerWork.run(GradleKotlinCompilerWork.kt:119)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2776340Z 	at org.jetbrains.kotlin.compilerRunner.GradleCompilerRunnerWithWorkers$GradleKotlinCompilerWorkAction.execute(GradleCompilerRunnerWithWorkers.kt:76)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2778078Z 	at org.gradle.workers.internal.DefaultWorkerServer.execute(DefaultWorkerServer.java:63)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2779413Z 	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2781167Z 	at org.gradle.workers.internal.NoIsolationWorkerFactory$1$1.create(NoIsolationWorkerFactory.java:62)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2795520Z 	at org.gradle.internal.classloader.ClassLoaderUtils.executeInClassloader(ClassLoaderUtils.java:100)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2797070Z 	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.lambda$execute$0(NoIsolationWorkerFactory.java:62)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2798348Z 	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:44)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2799382Z 	at org.gradle.workers.internal.AbstractWorker$1.call(AbstractWorker.java:41)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2800848Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:209)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2802848Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$CallableBuildOperationWorker.execute(DefaultBuildOperationRunner.java:204)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2804830Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:66)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2806289Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner$2.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2807765Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:166)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2809249Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.execute(DefaultBuildOperationRunner.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2810668Z 	at org.gradle.internal.operations.DefaultBuildOperationRunner.call(DefaultBuildOperationRunner.java:53)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2812100Z 	at org.gradle.workers.internal.AbstractWorker.executeWrappedInBuildOperation(AbstractWorker.java:41)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2813601Z 	at org.gradle.workers.internal.NoIsolationWorkerFactory$1.execute(NoIsolationWorkerFactory.java:59)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2814923Z 	at org.gradle.workers.internal.DefaultWorkerExecutor.lambda$submitWork$0(DefaultWorkerExecutor.java:174)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2816580Z 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runExecution(DefaultConditionalExecutionQueue.java:195)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2818323Z 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.access$700(DefaultConditionalExecutionQueue.java:128)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2820204Z 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner$1.run(DefaultConditionalExecutionQueue.java:170)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2821518Z 	at org.gradle.internal.Factories$1.create(Factories.java:31)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2822581Z 	at org.gradle.internal.work.DefaultWorkerLeaseService.withLocks(DefaultWorkerLeaseService.java:267)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2824775Z 	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:131)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2826275Z 	at org.gradle.internal.work.DefaultWorkerLeaseService.runAsWorkerThread(DefaultWorkerLeaseService.java:136)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2827910Z 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.runBatch(DefaultConditionalExecutionQueue.java:165)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2829625Z 	at org.gradle.internal.work.DefaultConditionalExecutionQueue$ExecutionRunner.run(DefaultConditionalExecutionQueue.java:134)
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2830689Z 	... 2 more
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2830867Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2830876Z 
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2831017Z BUILD FAILED in 3m 58s
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.2835367Z 31 actionable tasks: 31 executed
+Build Debug APK	Build Debug APK	2026-04-19T10:45:41.7048870Z ##[error]Process completed with exit code 1.
+Build Debug APK	Post Setup Gradle	∩╗┐2026-04-19T10:45:41.7224578Z Post job cleanup.
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:41.9564919Z In post-action step
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:41.9574251Z Stopping all Gradle daemons before saving Gradle User Home state
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:41.9575195Z Stopping Gradle daemons for /home/runner/gradle-installations/installs/gradle-8.9
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:41.9594181Z [command]/home/runner/gradle-installations/installs/gradle-8.9/bin/gradle --stop
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:42.5973982Z No Gradle daemons are running.
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:42.6201023Z ##[group]Caching Gradle state
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:42.6487659Z Caching generated-gradle-jars with path '/home/runner/.gradle/caches/8.9/generated-gradle-jars/gradle-api-8.9.jar' and cache key: gradle-generated-gradle-jars-v1-26cfecc158c44513d188405a5d2d0d9c
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:42.6639689Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.2658027Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches/8.9/generated-gradle-jars/gradle-api-8.9.jar' and key: gradle-generated-gradle-jars-v1-26cfecc158c44513d188405a5d2d0d9c: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0V7LkaQAAAAAKoDVMtbhKTJjyq3O2XmpZUEhMMzBFREdFMDIyMQBFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.3714587Z Caching dependencies with path '/home/runner/.gradle/caches/modules-*/files-*/*/*/*/*' and cache key: gradle-dependencies-v1-b829c9d3dca1d4fb7147eadf3d0d4a0b
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.3791783Z Caching instrumented-jars with path '/home/runner/.gradle/caches/jars-*/*/' and cache key: gradle-instrumented-jars-v1-817a8d0be1eb0f19b5e1789eaa4084aa
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.3977601Z Caching kotlin-dsl with path '/home/runner/.gradle/caches/*/kotlin-dsl/accessors/*/
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.3978889Z /home/runner/.gradle/caches/*/kotlin-dsl/scripts/*/' and cache key: gradle-kotlin-dsl-v1-98172dc14e7d5d4196f4e3ba2300c9b6
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.4009227Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.4199643Z Caching groovy-dsl with path '/home/runner/.gradle/caches/*/groovy-dsl/*/' and cache key: gradle-groovy-dsl-v1-89081b63181681d9de254e0d2c125cf7
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.4519180Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.4799969Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.4858756Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches/jars-*/*/' and key: gradle-instrumented-jars-v1-817a8d0be1eb0f19b5e1789eaa4084aa: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0V7LkaQAAAADEV8TE6M+UR7tCM5c7VRMBUEhMMzBFREdFMDQxMABFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.5655808Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches/*/groovy-dsl/*/' and key: gradle-groovy-dsl-v1-89081b63181681d9de254e0d2c125cf7: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0V7LkaQAAAACp1XfMAsZEQ4UlCYkpWSeDUEhMMzBFREdFMDExMABFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:43.5776450Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches/*/kotlin-dsl/accessors/*/
+Build Debug APK	Post Setup Gradle	/home/runner/.gradle/caches/*/kotlin-dsl/scripts/*/' and key: gradle-kotlin-dsl-v1-98172dc14e7d5d4196f4e3ba2300c9b6: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0V7LkaQAAAAC0u1pwZJM0RKWnnt6OwUaqUEhMMzBFREdFMDIxNQBFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:44.0897159Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:44.4534549Z Caching transforms with path '/home/runner/.gradle/caches/transforms-4/*/
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:44.4568262Z /home/runner/.gradle/caches/*/transforms/*/' and cache key: gradle-transforms-v1-e75a8eeb954930bc839d91595e290e04
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:45.0612709Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches/modules-*/files-*/*/*/*/*' and key: gradle-dependencies-v1-b829c9d3dca1d4fb7147eadf3d0d4a0b: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0WbLkaQAAAABG23LifOAoTZPkK5k645muUEhMMzBFREdFMDExMgBFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:45.3577313Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:47.5003142Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches/transforms-4/*/
+Build Debug APK	Post Setup Gradle	/home/runner/.gradle/caches/*/transforms/*/' and key: gradle-transforms-v1-e75a8eeb954930bc839d91595e290e04: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0W7LkaQAAAACkQ1Kt/17nQrXCfnIQj8SaUEhMMzBFREdFMDIyMgBFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:48.4477563Z Caching Gradle User Home with cache key: gradle-home-v1|Linux|android[9666a6256c472776b30a60021e359eda]-f7611c4c35a828ee153e8c09e67afa5c8389f08c
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:48.4563781Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:48.6829419Z ##[warning]Failed to save cache entry with path '/home/runner/.gradle/caches,/home/runner/.gradle/notifications,/home/runner/.gradle/.setup-gradle' and key: gradle-home-v1|Linux|android[9666a6256c472776b30a60021e359eda]-f7611c4c35a828ee153e8c09e67afa5c8389f08c: Error: <h2>Our services aren't available right now</h2><p>We're working to restore all services as soon as possible. Please check back soon.</p>0XLLkaQAAAABj7cS7fd5RTZCpbN8+BTm/UEhMMzBFREdFMDEyMABFZGdl
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:48.6832438Z ##[endgroup]
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:48.6835914Z Generating Job Summary
+Build Debug APK	Post Setup Gradle	2026-04-19T10:45:48.6849260Z Completed post-action step
+Build Debug APK	Post Set up JDK 17	∩╗┐2026-04-19T10:45:48.7040845Z Post job cleanup.
+Build Debug APK	Post Checkout repository	∩╗┐2026-04-19T10:45:48.8759937Z Post job cleanup.
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9689727Z [command]/usr/bin/git version
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9725417Z git version 2.53.0
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9767754Z Temporarily overriding HOME='/home/runner/work/_temp/0058d556-48ea-42ad-b8af-99b1d83528ea' before making global git config changes
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9768661Z Adding repository directory to the temporary git global config as a safe directory
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9775375Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Tranzo.money/Tranzo.money
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9810412Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:48.9842370Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:49.0059162Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:49.0079172Z http.https://github.com/.extraheader
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:49.0091951Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:49.0121881Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:49.0334426Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Build Debug APK	Post Checkout repository	2026-04-19T10:45:49.0364149Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Build Debug APK	Complete job	∩╗┐2026-04-19T10:45:49.0679007Z Cleaning up orphan processes
+Build Debug APK	Complete job	2026-04-19T10:45:49.0975194Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4, actions/setup-java@v4, gradle/actions/setup-gradle@v3. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Foundry Tests	Set up job	∩╗┐2026-04-19T10:41:36.8604272Z Current runner version: '2.333.1'
+Foundry Tests	Set up job	2026-04-19T10:41:36.8633153Z ##[group]Runner Image Provisioner
+Foundry Tests	Set up job	2026-04-19T10:41:36.8634391Z Hosted Compute Agent
+Foundry Tests	Set up job	2026-04-19T10:41:36.8634989Z Version: 20260213.493
+Foundry Tests	Set up job	2026-04-19T10:41:36.8635571Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Foundry Tests	Set up job	2026-04-19T10:41:36.8636312Z Build Date: 2026-02-13T00:28:41Z
+Foundry Tests	Set up job	2026-04-19T10:41:36.8636981Z Worker ID: {02c4ae22-0a00-4164-a2b7-7226bb936280}
+Foundry Tests	Set up job	2026-04-19T10:41:36.8637677Z Azure Region: northcentralus
+Foundry Tests	Set up job	2026-04-19T10:41:36.8638206Z ##[endgroup]
+Foundry Tests	Set up job	2026-04-19T10:41:36.8639671Z ##[group]Operating System
+Foundry Tests	Set up job	2026-04-19T10:41:36.8640573Z Ubuntu
+Foundry Tests	Set up job	2026-04-19T10:41:36.8641073Z 24.04.4
+Foundry Tests	Set up job	2026-04-19T10:41:36.8641620Z LTS
+Foundry Tests	Set up job	2026-04-19T10:41:36.8642108Z ##[endgroup]
+Foundry Tests	Set up job	2026-04-19T10:41:36.8642597Z ##[group]Runner Image
+Foundry Tests	Set up job	2026-04-19T10:41:36.8643227Z Image: ubuntu-24.04
+Foundry Tests	Set up job	2026-04-19T10:41:36.8643742Z Version: 20260413.86.1
+Foundry Tests	Set up job	2026-04-19T10:41:36.8644701Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260413.86/images/ubuntu/Ubuntu2404-Readme.md
+Foundry Tests	Set up job	2026-04-19T10:41:36.8646396Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260413.86
+Foundry Tests	Set up job	2026-04-19T10:41:36.8647280Z ##[endgroup]
+Foundry Tests	Set up job	2026-04-19T10:41:36.8648450Z ##[group]GITHUB_TOKEN Permissions
+Foundry Tests	Set up job	2026-04-19T10:41:36.8650566Z Contents: read
+Foundry Tests	Set up job	2026-04-19T10:41:36.8651257Z Metadata: read
+Foundry Tests	Set up job	2026-04-19T10:41:36.8651808Z Packages: read
+Foundry Tests	Set up job	2026-04-19T10:41:36.8652286Z ##[endgroup]
+Foundry Tests	Set up job	2026-04-19T10:41:36.8654345Z Secret source: Actions
+Foundry Tests	Set up job	2026-04-19T10:41:36.8655080Z Prepare workflow directory
+Foundry Tests	Set up job	2026-04-19T10:41:36.9225642Z Prepare all required actions
+Foundry Tests	Set up job	2026-04-19T10:41:36.9279992Z Getting action download info
+Foundry Tests	Set up job	2026-04-19T10:41:37.2098673Z Download action repository 'actions/checkout@v4' (SHA:34e114876b0b11c390a56381ad16ebd13914f8d5)
+Foundry Tests	Set up job	2026-04-19T10:41:37.7161638Z Download action repository 'foundry-rs/foundry-toolchain@v1' (SHA:8789b3e21e6c11b2697f5eb56eddae542f746c10)
+Foundry Tests	Set up job	2026-04-19T10:41:38.4685712Z Complete job name: Foundry Tests
+Foundry Tests	Checkout repository	∩╗┐2026-04-19T10:41:38.5527917Z ##[group]Run actions/checkout@v4
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5529786Z with:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5530789Z   submodules: recursive
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5531753Z   repository: Pranav00x/Tranzo.money
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5533098Z   token: ***
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5533891Z   ssh-strict: true
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5534697Z   ssh-user: git
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5535524Z   persist-credentials: true
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5536447Z   clean: true
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5537289Z   sparse-checkout-cone-mode: true
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5538284Z   fetch-depth: 1
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5539087Z   fetch-tags: false
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5539928Z   show-progress: true
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5540918Z   lfs: false
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5541712Z   set-safe-directory: true
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.5542892Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6791325Z Syncing repository: Pranav00x/Tranzo.money
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6794042Z ##[group]Getting Git version info
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6795576Z Working directory is '/home/runner/work/Tranzo.money/Tranzo.money'
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6797715Z [command]/usr/bin/git version
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6836492Z git version 2.53.0
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6862535Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6877206Z Temporarily overriding HOME='/home/runner/work/_temp/9aefd697-944a-496f-bd95-24759925bc8d' before making global git config changes
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6880416Z Adding repository directory to the temporary git global config as a safe directory
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6890412Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Tranzo.money/Tranzo.money
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6920445Z Deleting the contents of '/home/runner/work/Tranzo.money/Tranzo.money'
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6923951Z ##[group]Initializing the repository
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6927937Z [command]/usr/bin/git init /home/runner/work/Tranzo.money/Tranzo.money
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.6998429Z hint: Using 'master' as the name for the initial branch. This default branch name
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7001407Z hint: will change to "main" in Git 3.0. To configure the initial branch name
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7003362Z hint: to use in all of your new repositories, which will suppress this warning,
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7005682Z hint: call:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7006416Z hint:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7007365Z hint: 	git config --global init.defaultBranch <name>
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7008584Z hint:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7010401Z hint: Names commonly chosen instead of 'master' are 'main', 'trunk' and
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7012361Z hint: 'development'. The just-created branch can be renamed via this command:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7013934Z hint:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7014814Z hint: 	git branch -m <name>
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7015718Z hint:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7016941Z hint: Disable this message with "git config set advice.defaultBranchName false"
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7019098Z Initialized empty Git repository in /home/runner/work/Tranzo.money/Tranzo.money/.git/
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7022697Z [command]/usr/bin/git remote add origin https://github.com/Pranav00x/Tranzo.money
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7041064Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7042539Z ##[group]Disabling automatic garbage collection
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7044433Z [command]/usr/bin/git config --local gc.auto 0
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7072886Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7074617Z ##[group]Setting up auth
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7078619Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7107803Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7393868Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7422373Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7630941Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7660371Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7880768Z [command]/usr/bin/git config --local http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7913135Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7914505Z ##[group]Fetching the repository
+Foundry Tests	Checkout repository	2026-04-19T10:41:38.7922357Z [command]/usr/bin/git -c protocol.version=2 fetch --no-tags --prune --no-recurse-submodules --depth=1 origin +f7611c4c35a828ee153e8c09e67afa5c8389f08c:refs/remotes/origin/main
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1761221Z From https://github.com/Pranav00x/Tranzo.money
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1763814Z  * [new ref]         f7611c4c35a828ee153e8c09e67afa5c8389f08c -> origin/main
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1793795Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1796326Z ##[group]Determining the checkout info
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1799132Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1801561Z [command]/usr/bin/git sparse-checkout disable
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1841159Z [command]/usr/bin/git config --local --unset-all extensions.worktreeConfig
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1872611Z ##[group]Checking out the ref
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.1875729Z [command]/usr/bin/git checkout --progress --force -B main refs/remotes/origin/main
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2048050Z Switched to a new branch 'main'
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2050710Z branch 'main' set up to track 'origin/main'.
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2058727Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2061305Z ##[group]Setting up auth for fetching submodules
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2064580Z [command]/usr/bin/git config --global http.https://github.com/.extraheader AUTHORIZATION: basic ***
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2097721Z [command]/usr/bin/git config --global --unset-all url.https://github.com/.insteadOf
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2126047Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf git@github.com:
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2155399Z [command]/usr/bin/git config --global --add url.https://github.com/.insteadOf org-128968278@github.com:
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2182231Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2183961Z ##[group]Fetching submodules
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2185517Z [command]/usr/bin/git submodule sync --recursive
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2397756Z [command]/usr/bin/git -c protocol.version=2 submodule update --init --force --depth=1 --recursive
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2604749Z Submodule 'smart_contracts/lib/account-abstraction' (https://github.com/eth-infinitism/account-abstraction) registered for path 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2611829Z Submodule 'smart_contracts/lib/forge-std' (https://github.com/foundry-rs/forge-std) registered for path 'smart_contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2616631Z Submodule 'smart_contracts/lib/openzeppelin-contracts' (https://github.com/OpenZeppelin/openzeppelin-contracts) registered for path 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.2639463Z Cloning into '/home/runner/work/Tranzo.money/Tranzo.money/smart_contracts/lib/account-abstraction'...
+Foundry Tests	Checkout repository	2026-04-19T10:41:39.9601881Z Cloning into '/home/runner/work/Tranzo.money/Tranzo.money/smart_contracts/lib/forge-std'...
+Foundry Tests	Checkout repository	2026-04-19T10:41:40.2922734Z Cloning into '/home/runner/work/Tranzo.money/Tranzo.money/smart_contracts/lib/openzeppelin-contracts'...
+Foundry Tests	Checkout repository	2026-04-19T10:41:41.6939931Z From https://github.com/eth-infinitism/account-abstraction
+Foundry Tests	Checkout repository	2026-04-19T10:41:41.6940891Z  * branch            b36a1ed52ae00da6f8a4c8d50181e2877e4fa410 -> FETCH_HEAD
+Foundry Tests	Checkout repository	2026-04-19T10:41:41.7141115Z Submodule path 'smart_contracts/lib/account-abstraction': checked out 'b36a1ed52ae00da6f8a4c8d50181e2877e4fa410'
+Foundry Tests	Checkout repository	2026-04-19T10:41:42.3535780Z From https://github.com/foundry-rs/forge-std
+Foundry Tests	Checkout repository	2026-04-19T10:41:42.3536748Z  * branch            0844d7e1fc5e60d77b68e469bff60265f236c398 -> FETCH_HEAD
+Foundry Tests	Checkout repository	2026-04-19T10:41:42.3642277Z Submodule path 'smart_contracts/lib/forge-std': checked out '0844d7e1fc5e60d77b68e469bff60265f236c398'
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.0725355Z From https://github.com/OpenZeppelin/openzeppelin-contracts
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.0726536Z  * branch            5fd1781b1454fd1ef8e722282f86f9293cacf256 -> FETCH_HEAD
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.1565590Z Submodule path 'smart_contracts/lib/openzeppelin-contracts': checked out '5fd1781b1454fd1ef8e722282f86f9293cacf256'
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.1585851Z Submodule 'lib/erc4626-tests' (https://github.com/a16z/erc4626-tests.git) registered for path 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.1590459Z Submodule 'lib/forge-std' (https://github.com/foundry-rs/forge-std) registered for path 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.1595439Z Submodule 'lib/halmos-cheatcodes' (https://github.com/a16z/halmos-cheatcodes) registered for path 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.1622014Z Cloning into '/home/runner/work/Tranzo.money/Tranzo.money/smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'...
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.4477591Z Cloning into '/home/runner/work/Tranzo.money/Tranzo.money/smart_contracts/lib/openzeppelin-contracts/lib/forge-std'...
+Foundry Tests	Checkout repository	2026-04-19T10:41:43.7913076Z Cloning into '/home/runner/work/Tranzo.money/Tranzo.money/smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'...
+Foundry Tests	Checkout repository	2026-04-19T10:41:44.7539907Z From https://github.com/a16z/erc4626-tests
+Foundry Tests	Checkout repository	2026-04-19T10:41:44.7540916Z  * branch            232ff9ba8194e406967f52ecc5cb52ed764209e9 -> FETCH_HEAD
+Foundry Tests	Checkout repository	2026-04-19T10:41:44.7596542Z Submodule path 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests': checked out '232ff9ba8194e406967f52ecc5cb52ed764209e9'
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.4033681Z From https://github.com/foundry-rs/forge-std
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.4034533Z  * branch            3b20d60d14b343ee4f908cb8079495c07f5e8981 -> FETCH_HEAD
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.4137820Z Submodule path 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std': checked out '3b20d60d14b343ee4f908cb8079495c07f5e8981'
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.9873661Z From https://github.com/a16z/halmos-cheatcodes
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.9874364Z  * branch            7328abe100445fc53885c21d0e713b95293cf14c -> FETCH_HEAD
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.9926199Z Submodule path 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes': checked out '7328abe100445fc53885c21d0e713b95293cf14c'
+Foundry Tests	Checkout repository	2026-04-19T10:41:45.9962992Z [command]/usr/bin/git submodule foreach --recursive git config --local gc.auto 0
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0168610Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0206231Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0244906Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0283039Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0319725Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0359752Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0409253Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0409849Z ##[group]Persisting credentials for submodules
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0420090Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'url\.https\:\/\/github\.com\/\.insteadOf' && git config --local --unset-all 'url.https://github.com/.insteadOf' || :"
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0643458Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0685564Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0727870Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0768887Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0811906Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0853899Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.0913521Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local 'http.https://github.com/.extraheader' 'AUTHORIZATION: basic ***' && git config --local --show-origin --name-only --get-regexp remote.origin.url"
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1116807Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1155054Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/account-abstraction/config	remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1174241Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1211230Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/forge-std/config	remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1231014Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1268020Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/config	remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1286366Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1323938Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config	remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1342886Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1380838Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/forge-std/config	remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1399788Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1437974Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config	remote.origin.url
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1504713Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'git@github.com:'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1706044Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1742355Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1778613Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1814668Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1852441Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1889275Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.1938911Z [command]/usr/bin/git submodule foreach --recursive git config --local --add 'url.https://github.com/.insteadOf' 'org-128968278@github.com:'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2141400Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2177907Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2213957Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2250040Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2286974Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2324511Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2369671Z ##[endgroup]
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2404098Z [command]/usr/bin/git log -1 --format=%H
+Foundry Tests	Checkout repository	2026-04-19T10:41:46.2425163Z f7611c4c35a828ee153e8c09e67afa5c8389f08c
+Foundry Tests	Install Foundry	∩╗┐2026-04-19T10:41:46.2637261Z ##[group]Run foundry-rs/foundry-toolchain@v1
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2637558Z with:
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2637728Z   version: stable
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2637919Z   network: ethereum
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2638088Z   cache: true
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2638339Z   cache-key: contracts-f7611c4c35a828ee153e8c09e67afa5c8389f08c
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2638663Z   cache-restore-keys: contracts-
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.2638883Z ##[endgroup]
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.3812764Z Installing Foundry (version: stable, network: ethereum)
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.3815878Z Downloading foundryup installer...
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.4071407Z Running foundryup installer...
+Foundry Tests	Install Foundry	2026-04-19T10:41:46.4528269Z Running: foundryup 
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.2228524Z Added /home/runner/.foundry/bin to PATH
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.2230083Z Primary key: linux-foundry-chain-fork-contracts-f7611c4c35a828ee153e8c09e67afa5c8389f08c
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.2268165Z Restore keys: linux-foundry-chain-fork-contracts-
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.3089072Z Cache hit for restore-key: linux-foundry-chain-fork-contracts-b9c2fa6de70e8172e693f31db8fe59ff2dfbddfd
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5854624Z Received 308 of 308 (100.0%), 0.0 MBs/sec
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5855260Z Cache Size: ~0 MB (308 B)
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5885404Z [command]/usr/bin/tar -xf /home/runner/work/_temp/33da73b7-6278-4e26-9c07-233c486b4ee9/cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --use-compress-program unzstd
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5929441Z Cache restored successfully
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5933062Z Cache restored from key: linux-foundry-chain-fork-contracts-b9c2fa6de70e8172e693f31db8fe59ff2dfbddfd
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5933975Z Running: forge --version
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5983869Z forge Version: 1.5.1-stable
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5984369Z Commit SHA: b0a9dd9ceda36f63e2326ce530c10e6916f4b8a2
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5984763Z Build Timestamp: 2025-12-22T11:39:01.425730780Z (1766403541)
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5985071Z Build Profile: maxperf
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.5989721Z Running: cast --version
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6039140Z cast Version: 1.5.1-stable
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6039613Z Commit SHA: b0a9dd9ceda36f63e2326ce530c10e6916f4b8a2
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6039992Z Build Timestamp: 2025-12-22T11:39:01.425730780Z (1766403541)
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6040512Z Build Profile: maxperf
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6045395Z Running: anvil --version
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6082999Z anvil Version: 1.5.1-stable
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6083465Z Commit SHA: b0a9dd9ceda36f63e2326ce530c10e6916f4b8a2
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6083980Z Build Timestamp: 2025-12-22T11:39:01.425730780Z (1766403541)
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6084297Z Build Profile: maxperf
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6087626Z Running: chisel --version
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6124546Z chisel Version: 1.5.1-stable
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6125224Z Commit SHA: b0a9dd9ceda36f63e2326ce530c10e6916f4b8a2
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6125884Z Build Timestamp: 2025-12-22T11:39:01.425730780Z (1766403541)
+Foundry Tests	Install Foundry	2026-04-19T10:41:50.6126390Z Build Profile: maxperf
+Foundry Tests	Run forge tests	∩╗┐2026-04-19T10:41:50.6246677Z ##[group]Run forge test -vvv
+Foundry Tests	Run forge tests	2026-04-19T10:41:50.6247122Z [36;1mforge test -vvv[0m
+Foundry Tests	Run forge tests	2026-04-19T10:41:50.6272631Z shell: /usr/bin/bash -e {0}
+Foundry Tests	Run forge tests	2026-04-19T10:41:50.6273083Z ##[endgroup]
+Foundry Tests	Run forge tests	2026-04-19T10:41:50.8530750Z Compiling 73 files with Solc 0.8.28
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9471572Z Solc 0.8.28 finished in 9.09s
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9614848Z Compiler run successful with warnings:
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9615699Z Warning (5667): Unused function parameter. Remove or comment out the variable name to silence this warning.
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9616524Z    --> src/TranzoPaymaster.sol:174:9:
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9616922Z     |
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9617220Z 174 |         uint256 actualUserOpFeePerGas
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9617653Z     |         ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9617911Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9618172Z Warning (2018): Function state mutability can be restricted to view
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9618805Z    --> src/TranzoPaymaster.sol:126:5:
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9619229Z     |
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9619592Z 126 |     function validatePaymasterUserOp(
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9620524Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9690922Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9691299Z Warning (2018): Function state mutability can be restricted to view
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9691903Z    --> test/TranzoAccount.t.sol:258:5:
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9692296Z     |
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9692651Z 258 |     function test_isValidSignature_owner() public {
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9693335Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9693891Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9694198Z Warning (2018): Function state mutability can be restricted to view
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9694801Z    --> test/TranzoAccount.t.sol:268:5:
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9695185Z     |
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9695555Z 268 |     function test_isValidSignature_wrongSigner() public {
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9696317Z     |     ^ (Relevant source part starts here and spans across multiple lines).
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9696822Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9697118Z Warning (2018): Function state mutability can be restricted to view
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9697757Z   --> test/TranzoAccountFactory.t.sol:71:5:
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9698207Z    |
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9698637Z 71 |     function test_getAddress_beforeDeployment_noCode() public {
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9699426Z    |     ^ (Relevant source part starts here and spans across multiple lines).
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9699905Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9891227Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9892001Z Ran 9 tests for test/TranzoDripper.t.sol:TranzoDripperTest
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9892791Z [PASS] test_balanceOf_accrues() (gas: 204044)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9893471Z [PASS] test_cancel_refunds_employer() (gas: 256829)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9894099Z [PASS] test_createStream() (gas: 196661)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9894959Z [PASS] test_multiple_withdrawals() (gas: 263269)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9895855Z [PASS] test_revert_cancel_unauthorized() (gas: 197625)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9896944Z [PASS] test_revert_invalid_time_range() (gas: 16006)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9897889Z [PASS] test_revert_withdraw_nothing() (gas: 198428)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9898921Z [PASS] test_revert_zero_amount() (gas: 15423)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9899838Z [PASS] test_withdraw() (gas: 252618)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9901426Z Suite result: ok. 9 passed; 0 failed; 0 skipped; finished in 1.46ms (1.02ms CPU time)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9901952Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9902237Z Ran 10 tests for test/TranzoAccountFactory.t.sol:TranzoAccountFactoryTest
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9902682Z [PASS] test_createAccount_deploysProxy() (gas: 158716)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9903274Z [PASS] test_createAccount_idempotent() (gas: 162919)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9905232Z [PASS] test_createAccount_setsOwner() (gas: 160059)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9907074Z [PASS] test_differentOwners_differentAddresses() (gas: 15677)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9908843Z [PASS] test_differentSalts_differentAddresses() (gas: 13201)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9910486Z [PASS] test_emitsAccountCreatedEvent() (gas: 166763)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9912591Z [PASS] test_getAddress_beforeDeployment_noCode() (gas: 12883)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9914366Z [PASS] test_getAddress_matchesDeployedAddress() (gas: 161893)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9915951Z [PASS] test_implementationIsNotProxy() (gas: 5443)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9917784Z [PASS] test_multipleAccountsPerOwner() (gas: 311124)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9919846Z Suite result: ok. 10 passed; 0 failed; 0 skipped; finished in 1.91ms (1.34ms CPU time)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9920535Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9920741Z Ran 12 tests for test/TranzoPaymaster.t.sol:TranzoPaymasterTest
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9921159Z [PASS] test_depositToEntryPoint_ownerOnly() (gas: 56005)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9921738Z [PASS] test_depositUsdc_updatesBalance() (gas: 120703)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9923294Z [PASS] test_setVerifyingSigner_ownerOnly() (gas: 21181)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9924721Z [PASS] test_setVerifyingSigner_revertsIfNotOwner() (gas: 12105)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9926390Z [PASS] test_validatePaymasterUserOp_revertsIfDataTooShort() (gas: 18354)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9927810Z [PASS] test_validatePaymasterUserOp_revertsIfNotEntryPoint() (gas: 15134)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9929237Z [PASS] test_validatePaymasterUserOp_sponsored_invalidSig() (gas: 23930)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9930889Z [PASS] test_validatePaymasterUserOp_sponsored_validSig() (gas: 26420)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9932357Z [PASS] test_validatePaymasterUserOp_usdc_insufficientBalance() (gas: 32796)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9933789Z [PASS] test_validatePaymasterUserOp_usdc_sufficientBalance() (gas: 159141)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9935187Z [PASS] test_withdrawUsdc_revertsOnInsufficient() (gas: 13627)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9936731Z [PASS] test_withdrawUsdc_updatesBalance() (gas: 147228)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9938378Z Suite result: ok. 12 passed; 0 failed; 0 skipped; finished in 1.84ms (2.10ms CPU time)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9938908Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9939155Z Ran 22 tests for test/TranzoAccount.t.sol:TranzoAccountTest
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9939600Z [PASS] test_addRevokeSessionKey() (gas: 62675)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9940332Z [PASS] test_cannotInitializeTwice() (gas: 16599)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9942384Z [PASS] test_executeBatch_multipleTargets() (gas: 200887)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9944297Z [PASS] test_executeBatch_revertsOnLengthMismatch() (gas: 20698)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9946062Z [PASS] test_execute_entryPointCanCall() (gas: 56235)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9947931Z [PASS] test_execute_forwardsValue() (gas: 39600)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9949764Z [PASS] test_execute_ownerCanCall() (gas: 55590)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9951927Z [PASS] test_execute_revertsIfUnauthorized() (gas: 19139)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9953715Z [PASS] test_execute_revertsOnFailedCall() (gas: 54283)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9955484Z [PASS] test_initialOwner() (gas: 15165)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9957319Z [PASS] test_isValidSignature_owner() (gas: 22624)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9959174Z [PASS] test_isValidSignature_wrongSigner() (gas: 20433)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9961079Z [PASS] test_receiveEth() (gas: 16970)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9962930Z [PASS] test_spendingLimits_canSetLimits() (gas: 67097)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9965057Z [PASS] test_spendingLimits_perTxEnforced() (gas: 178775)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9966773Z [PASS] test_transferOwnership() (gas: 24570)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9968644Z [PASS] test_transferOwnership_revertsIfNotOwner() (gas: 17409)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9970436Z [PASS] test_transferOwnership_revertsZeroAddress() (gas: 19291)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9972387Z [PASS] test_validateUserOp_invalidSignature() (gas: 27430)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9974141Z [PASS] test_validateUserOp_paysPrefund() (gas: 36660)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9976069Z [PASS] test_validateUserOp_revertsIfNotEntryPoint() (gas: 16500)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9977950Z [PASS] test_validateUserOp_validOwnerSignature() (gas: 27538)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9979963Z Suite result: ok. 22 passed; 0 failed; 0 skipped; finished in 3.45ms (4.07ms CPU time)
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9980771Z 
+Foundry Tests	Run forge tests	2026-04-19T10:41:59.9981096Z Ran 4 test suites in 18.75ms (8.64ms CPU time): 53 tests passed, 0 failed, 0 skipped (53 total tests)
+Foundry Tests	Post Install Foundry	∩╗┐2026-04-19T10:42:00.0103961Z Post job cleanup.
+Foundry Tests	Post Install Foundry	2026-04-19T10:42:00.1505180Z [command]/usr/bin/tar --posix -cf cache.tzst --exclude cache.tzst -P -C /home/runner/work/Tranzo.money/Tranzo.money --files-from manifest.txt --use-compress-program zstdmt
+Foundry Tests	Post Install Foundry	2026-04-19T10:42:00.4277798Z Sent 329 of 329 (100.0%), 0.0 MBs/sec
+Foundry Tests	Post Install Foundry	2026-04-19T10:42:00.5578926Z Cache saved with the key: linux-foundry-chain-fork-contracts-f7611c4c35a828ee153e8c09e67afa5c8389f08c
+Foundry Tests	Post Checkout repository	∩╗┐2026-04-19T10:42:00.5696438Z Post job cleanup.
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6628280Z [command]/usr/bin/git version
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6663981Z git version 2.53.0
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6706314Z Temporarily overriding HOME='/home/runner/work/_temp/ca4a1323-0c13-4f6d-be52-510c58bbbf78' before making global git config changes
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6707567Z Adding repository directory to the temporary git global config as a safe directory
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6711840Z [command]/usr/bin/git config --global --add safe.directory /home/runner/work/Tranzo.money/Tranzo.money
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6746072Z [command]/usr/bin/git config --local --name-only --get-regexp core\.sshCommand
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6777217Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'core\.sshCommand' && git config --local --unset-all 'core.sshCommand' || :"
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.6979901Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7022796Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7064475Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7106322Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7148431Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7190888Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7249562Z [command]/usr/bin/git config --local --name-only --get-regexp http\.https\:\/\/github\.com\/\.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7269652Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7281012Z [command]/usr/bin/git config --local --unset-all http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7311593Z [command]/usr/bin/git submodule foreach --recursive sh -c "git config --local --name-only --get-regexp 'http\.https\:\/\/github\.com\/\.extraheader' && git config --local --unset-all 'http.https://github.com/.extraheader' || :"
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7514615Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7538126Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7571439Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7594783Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7627521Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7651681Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7685711Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7712540Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7746716Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7773318Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7807149Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7831221Z http.https://github.com/.extraheader
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7884709Z [command]/usr/bin/git config --local --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.7922658Z [command]/usr/bin/git submodule foreach --recursive git config --local --show-origin --name-only --get-regexp remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8141798Z Entering 'smart_contracts/lib/account-abstraction'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8162767Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/account-abstraction/config	remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8180895Z Entering 'smart_contracts/lib/forge-std'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8200041Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/forge-std/config	remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8217513Z Entering 'smart_contracts/lib/openzeppelin-contracts'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8236239Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/config	remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8253742Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/erc4626-tests'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8272963Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config	remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8290408Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/forge-std'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8309887Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/forge-std/config	remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8327904Z Entering 'smart_contracts/lib/openzeppelin-contracts/lib/halmos-cheatcodes'
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8347016Z file:/home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config	remote.origin.url
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8383814Z [command]/usr/bin/git config --file /home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/account-abstraction/config --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8415932Z [command]/usr/bin/git config --file /home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/forge-std/config --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8461654Z [command]/usr/bin/git config --file /home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/config --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8491920Z [command]/usr/bin/git config --file /home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/erc4626-tests/config --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8523433Z [command]/usr/bin/git config --file /home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/forge-std/config --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Post Checkout repository	2026-04-19T10:42:00.8554615Z [command]/usr/bin/git config --file /home/runner/work/Tranzo.money/Tranzo.money/.git/modules/smart_contracts/lib/openzeppelin-contracts/modules/lib/halmos-cheatcodes/config --name-only --get-regexp ^includeIf\.gitdir:
+Foundry Tests	Complete job	∩╗┐2026-04-19T10:42:00.8725517Z Cleaning up orphan processes
+Foundry Tests	Complete job	2026-04-19T10:42:00.9123486Z ##[warning]Node.js 20 actions are deprecated. The following actions are running on Node.js 20 and may not work as expected: actions/checkout@v4. Actions will be forced to run with Node.js 24 by default starting June 2nd, 2026. Node.js 20 will be removed from the runner on September 16th, 2026. Please check if updated versions of these actions are available that support Node.js 24. To opt into Node.js 24 now, set the FORCE_JAVASCRIPT_ACTIONS_TO_NODE24=true environment variable on the runner or in your workflow file. Once Node.js 24 becomes the default, you can temporarily opt out by setting ACTIONS_ALLOW_USE_UNSECURE_NODE_VERSION=true. For more information see: https://github.blog/changelog/2025-09-19-deprecation-of-node-20-on-github-actions-runners/
+Notify Telegram	Set up job	∩╗┐2026-04-19T10:45:54.0737373Z Current runner version: '2.333.1'
+Notify Telegram	Set up job	2026-04-19T10:45:54.0761262Z ##[group]Runner Image Provisioner
+Notify Telegram	Set up job	2026-04-19T10:45:54.0762176Z Hosted Compute Agent
+Notify Telegram	Set up job	2026-04-19T10:45:54.0762753Z Version: 20260213.493
+Notify Telegram	Set up job	2026-04-19T10:45:54.0763435Z Commit: 5c115507f6dd24b8de37d8bbe0bb4509d0cc0fa3
+Notify Telegram	Set up job	2026-04-19T10:45:54.0764143Z Build Date: 2026-02-13T00:28:41Z
+Notify Telegram	Set up job	2026-04-19T10:45:54.0764817Z Worker ID: {0aefa17e-ab33-4a78-9919-7771883933e2}
+Notify Telegram	Set up job	2026-04-19T10:45:54.0765591Z Azure Region: westus3
+Notify Telegram	Set up job	2026-04-19T10:45:54.0766098Z ##[endgroup]
+Notify Telegram	Set up job	2026-04-19T10:45:54.0767714Z ##[group]Operating System
+Notify Telegram	Set up job	2026-04-19T10:45:54.0768415Z Ubuntu
+Notify Telegram	Set up job	2026-04-19T10:45:54.0768860Z 24.04.4
+Notify Telegram	Set up job	2026-04-19T10:45:54.0769322Z LTS
+Notify Telegram	Set up job	2026-04-19T10:45:54.0769866Z ##[endgroup]
+Notify Telegram	Set up job	2026-04-19T10:45:54.0770351Z ##[group]Runner Image
+Notify Telegram	Set up job	2026-04-19T10:45:54.0770923Z Image: ubuntu-24.04
+Notify Telegram	Set up job	2026-04-19T10:45:54.0771498Z Version: 20260413.86.1
+Notify Telegram	Set up job	2026-04-19T10:45:54.0772524Z Included Software: https://github.com/actions/runner-images/blob/ubuntu24/20260413.86/images/ubuntu/Ubuntu2404-Readme.md
+Notify Telegram	Set up job	2026-04-19T10:45:54.0774277Z Image Release: https://github.com/actions/runner-images/releases/tag/ubuntu24%2F20260413.86
+Notify Telegram	Set up job	2026-04-19T10:45:54.0775228Z ##[endgroup]
+Notify Telegram	Set up job	2026-04-19T10:45:54.0776378Z ##[group]GITHUB_TOKEN Permissions
+Notify Telegram	Set up job	2026-04-19T10:45:54.0778529Z Contents: read
+Notify Telegram	Set up job	2026-04-19T10:45:54.0779074Z Metadata: read
+Notify Telegram	Set up job	2026-04-19T10:45:54.0779729Z Packages: read
+Notify Telegram	Set up job	2026-04-19T10:45:54.0780340Z ##[endgroup]
+Notify Telegram	Set up job	2026-04-19T10:45:54.0782684Z Secret source: Actions
+Notify Telegram	Set up job	2026-04-19T10:45:54.0783494Z Prepare workflow directory
+Notify Telegram	Set up job	2026-04-19T10:45:54.1154682Z Prepare all required actions
+Notify Telegram	Set up job	2026-04-19T10:45:54.1264512Z Complete job name: Notify Telegram
+Notify Telegram	Send build status to Telegram	∩╗┐2026-04-19T10:45:54.2137947Z ##[group]Run SHORT_SHA=$(echo "f7611c4c35a828ee153e8c09e67afa5c8389f08c" | cut -c1-7)
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2139962Z [36;1mSHORT_SHA=$(echo "f7611c4c35a828ee153e8c09e67afa5c8389f08c" | cut -c1-7)[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2141439Z [36;1mCONTRACTS="success"[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2142425Z [36;1mANDROID="failure"[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2143492Z [36;1m[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2144668Z [36;1mif [ "$CONTRACTS" = "success" ] && [ "$ANDROID" = "success" ]; then[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2146041Z [36;1m  STATUS="Γ£à All checks passed"[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2147277Z [36;1melse[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2148144Z [36;1m  STATUS="Γ¥î Build failed"[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2149053Z [36;1mfi[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2150219Z [36;1m[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2151194Z [36;1mMESSAGE=$(cat <<EOF[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2152266Z [36;1m<b>${STATUS}</b> ΓÇö <code>${SHORT_SHA}</code>[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2153261Z [36;1m[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2154198Z [36;1m≡ƒöù Contracts: ${CONTRACTS}[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2155276Z [36;1m≡ƒô▒ Android: ${ANDROID}[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2156368Z [36;1mEOF[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2157378Z [36;1m)[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2158231Z [36;1m[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2158987Z [36;1mcurl -s -X POST \[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2160152Z [36;1m  "https://api.telegram.org/bot${TG_BOT_TOKEN}/sendMessage" \[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2161610Z [36;1m  -d "chat_id=${TG_CHAT_ID}" \[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2162737Z [36;1m  -d "text=${MESSAGE}" \[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2163704Z [36;1m  -d "parse_mode=HTML"[0m
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2477137Z shell: /usr/bin/bash -e {0}
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2478728Z env:
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2479852Z   TG_BOT_TOKEN: ***
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2480826Z   TG_CHAT_ID: ***
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.2481674Z ##[endgroup]
+Notify Telegram	Send build status to Telegram	2026-04-19T10:45:54.9113608Z {"ok":true,"result":{"message_id":394,"from":{"id":8461785127,"is_bot":true,"first_name":"Tranzo Labs","username":"TranzoLabs_bot"},"chat":{"id":***,"title":"Tranzo Labs","type":"supergroup"},"date":1776595554,"text":"\u274c Build failed \u2014 f7611c4\n\n\ud83d\udd17 Contracts: success\n\ud83d\udcf1 Android: failure","entities":[{"offset":0,"length":14,"type":"bold"},{"offset":17,"length":7,"type":"code"}]}}
+Notify Telegram	Complete job	∩╗┐2026-04-19T10:45:54.9221056Z Cleaning up orphan processes
