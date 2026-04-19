@@ -323,7 +323,6 @@ class MainActivity : FragmentActivity() {
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
                             SettingsScreenProMax(
-                                themeManager = themeManager,
                                 onLogout = {
                                     navController.navigate(Screen.Welcome.route) {
                                         popUpTo(0) { inclusive = true }
@@ -358,10 +357,6 @@ class MainActivity : FragmentActivity() {
                             CardScreenPro(
                                 onBack = { navController.popBackStack() },
                                 onOrderCard = { navController.navigate(Screen.OrderCard.route) },
-                                onCardDetails = { cardId ->
-                                    navController.navigate(Screen.CardDetails.createRoute(cardId))
-                                },
-                                onManageLimits = { /* Future */ }
                             )
                         }
 

@@ -32,7 +32,6 @@ import com.tranzo.app.util.ThemeManager
  */
 @Composable
 fun SettingsScreenProMax(
-    themeManager: ThemeManager = hiltViewModel(),
     homeViewModel: HomeViewModel = hiltViewModel(),
     onLogout: () -> Unit = {},
     onSecurity: () -> Unit = {},
