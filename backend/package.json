@@ -1,11 +1,11 @@
 {
   "name": "tranzo-backend",
   "version": "1.0.0",
-  "description": "Tranzo Backend â€” Openfort-powered wallet API",
+  "description": "Tranzo Backend - Openfort-powered wallet API",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
-    "build": "tsc --noEmit false --skipLibCheck || true",
+    "build": "tsc --noEmit false --skipLibCheck",
     "start": "node dist/index.js",
     "dev": "tsx watch src/index.ts",
     "db:generate": "prisma generate",

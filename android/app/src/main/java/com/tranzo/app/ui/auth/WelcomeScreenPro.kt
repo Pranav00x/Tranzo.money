@@ -200,7 +200,11 @@ fun WelcomeScreenPro(
                     AuthMethodRow(
                         icon = Icons.Outlined.AlternateEmail,
                         label = "Continue with X",
-                        onClick = { /* X auth — to be implemented */ }
+                        onClick = {
+                            // X auth implementation
+                            // For now, we'll use a dummy ID for testing
+                            viewModel.loginWithTwitter("twitter_id_123", email.ifBlank { null }, "Twitter User")
+                        }
                     )
 
                     // Email OTP
