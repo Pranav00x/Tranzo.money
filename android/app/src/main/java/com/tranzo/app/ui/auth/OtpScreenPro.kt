@@ -1,7 +1,9 @@
 package com.tranzo.app.ui.auth
 
+import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -15,6 +17,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -24,7 +28,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 
 /**
- * CheQ-inspired OTP verification — monochrome, 6-digit code entry.
+ * Enhanced OTP Screen — 6 separate boxes for the verification code.
+ * Clean monochrome design with high contrast.
  */
 @Composable
 fun OtpScreenPro(
@@ -36,12 +41,17 @@ fun OtpScreenPro(
 ) {
     val state by viewModel.state.collectAsState()
     var otp by remember { mutableStateOf("") }
+    val focusRequester = remember { FocusRequester() }
 
-    // Navigate on success
     LaunchedEffect(state.isAuthenticated) {
         if (state.isAuthenticated) {
             onNavigateToHome(state.isNewUser)
         }
+    }
+
+    // Auto-focus on entry
+    LaunchedEffect(Unit) {
+        focusRequester.requestFocus()
     }
 
     Column(
@@ -50,16 +60,20 @@ fun OtpScreenPro(
             .background(Color.White)
             .systemBarsPadding()
     ) {
-        // ── Back button ──────────────────────────────────────
-        IconButton(
-            onClick = onSkip,
-            modifier = Modifier.padding(horizontal = 4.dp, vertical = 4.dp)
+        // Top bar
+        Row(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 8.dp, vertical = 8.dp),
+            verticalAlignment = Alignment.CenterVertically
         ) {
-            Icon(
-                Icons.AutoMirrored.Outlined.ArrowBack,
-                contentDescription = "Back",
-                tint = Color(0xFF1A1A1A)
-            )
+            IconButton(onClick = onSkip) {
+                Icon(
+                    Icons.AutoMirrored.Outlined.ArrowBack,
+                    contentDescription = "Back",
+                    tint = Color(0xFF1A1A1A)
+                )
+            }
         }
 
         Column(
@@ -67,10 +81,10 @@ fun OtpScreenPro(
                 .fillMaxWidth()
                 .padding(horizontal = 32.dp)
         ) {
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
             Text(
-                "Enter code",
+                "Verify your email",
                 style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = Color(0xFF1A1A1A)
@@ -78,111 +92,111 @@ fun OtpScreenPro(
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // Email badge
-            Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
-            ) {
-                Icon(
-                    Icons.Outlined.Email,
-                    contentDescription = null,
-                    tint = Color(0xFF999999),
-                    modifier = Modifier.size(16.dp)
-                )
-                Text(
-                    "Sent to $email",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF999999)
+            Text(
+                "We've sent a 6-digit code to",
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF666666)
+            )
+            Text(
+                email,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1A1A1A)
+            )
+
+            Spacer(modifier = Modifier.height(48.dp))
+
+            // ── Hidden input to capture keyboard ──────────────────
+            Box(modifier = Modifier.height(0.dp)) {
+                TextField(
+                    value = otp,
+                    onValueChange = { if (it.length <= 6 && it.all { it.isDigit() }) otp = it },
+                    keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.NumberPassword),
+                    modifier = Modifier.focusRequester(focusRequester)
                 )
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
-
-            // OTP input
-            OutlinedTextField(
-                value = otp,
-                onValueChange = { newValue ->
-                    if (newValue.length <= 6 && newValue.all { it.isDigit() }) {
-                        otp = newValue
-                    }
-                },
-                modifier = Modifier.fillMaxWidth(),
-                textStyle = MaterialTheme.typography.headlineLarge.copy(
-                    textAlign = TextAlign.Center,
-                    fontWeight = FontWeight.Bold,
-                    letterSpacing = 8.sp,
-                    color = Color(0xFF1A1A1A)
-                ),
-                placeholder = {
-                    Text(
-                        "000000",
-                        style = MaterialTheme.typography.headlineLarge.copy(
-                            textAlign = TextAlign.Center,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 8.sp,
-                        ),
-                        color = Color(0xFFE0E0E0),
-                        modifier = Modifier.fillMaxWidth()
-                    )
-                },
-                keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Number),
-                singleLine = true,
-                shape = RoundedCornerShape(16.dp),
-                colors = OutlinedTextFieldDefaults.colors(
-                    focusedBorderColor = Color(0xFF1A1A1A),
-                    unfocusedBorderColor = Color(0xFFE0E0E0),
-                    cursorColor = Color(0xFF1A1A1A),
-                    unfocusedContainerColor = Color(0xFFFAFAFA),
-                    focusedContainerColor = Color.White,
-                )
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Progress dots
+            // ── Visual OTP Boxes ──────────────────────────────────
             Row(
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .clickable { focusRequester.requestFocus() },
                 horizontalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 repeat(6) { index ->
+                    val char = if (index < otp.length) otp[index].toString() else ""
+                    val isFocused = otp.length == index
+
                     Box(
                         modifier = Modifier
                             .weight(1f)
-                            .height(3.dp)
-                            .clip(RoundedCornerShape(2.dp))
-                            .background(
-                                if (index < otp.length) Color(0xFF1A1A1A) else Color(0xFFE8E8E8)
+                            .aspectRatio(0.85f)
+                            .clip(RoundedCornerShape(12.dp))
+                            .background(if (isFocused) Color(0xFFF9F9F9) else Color(0xFFFAFAFA))
+                            .border(
+                                width = if (isFocused) 2.dp else 1.dp,
+                                color = if (isFocused) Color(0xFF1A1A1A) else Color(0xFFE8E8E8),
+                                shape = RoundedCornerShape(12.dp)
+                            ),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Text(
+                            text = char,
+                            style = MaterialTheme.typography.headlineMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1A1A1A)
+                        )
+                        
+                        // Blinking cursor simulation if focused and empty
+                        if (isFocused) {
+                            val infiniteTransition = rememberInfiniteTransition()
+                            val alpha by infiniteTransition.animateFloat(
+                                initialValue = 0f,
+                                targetValue = 1f,
+                                animationSpec = infiniteRepeatable(
+                                    animation = tween(500, easing = LinearEasing),
+                                    repeatMode = RepeatMode.Reverse
+                                )
                             )
-                    )
+                            Box(
+                                modifier = Modifier
+                                    .width(2.dp)
+                                    .height(24.dp)
+                                    .background(Color(0xFF1A1A1A).copy(alpha = alpha))
+                            )
+                        }
+                    }
                 }
             }
 
-            // Error
-            state.error?.let { err ->
-                Spacer(modifier = Modifier.height(16.dp))
-                Surface(
-                    modifier = Modifier.fillMaxWidth(),
-                    shape = RoundedCornerShape(12.dp),
-                    color = Color(0xFFFFF0F0)
-                ) {
-                    Text(
-                        err,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = Color(0xFFCC0000),
-                        modifier = Modifier.padding(12.dp)
-                    )
+            // Error display
+            AnimatedVisibility(
+                visible = state.error != null,
+                enter = fadeIn() + expandVertically(),
+                exit = fadeOut() + shrinkVertically()
+            ) {
+                state.error?.let { err ->
+                    Spacer(modifier = Modifier.height(24.dp))
+                    Surface(
+                        modifier = Modifier.fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
+                        color = Color(0xFFFFF0F0)
+                    ) {
+                        Text(
+                            err,
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFFCC0000),
+                            modifier = Modifier.padding(12.dp)
+                        )
+                    }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(48.dp))
 
             // Verify button
             Button(
-                onClick = {
-                    if (otp.length == 6) {
-                        viewModel.verifyOtp(email, otp)
-                    }
-                },
+                onClick = { if (otp.length == 6) viewModel.verifyOtp(email, otp) },
                 modifier = Modifier
                     .fillMaxWidth()
                     .height(56.dp),
@@ -207,28 +221,22 @@ fun OtpScreenPro(
                 }
             }
 
-            Spacer(modifier = Modifier.height(20.dp))
+            Spacer(modifier = Modifier.height(24.dp))
 
-            // Resend
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.Center,
-                verticalAlignment = Alignment.CenterVertically
+            // Resend logic
+            TextButton(
+                onClick = {
+                    viewModel.sendOtp(email)
+                    onResend()
+                },
+                modifier = Modifier.align(Alignment.CenterHorizontally),
+                enabled = !state.isLoading
             ) {
                 Text(
-                    "Didn't receive it? ",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = Color(0xFF999999)
-                )
-                Text(
-                    "Resend",
-                    style = MaterialTheme.typography.bodySmall,
-                    fontWeight = FontWeight.Bold,
+                    "Didn't receive a code? Resend",
+                    style = MaterialTheme.typography.bodyMedium,
                     color = Color(0xFF1A1A1A),
-                    modifier = Modifier.clickable {
-                        viewModel.sendOtp(email)
-                        onResend()
-                    }
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }

@@ -1,3 +1,4 @@
+
 package com.tranzo.app.ui.onboarding
 
 import androidx.compose.animation.*
@@ -54,6 +55,17 @@ fun OnboardingScreen(
     onGetStarted: () -> Unit,
 ) {
     val pagerState = rememberPagerState(pageCount = { pages.size })
+
+    // Auto-scroll every 3 seconds
+    LaunchedEffect(pagerState) {
+        while (pagerState.currentPage < pages.lastIndex) {
+            kotlinx.coroutines.delay(3000)
+            val next = pagerState.currentPage + 1
+            if (next <= pages.lastIndex) {
+                pagerState.animateScrollToPage(next)
+            }
+        }
+    }
 
     Column(
         modifier = Modifier

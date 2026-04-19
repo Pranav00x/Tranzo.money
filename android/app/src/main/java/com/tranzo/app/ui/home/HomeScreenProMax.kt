@@ -84,8 +84,12 @@ fun HomeScreenProMax(
                     }
                     Spacer(modifier = Modifier.width(12.dp))
                     Column {
+                        val userName = state.user?.let {
+                            val full = listOfNotNull(it.firstName, it.lastName).joinToString(" ").trim()
+                            full.ifEmpty { it.displayName ?: it.email?.substringBefore("@") ?: "Wallet" }
+                        } ?: "Tranzo Wallet"
                         Text(
-                            state.user?.displayName ?: state.user?.firstName ?: "Tranzo Wallet",
+                            userName,
                             style = MaterialTheme.typography.titleMedium,
                             fontWeight = FontWeight.Bold,
                             color = Color(0xFF1A1A1A)

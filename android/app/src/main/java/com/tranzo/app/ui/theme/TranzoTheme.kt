@@ -55,6 +55,7 @@ fun TranzoTheme(
 ) {
     // Get the color scheme based on theme ID from AppThemes.kt
     val colorScheme = when (themeId) {
+        "light_mono" -> MonoLightColors
         "default_dark" -> DarkThemeColors
         "purple_night" -> PurpleThemeColors
         "ocean" -> OceanThemeColors
@@ -63,7 +64,7 @@ fun TranzoTheme(
         "pink" -> PinkThemeColors
         "gold" -> GoldThemeColors
         "cyberpunk" -> CyberpunkThemeColors
-        else -> DarkThemeColors
+        else -> MonoLightColors
     }
 
     MaterialTheme(

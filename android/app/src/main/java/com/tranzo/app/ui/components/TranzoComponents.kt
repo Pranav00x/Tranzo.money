@@ -89,6 +89,7 @@ fun TranzoButton(
             Text(
                 text = text,
                 style = MaterialTheme.typography.labelLarge,
+                color = textColor // Explicit color to avoid theme inheritance issues
             )
         }
     }
@@ -120,6 +121,7 @@ fun TranzoSecondaryButton(
         Text(
             text = text,
             style = MaterialTheme.typography.labelLarge,
+            color = TranzoColors.TextPrimary // Explicit color to avoid theme inheritance issues
         )
     }
 }

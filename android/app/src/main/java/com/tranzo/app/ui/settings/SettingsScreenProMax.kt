@@ -84,8 +84,12 @@ fun SettingsScreenProMax(
                     }
 
                     Column {
+                        val name = user?.let {
+                            val full = listOfNotNull(it.firstName, it.lastName).joinToString(" ").trim()
+                            full.ifEmpty { it.displayName ?: it.email ?: "User" }
+                        } ?: "User"
                         Text(
-                            user?.displayName ?: user?.firstName ?: "Tranzo User",
+                            name,
                             style = MaterialTheme.typography.titleLarge,
                             fontWeight = FontWeight.Bold,
                             color = Color.White
@@ -181,7 +185,7 @@ fun SettingsScreenProMax(
                     SettingItemRow(
                         icon = Icons.Outlined.Info,
                         label = "About Tranzo",
-                        trailingText = "v1.0.0",
+                        trailingText = "v1.0.1",
                         onClick = { }
                     )
                 }
@@ -235,7 +239,7 @@ fun SettingsScreenProMax(
                     color = Color(0xFF999999)
                 )
                 Text(
-                    "Build v1.0.0",
+                    "Build v1.0.1",
                     style = MaterialTheme.typography.labelSmall,
                     color = Color(0xFFCCCCCC)
                 )

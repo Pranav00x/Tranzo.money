@@ -84,21 +84,22 @@ class CardViewModel @Inject constructor(
                     isLoading = false,
                     hasCard = true,
                     card = CardInfo(
-                        id = response.id,
-                        maskedPan = response.maskedPan,
-                        cardholderName = response.cardholderName,
-                        expiry = response.expiry,
-                        type = response.type,
-                        status = response.status,
-                        network = response.network,
+                        id = response.id ?: "",
+                        maskedPan = response.maskedPan ?: "**** **** **** ----",
+                        cardholderName = response.cardholderName ?: "",
+                        expiry = response.expiry ?: "--/--",
+                        type = response.type ?: "virtual",
+                        status = response.status ?: "pending",
+                        network = response.network ?: "Visa",
                         spendLimitCents = response.spendLimitCents,
                     ),
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    hasCard = false, // If API fails (e.g. 404 No Card), set hasCard to false
-                    error = if (e.message?.contains("404") == true) null else e.message,
+                    hasCard = false,
+                    card = null,
+                    error = if (e.message?.contains("404") == true || e.message?.contains("null") == true) null else e.message,
                 )
             }
         }
