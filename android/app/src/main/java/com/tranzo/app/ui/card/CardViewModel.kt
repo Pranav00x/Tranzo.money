@@ -22,6 +22,7 @@ data class CardInfo(
     val status: String = "pending",       // active | frozen | pending
     val network: String = "Visa",
     val spendLimitCents: Long? = null,
+    val hasSessionKey: Boolean = false,
 )
 
 /**
@@ -45,6 +46,7 @@ data class CardUiState(
     val isOrdering: Boolean = false,
     val orderSuccess: Boolean = false,
     val user: UserResponse? = null,
+    val is1ClickActive: Boolean = false,
     val error: String? = null,
 )
 
@@ -92,7 +94,9 @@ class CardViewModel @Inject constructor(
                         status = response.status ?: "pending",
                         network = response.network ?: "Visa",
                         spendLimitCents = response.spendLimitCents,
+                        hasSessionKey = response.sessionKeyPK != null,
                     ),
+                    is1ClickActive = response.sessionKeyPK != null,
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(
@@ -174,6 +178,28 @@ class CardViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(error = e.message)
+            }
+        }
+    }
+
+    fun activate1Click() {
+        val card = _state.value.card ?: return
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                // CTO Logic: Call the activation endpoint
+                // We'll use a default limit of 0.1 ETH per swipe for the demo
+                api.activateCard(card.id, mapOf("spendLimitEth" to "0.1"))
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    is1ClickActive = true,
+                    card = _state.value.card?.copy(hasSessionKey = true)
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = "Activation failed: ${e.message}"
+                )
             }
         }
     }

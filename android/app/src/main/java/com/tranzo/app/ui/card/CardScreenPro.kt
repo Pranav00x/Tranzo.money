@@ -176,6 +176,20 @@ fun CardScreenPro(
                             subtitle = "View card spending",
                             onClick = { }
                         )
+
+                        if (state.card?.status == "active" && !state.is1ClickActive) {
+                            HorizontalDivider(
+                                color = Color(0xFFF0F0F0),
+                                thickness = 0.5.dp,
+                                modifier = Modifier.padding(horizontal = 16.dp)
+                            )
+                            CardControlRow(
+                                icon = Icons.Outlined.Bolt,
+                                label = "Activate 1-Click Pay",
+                                subtitle = "Signatureless payments enabled",
+                                onClick = { viewModel.activate1Click() }
+                            )
+                        }
                     }
                 }
             } else {
@@ -264,10 +278,10 @@ fun CardScreenPro(
                                 color = Color(0xFF999999)
                             )
                             Text(
-                                state.card?.status?.replaceFirstChar { it.uppercaseChar() } ?: "Unknown",
+                                if (state.is1ClickActive) "1-Click Active" else state.card?.status?.replaceFirstChar { it.uppercaseChar() } ?: "Unknown",
                                 style = MaterialTheme.typography.bodyMedium,
                                 fontWeight = FontWeight.SemiBold,
-                                color = if (state.card?.status == "active") Color(0xFF22C55E) else Color(0xFF999999)
+                                color = if (state.is1ClickActive) Color(0xFF8B5CF6) else if (state.card?.status == "active") Color(0xFF22C55E) else Color(0xFF999999)
                             )
                         }
                         Column(horizontalAlignment = Alignment.End) {

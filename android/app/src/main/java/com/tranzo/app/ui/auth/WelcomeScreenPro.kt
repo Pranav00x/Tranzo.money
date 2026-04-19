@@ -214,7 +214,15 @@ fun WelcomeScreenPro(
                     AuthMethodRow(
                         icon = Icons.Outlined.Fingerprint,
                         label = "Continue with Passkey",
-                        onClick = { /* Passkey auth — to be implemented */ }
+                        onClick = {
+                            if (isSignUp) {
+                                viewModel.registerPasskey(context)
+                            } else {
+                                // For login, we might need the email first or use a resident key
+                                // For simplicity, we'll try to login with any available passkey
+                                viewModel.loginWithPasskey(context, email)
+                            }
+                        }
                     )
                 }
 

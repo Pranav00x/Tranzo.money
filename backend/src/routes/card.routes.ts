@@ -184,6 +184,62 @@ router.post(
 );
 
 /**
+ * POST /card/:cardId/activate
+ * CTO LOGIC: Perform the one-time on-chain session key installation.
+ * Body: { spendLimitEth: string }
+ */
+router.post(
+  "/:cardId/activate",
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { cardId } = cardIdParamSchema.parse(req.params);
+      const { spendLimitEth } = z.object({ spendLimitEth: z.string() }).parse(req.body);
+
+      const result = await CardService.activateCardOnChain(req.user!.sub, cardId, spendLimitEth);
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      if (err instanceof AppError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+/**
+ * POST /card/pay
+ * CTO LOGIC: Merchant endpoint to process a card payment via session key.
+ * Body: { cardNumber: string, cvv: string, merchantAddress: string, amount: string }
+ */
+router.post(
+  "/pay",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { cardNumber, cvv, merchantAddress, amount } = z.object({
+        cardNumber: z.string(),
+        cvv: z.string(),
+        merchantAddress: z.string(),
+        amount: z.string(), // ETH amount
+      }).parse(req.body);
+
+      const amountWei = parseEther(amount);
+      const result = await CardService.processCardPayment(
+        cardNumber,
+        cvv,
+        merchantAddress as `0x${string}`,
+        amountWei
+      );
+
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+/**
  * PUT /card/:cardId/limits
  * Update spending limits.
  * Body: { dailyLimit?: number, monthlyLimit?: number }

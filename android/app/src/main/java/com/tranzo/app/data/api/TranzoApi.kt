@@ -19,6 +19,21 @@ interface TranzoApi {
     @POST("auth/google")
     suspend fun loginWithGoogle(@Body request: GoogleLoginRequest): AuthResponse
 
+    @POST("auth/twitter")
+    suspend fun loginWithTwitter(@Body request: TwitterLoginRequest): AuthResponse
+
+    @POST("auth/passkey/register/options")
+    suspend fun getPasskeyRegisterOptions(): Map<String, Any>
+
+    @POST("auth/passkey/register/verify")
+    suspend fun verifyPasskeyRegister(@Body request: Map<String, Any>): MessageResponse
+
+    @POST("auth/passkey/login/options")
+    suspend fun getPasskeyLoginOptions(@Body request: Map<String, String>): Map<String, Any>
+
+    @POST("auth/passkey/login/verify")
+    suspend fun verifyPasskeyLogin(@Body request: Map<String, Any>): AuthResponse
+
     @POST("auth/refresh")
     suspend fun refreshToken(@Body request: RefreshTokenRequest): TokenResponse
 
@@ -91,6 +106,9 @@ interface TranzoApi {
     suspend fun setCardFrozen(@Body request: CardFreezeRequest): CardResponse
 
     /** Paginated card transaction history. */
+    @POST("card/{cardId}/activate")
+    suspend fun activateCard(@Path("cardId") cardId: String, @Body body: Map<String, String>): SuccessResponse
+
     @GET("card/transactions")
     suspend fun getCardTransactions(
         @Query("limit") limit: Int = 20,

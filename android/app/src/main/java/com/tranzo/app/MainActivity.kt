@@ -49,6 +49,7 @@ import javax.inject.Inject
 class MainActivity : FragmentActivity() {
     @Inject lateinit var biometricHelper: BiometricHelper
     @Inject lateinit var themeManager: ThemeManager
+    @Inject lateinit var sessionManager: com.tranzo.app.util.SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -72,6 +73,7 @@ class MainActivity : FragmentActivity() {
                         // ── Auth Flow (Non-Custodial) ───────────────
                         composable(Screen.Splash.route) {
                             SplashScreen(
+                                isLoggedIn = sessionManager.isLoggedIn(),
                                 onNavigateToOnboarding = {
                                     navController.navigate(Screen.Onboarding.route) {
                                         popUpTo(Screen.Splash.route) { inclusive = true }
