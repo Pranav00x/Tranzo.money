@@ -16,8 +16,8 @@ android {
         applicationId = "com.tranzo.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
         buildConfigField("String", "WEBAUTHN_RP_ID", "\"tranzo.app\"")
@@ -33,8 +33,8 @@ android {
         }
         debug {
             buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
-            buildConfigField("String", "WEBAUTHN_RP_ID", "\"localhost\"")
-            buildConfigField("String", "WEBAUTHN_ORIGIN", "\"http://localhost:3000\"")
+            buildConfigField("String", "WEBAUTHN_RP_ID", "\"tranzo.app\"")
+            buildConfigField("String", "WEBAUTHN_ORIGIN", "\"https://tranzo.app\"")
         }
     }
 
