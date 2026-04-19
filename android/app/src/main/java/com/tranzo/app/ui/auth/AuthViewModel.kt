@@ -13,6 +13,13 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.credentials.CredentialManager
+import androidx.credentials.CreatePublicKeyCredentialRequest
+import androidx.credentials.CreatePublicKeyCredentialResponse
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetPublicKeyCredentialOption
+import androidx.credentials.PublicKeyCredential
+import com.google.gson.Gson
 
 enum class AuthMethod {
     EMAIL_OTP, GOOGLE, BIOMETRIC, PASSKEY, TWITTER
@@ -207,9 +214,9 @@ class AuthViewModel @Inject constructor(
                 val optionsJson = api.getPasskeyRegisterOptions()
                 
                 // 2. Use Credential Manager to create passkey
-                val credentialManager = androidx.credentials.CredentialManager.create(context)
-                val request = androidx.credentials.CreatePublicKeyCredentialRequest(
-                    requestJson = com.google.gson.Gson().toJson(optionsJson)
+                val credentialManager = CredentialManager.create(context)
+                val request = CreatePublicKeyCredentialRequest(
+                    requestJson = Gson().toJson(optionsJson)
                 )
                 
                 val result = credentialManager.createCredential(
@@ -218,8 +225,8 @@ class AuthViewModel @Inject constructor(
                 )
                 
                 // 3. Verify with backend
-                val responseJson = (result as androidx.credentials.CreatePublicKeyCredentialResponse).registrationJson
-                val verifyMap = com.google.gson.Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
+                val responseJson = (result as CreatePublicKeyCredentialResponse).registrationJson
+                val verifyMap = Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
                 api.verifyPasskeyRegister(verifyMap)
                 
                 _state.value = _state.value.copy(isLoading = false, authMethod = AuthMethod.PASSKEY)
@@ -240,12 +247,12 @@ class AuthViewModel @Inject constructor(
                 val optionsJson = api.getPasskeyLoginOptions(mapOf("email" to email))
                 
                 // 2. Use Credential Manager to get passkey
-                val credentialManager = androidx.credentials.CredentialManager.create(context)
-                val getOption = androidx.credentials.GetPublicKeyCredentialOption(
-                    requestJson = com.google.gson.Gson().toJson(optionsJson)
+                val credentialManager = CredentialManager.create(context)
+                val getOption = GetPublicKeyCredentialOption(
+                    requestJson = Gson().toJson(optionsJson)
                 )
                 
-                val request = androidx.credentials.GetCredentialRequest(
+                val request = GetCredentialRequest(
                     listOf(getOption)
                 )
                 
@@ -255,8 +262,8 @@ class AuthViewModel @Inject constructor(
                 )
                 
                 // 3. Verify with backend
-                val responseJson = (result.credential as androidx.credentials.PublicKeyCredential).authenticationJson
-                val verifyMap = com.google.gson.Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
+                val responseJson = (result.credential as PublicKeyCredential).authenticationJson
+                val verifyMap = Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
                 val authResponse = api.verifyPasskeyLogin(verifyMap)
                 
                 // 4. Save session

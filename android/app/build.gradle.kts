@@ -112,6 +112,7 @@ dependencies {
     // Google Auth & Credential Management
     implementation(libs.google.auth)
     implementation(libs.credential.manager)
+    implementation(libs.credential.auth)
     implementation("com.google.android.libraries.identity.googleid:googleid:1.0.0")
 
     // WebAuthn / Passkey
