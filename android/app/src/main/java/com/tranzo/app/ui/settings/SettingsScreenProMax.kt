@@ -224,7 +224,7 @@ fun SettingsScreenProMax(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(horizontal = 20.dp),
-                    containerColor = TranzoColors.Error
+                    btnColor = TranzoColors.Error
                 )
 
                 Spacer(modifier = Modifier.height(32.dp))
