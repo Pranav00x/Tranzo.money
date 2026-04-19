@@ -36,7 +36,7 @@ export class SessionKeyService {
     const masterSigner = privateKeyToAccount(masterSignerPrivateKey);
 
     // 1. Master validator
-    const sudoValidator = await signerToEcdsaValidator(publicClient, {
+    const sudoValidator = await signerToEcdsaValidator(publicClient as any, {
       signer: masterSigner,
       entryPoint: this.ENTRY_POINT,
       kernelVersion: this.KERNEL_VERSION,
@@ -55,7 +55,7 @@ export class SessionKeyService {
     });
 
     // 4. Session validator
-    const sessionValidator = await toPermissionValidator(publicClient, {
+    const sessionValidator = await toPermissionValidator(publicClient as any, {
       entryPoint: this.ENTRY_POINT,
       kernelVersion: this.KERNEL_VERSION,
       signer: await toECDSASigner({ signer: sessionKeySigner }),
@@ -63,7 +63,7 @@ export class SessionKeyService {
     });
 
     // 5. Account with BOTH validators
-    const account = await createKernelAccount(publicClient, {
+    const account = await createKernelAccount(publicClient as any, {
       plugins: { sudo: sudoValidator, regular: sessionValidator },
       entryPoint: this.ENTRY_POINT,
       kernelVersion: this.KERNEL_VERSION,
@@ -79,7 +79,6 @@ export class SessionKeyService {
       account,
       chain: baseSepolia,
       bundlerTransport: http(ENV.ZERODEV_RPC_URL),
-      client: publicClient,
       paymaster: {
         getPaymasterData: async (userOperation) =>
           paymasterClient.sponsorUserOperation({ userOperation }),
@@ -87,10 +86,12 @@ export class SessionKeyService {
     });
 
     // 7. Send the "Plugin Install" transaction (Setup UserOp)
-    const setupHash = await masterKernelClient.sendUserOperation({
-      calls: [
-        { to: zeroAddress, value: BigInt(0), data: "0x" },
-      ],
+    const setupHash = await (masterKernelClient as any).sendUserOperation({
+      userOperation: {
+        callData: await (account as any).encodeCalls([
+          { to: zeroAddress, value: BigInt(0), data: "0x" as `0x${string}` },
+        ]),
+      }
     });
 
     // Wait for it so we know it's active
@@ -122,7 +123,7 @@ export class SessionKeyService {
     });
 
     // 2. Recreate the session validator
-    const sessionValidator = await toPermissionValidator(publicClient, {
+    const sessionValidator = await toPermissionValidator(publicClient as any, {
       entryPoint: this.ENTRY_POINT,
       kernelVersion: this.KERNEL_VERSION,
       signer: await toECDSASigner({ signer: sessionKeySigner }),
@@ -131,14 +132,14 @@ export class SessionKeyService {
 
     // 3. Use a dummy master signer (required by SDK for shape, but NOT used for signing)
     const dummyMasterSigner = privateKeyToAccount(generatePrivateKey());
-    const dummySudoValidator = await signerToEcdsaValidator(publicClient, {
+    const dummySudoValidator = await signerToEcdsaValidator(publicClient as any, {
       signer: dummyMasterSigner,
       entryPoint: this.ENTRY_POINT,
       kernelVersion: this.KERNEL_VERSION,
     });
 
     // 4. Create the session-bound account
-    const account = await createKernelAccount(publicClient, {
+    const account = await createKernelAccount(publicClient as any, {
       address: smartAccountAddress,
       plugins: { sudo: dummySudoValidator, regular: sessionValidator },
       entryPoint: this.ENTRY_POINT,
@@ -155,7 +156,6 @@ export class SessionKeyService {
       account,
       chain: baseSepolia,
       bundlerTransport: http(ENV.ZERODEV_RPC_URL),
-      client: publicClient,
       paymaster: {
         getPaymasterData: async (userOperation) =>
           paymasterClient.sponsorUserOperation({ userOperation }),
@@ -163,10 +163,12 @@ export class SessionKeyService {
     });
 
     // 6. Execute UserOp
-    const userOpHash = await cardClient.sendUserOperation({
-      calls: [
-        { to, value, data: "0x" },
-      ],
+    const userOpHash = await (cardClient as any).sendUserOperation({
+      userOperation: {
+        callData: await (account as any).encodeCalls([
+          { to, value, data: "0x" as `0x${string}` },
+        ]),
+      }
     });
 
     return userOpHash;

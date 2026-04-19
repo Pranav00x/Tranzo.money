@@ -13,6 +13,14 @@ export declare class AuthService {
         accessToken: string;
         refreshToken: string;
         isNewUser: boolean;
+        user: {
+            id: any;
+            email: any;
+            displayName: any;
+            avatarUrl: any;
+            smartAccount: any;
+            kycStatus: any;
+        };
     }>;
     /**
      * Verify Google ID token and create/login user.
@@ -22,6 +30,23 @@ export declare class AuthService {
         refreshToken: string;
         isNewUser: boolean;
     }>;
+    /**
+     * Login with Twitter OAuth2.
+     */
+    static loginWithTwitter(twitterId: string, email?: string, name?: string): Promise<{
+        accessToken: string;
+        refreshToken: string;
+        isNewUser: boolean;
+        user: {
+            id: any;
+            email: any;
+            displayName: any;
+            avatarUrl: any;
+            smartAccount: any;
+            kycStatus: any;
+        };
+    }>;
+    private static mapUserResponse;
     static signAccessToken(payload: AuthPayload): string;
     static verifyAccessToken(token: string): AuthPayload;
     static createRefreshToken(userId: string): Promise<string>;

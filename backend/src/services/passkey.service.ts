@@ -29,9 +29,9 @@ export class PasskeyService {
       userName: email,
       attestationType: "none",
       excludeCredentials: userPasskeys.map(p => ({
-        id: p.credentialId,
+        id: p.credentialId as any,
         type: "public-key",
-      })),
+      })) as any,
       authenticatorSelection: {
         residentKey: "required",
         userVerification: "preferred",
@@ -58,8 +58,8 @@ export class PasskeyService {
       await prisma.passkey.create({
         data: {
           userId,
-          credentialId: Buffer.from(credentialID),
-          publicKey: Buffer.from(credentialPublicKey),
+          credentialId: Buffer.from(credentialID) as any,
+          publicKey: Buffer.from(credentialPublicKey) as any,
           counter: BigInt(counter),
           credentialName: body.credentialName || "New Device",
         }
@@ -82,9 +82,9 @@ export class PasskeyService {
     const options = await generateAuthenticationOptions({
       rpID: this.RP_ID,
       allowCredentials: userPasskeys.map(p => ({
-        id: p.credentialId,
+        id: p.credentialId as any,
         type: "public-key",
-      })),
+      })) as any,
       userVerification: "preferred",
     });
 
@@ -96,7 +96,7 @@ export class PasskeyService {
    */
   static async verifyAuthentication(userId: string, body: any, expectedChallenge: string) {
     const passkey = await prisma.passkey.findUnique({
-      where: { credentialId: Buffer.from(body.id, "base64url") }
+      where: { credentialId: Buffer.from(body.id, "base64url") as any }
     });
 
     if (!passkey) throw new Error("Passkey not found");
@@ -107,8 +107,8 @@ export class PasskeyService {
       expectedOrigin: this.ORIGIN,
       expectedRPID: this.RP_ID,
       authenticator: {
-        credentialID: passkey.credentialId,
-        credentialPublicKey: passkey.publicKey,
+        credentialID: passkey.credentialId as any,
+        credentialPublicKey: passkey.publicKey as any,
         counter: Number(passkey.counter),
       },
     });
