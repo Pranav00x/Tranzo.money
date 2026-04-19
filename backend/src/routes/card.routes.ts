@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { z } from "zod";
+import { encodeFunctionData, parseEther } from "viem";
 import { requireAuth } from "../middleware/auth.js";
 import { sensitiveLimiter } from "../middleware/rateLimit.js";
 import { CardService } from "../services/card.service.js";
@@ -327,7 +328,7 @@ router.post(
       const rawBody = JSON.stringify(req.body);
 
       const result = await CardService.handleAuthorizationWebhook(
-        payload,
+        payload as any,
         req.headers as Record<string, string | string[] | undefined>,
         rawBody
       );
@@ -363,7 +364,7 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const payload = webhookSettlementSchema.parse(req.body);
-      await CardService.handleSettlementWebhook(payload);
+      await CardService.handleSettlementWebhook(payload as any);
       res.json({ received: true });
     } catch (err: any) {
       if (err.name === "ZodError") {

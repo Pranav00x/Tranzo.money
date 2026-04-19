@@ -144,7 +144,7 @@ export class AuthService {
    */
   static async loginWithGoogle(
     idToken: string
-  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean }> {
+  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean; user: any }> {
     if (!ENV.GOOGLE_CLIENT_ID) {
       throw new Error("Google OAuth not configured");
     }

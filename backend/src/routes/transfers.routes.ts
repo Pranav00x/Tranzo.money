@@ -86,7 +86,7 @@ router.get("/history", requireAuth, async (req: Request, res: Response) => {
 router.get("/status/:intentId", requireAuth, async (req: Request, res: Response) => {
   try {
     const status = await OpenfortService.getTransactionStatus(
-      req.params.intentId
+      req.params.intentId as string
     );
     res.json(status);
   } catch (err: any) {

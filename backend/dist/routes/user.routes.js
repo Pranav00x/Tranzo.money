@@ -3,9 +3,9 @@ import { z } from 'zod';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { prisma } from '../db/prisma';
-import { authenticate } from '../middleware/auth';
-import { validateRequest } from '../middleware/validation';
+import prisma from '../services/prisma.service.js';
+import { requireAuth } from '../middleware/auth.js';
+import { validateRequest } from '../middleware/validation.js';
 const router = express.Router();
 // Configure multer for avatar uploads
 const uploadDir = path.join(process.cwd(), 'uploads/avatars');
@@ -39,36 +39,25 @@ const upload = multer({
 // PUT /user/profile - Update user profile information
 // ────────────────────────────────────────────────────────
 const updateProfileSchema = z.object({
-    firstName: z.string().min(2).max(50).optional(),
-    lastName: z.string().min(2).max(50).optional(),
-    displayName: z.string().optional(),
+    displayName: z.string().min(2).max(50).optional(),
     phone: z.string().regex(/^[\d\s+\-()]+$/).min(10).optional().or(z.literal('')),
-    preferredLanguage: z.enum(['en', 'es', 'fr', 'pt']).optional(),
-    biometricEnabled: z.boolean().optional(),
 });
-router.put('/profile', authenticate, validateRequest(updateProfileSchema), async (req, res) => {
+router.put('/profile', requireAuth, validateRequest(updateProfileSchema), async (req, res) => {
     try {
         const userId = req.userId;
-        const { firstName, lastName, displayName, phone, preferredLanguage, biometricEnabled } = req.body;
+        const { displayName, phone } = req.body;
         const updatedUser = await prisma.user.update({
             where: { id: userId },
             data: {
-                ...(firstName && { firstName }),
-                ...(lastName && { lastName }),
-                ...(displayName && { displayName: displayName || `${firstName} ${lastName}`.trim() }),
+                ...(displayName && { displayName }),
                 ...(phone !== undefined && { phone: phone || null }),
-                ...(preferredLanguage && { preferredLanguage }),
-                ...(biometricEnabled !== undefined && { biometricEnabled }),
             },
             select: {
                 id: true,
                 email: true,
-                firstName: true,
-                lastName: true,
                 phone: true,
-                preferredLanguage: true,
+                displayName: true,
                 avatarUrl: true,
-                biometricEnabled: true,
             },
         });
         res.json({
@@ -88,7 +77,7 @@ router.put('/profile', authenticate, validateRequest(updateProfileSchema), async
 // ────────────────────────────────────────────────────────
 // POST /user/avatar - Upload user avatar
 // ────────────────────────────────────────────────────────
-router.post('/avatar', authenticate, upload.single('avatar'), async (req, res) => {
+router.post('/avatar', requireAuth, upload.single('avatar'), async (req, res) => {
     try {
         if (!req.file) {
             return res.status(400).json({
@@ -115,8 +104,7 @@ router.post('/avatar', authenticate, upload.single('avatar'), async (req, res) =
             select: {
                 id: true,
                 email: true,
-                firstName: true,
-                lastName: true,
+                displayName: true,
                 avatarUrl: true,
             },
         });
@@ -138,7 +126,7 @@ router.post('/avatar', authenticate, upload.single('avatar'), async (req, res) =
 // ────────────────────────────────────────────────────────
 // GET /user/profile - Get current user profile
 // ────────────────────────────────────────────────────────
-router.get('/profile', authenticate, async (req, res) => {
+router.get('/profile', requireAuth, async (req, res) => {
     try {
         const userId = req.userId;
         const user = await prisma.user.findUnique({
@@ -146,13 +134,10 @@ router.get('/profile', authenticate, async (req, res) => {
             select: {
                 id: true,
                 email: true,
-                firstName: true,
-                lastName: true,
+                displayName: true,
                 phone: true,
-                preferredLanguage: true,
                 avatarUrl: true,
-                biometricEnabled: true,
-                walletAddress: true,
+                smartAccount: true,
                 createdAt: true,
             },
         });

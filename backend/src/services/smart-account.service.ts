@@ -6,6 +6,7 @@ import { ENV } from "../config/env.js";
 
 // ZeroDev SDK - kernel account creation
 import { createKernelAccount, createKernelAccountClient } from "@zerodev/sdk";
+// @ts-ignore
 import { signerToEcdsaValidator } from "@zerodev/ecdsa-validator";
 import { getEntryPoint, KERNEL_V3_1 } from "@zerodev/sdk/constants";
 
@@ -98,59 +99,51 @@ export class SmartAccountService {
   }
 
   /**
-   * Send a gasless transaction via ZeroDev
+   * Send a gasless transaction via ZeroDev (Unified Signature)
    */
-  static async sendGaslessTransaction(userId: string, tx: any) {
-    if (!ENV.ZERODEV_PROJECT_ID || !ENV.ZERODEV_RPC_URL) {
-      throw new Error("ZERODEV_PROJECT_ID and ZERODEV_RPC_URL required");
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user?.smartAccount || !user?.signerPrivateKey) {
-      throw new Error("User has no smart account");
-    }
-
+  static async sendGaslessTransaction(
+    signerPrivateKey: `0x${string}`,
+    to: `0x${string}`,
+    value: bigint,
+    data: `0x${string}`,
+    chainId: number = ENV.DEFAULT_CHAIN_ID
+  ) {
     try {
-      const signer = privateKeyToAccount(user.signerPrivateKey as `0x${string}`);
-
-      // Create public client
+      const signer = privateKeyToAccount(signerPrivateKey);
       const publicClient = createPublicClient({
         chain: baseSepolia,
         transport: http(ENV.ZERODEV_RPC_URL),
       });
-
-      // Get correct entry point for v0.7
       const entryPoint = getEntryPoint("0.7");
 
-      // Recreate ECDSA validator
-      // @ts-ignore - ZeroDev SDK types compatibility
-      const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
+      // @ts-ignore
+      const ecdsaValidator = await signerToEcdsaValidator(publicClient as any, {
         signer,
         entryPoint,
         kernelVersion: KERNEL_V3_1,
       });
 
-      // Recreate kernel account
-      // @ts-ignore - ZeroDev SDK types compatibility
-      const account = await createKernelAccount(publicClient, {
+      // @ts-ignore
+      const account = await createKernelAccount(publicClient as any, {
         plugins: { sudo: ecdsaValidator },
         entryPoint,
         kernelVersion: KERNEL_V3_1,
       });
 
-      // Create kernel account client for sending transactions
-      const walletClient = createWalletClient({
+      const walletClient = createKernelAccountClient({
         account,
         chain: baseSepolia,
-        transport: http(ENV.ZERODEV_RPC_URL),
+        bundlerTransport: http(ENV.ZERODEV_RPC_URL),
       });
 
-      console.log(`[SmartAccount] Sending gasless tx from ${account.address}`);
-      // Transaction sending implementation would go here
-      return { hash: "0x" + "0".repeat(64), status: "pending" };
+      console.log(`[SmartAccount] Sending gasless tx to ${to}`);
+      const hash = await (walletClient as any).sendTransaction({
+        to,
+        value,
+        data,
+      });
+      
+      return hash;
     } catch (err: any) {
       console.error("[SmartAccount] Failed to send transaction:", err);
       throw new Error(`Failed to send transaction: ${err.message}`);

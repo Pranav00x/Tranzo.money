@@ -225,7 +225,7 @@ class AuthViewModel @Inject constructor(
                 )
                 
                 // 3. Verify with backend
-                val responseJson = (result as CreatePublicKeyCredentialResponse).registrationJson
+                val responseJson = result.data.getString("androidx.credentials.BUNDLE_KEY_REGISTRATION_RESPONSE_JSON")
                 val verifyMap = Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
                 api.verifyPasskeyRegister(verifyMap)
                 
@@ -262,7 +262,7 @@ class AuthViewModel @Inject constructor(
                 )
                 
                 // 3. Verify with backend
-                val responseJson = (result.credential as PublicKeyCredential).authenticationJson
+                val responseJson = (result.credential as PublicKeyCredential).data.getString("androidx.credentials.BUNDLE_KEY_AUTHENTICATION_RESPONSE_JSON")
                 val verifyMap = Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
                 val authResponse = api.verifyPasskeyLogin(verifyMap)
                 

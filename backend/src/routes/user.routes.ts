@@ -3,9 +3,9 @@ import { z } from 'zod';
 import multer from 'multer';
 import path from 'path';
 import fs from 'fs';
-import { prisma } from '../db/prisma';
-import { authenticate } from '../middleware/auth';
-import { validateRequest } from '../middleware/validation';
+import prisma from '../services/prisma.service.js';
+import { requireAuth } from '../middleware/auth.js';
+import { validateRequest } from '../middleware/validation.js';
 
 const router = express.Router();
 
@@ -44,42 +44,31 @@ const upload = multer({
 // ────────────────────────────────────────────────────────
 
 const updateProfileSchema = z.object({
-  firstName: z.string().min(2).max(50).optional(),
-  lastName: z.string().min(2).max(50).optional(),
-  displayName: z.string().optional(),
+  displayName: z.string().min(2).max(50).optional(),
   phone: z.string().regex(/^[\d\s+\-()]+$/).min(10).optional().or(z.literal('')),
-  preferredLanguage: z.enum(['en', 'es', 'fr', 'pt']).optional(),
-  biometricEnabled: z.boolean().optional(),
 });
 
 router.put(
   '/profile',
-  authenticate,
+  requireAuth,
   validateRequest(updateProfileSchema),
   async (req, res) => {
     try {
       const userId = (req as any).userId;
-      const { firstName, lastName, displayName, phone, preferredLanguage, biometricEnabled } = req.body;
+      const { displayName, phone } = req.body;
 
       const updatedUser = await prisma.user.update({
         where: { id: userId },
         data: {
-          ...(firstName && { firstName }),
-          ...(lastName && { lastName }),
-          ...(displayName && { displayName: displayName || `${firstName} ${lastName}`.trim() }),
+          ...(displayName && { displayName }),
           ...(phone !== undefined && { phone: phone || null }),
-          ...(preferredLanguage && { preferredLanguage }),
-          ...(biometricEnabled !== undefined && { biometricEnabled }),
         },
         select: {
           id: true,
           email: true,
-          firstName: true,
-          lastName: true,
           phone: true,
-          preferredLanguage: true,
+          displayName: true,
           avatarUrl: true,
-          biometricEnabled: true,
         },
       });
 
@@ -104,11 +93,11 @@ router.put(
 
 router.post(
   '/avatar',
-  authenticate,
+  requireAuth,
   upload.single('avatar'),
   async (req, res) => {
     try {
-      if (!req.file) {
+      if (!(req as any).file) {
         return res.status(400).json({
           success: false,
           error: 'No file uploaded',
@@ -116,7 +105,7 @@ router.post(
       }
 
       const userId = (req as any).userId;
-      const avatarUrl = `/uploads/avatars/${req.file.filename}`;
+      const avatarUrl = `/uploads/avatars/${(req as any).file.filename}`;
 
       // Delete old avatar if exists
       const user = await prisma.user.findUnique({
@@ -137,8 +126,7 @@ router.post(
         select: {
           id: true,
           email: true,
-          firstName: true,
-          lastName: true,
+          displayName: true,
           avatarUrl: true,
         },
       });
@@ -165,7 +153,7 @@ router.post(
 
 router.get(
   '/profile',
-  authenticate,
+  requireAuth,
   async (req, res) => {
     try {
       const userId = (req as any).userId;
@@ -175,13 +163,10 @@ router.get(
         select: {
           id: true,
           email: true,
-          firstName: true,
-          lastName: true,
+          displayName: true,
           phone: true,
-          preferredLanguage: true,
           avatarUrl: true,
-          biometricEnabled: true,
-          walletAddress: true,
+          smartAccount: true,
           createdAt: true,
         },
       });

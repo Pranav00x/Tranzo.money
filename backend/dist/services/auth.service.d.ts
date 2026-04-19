@@ -29,6 +29,7 @@ export declare class AuthService {
         accessToken: string;
         refreshToken: string;
         isNewUser: boolean;
+        user: any;
     }>;
     /**
      * Login with Twitter OAuth2.
