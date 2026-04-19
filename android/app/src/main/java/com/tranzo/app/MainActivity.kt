@@ -23,6 +23,7 @@ import com.tranzo.app.ui.dripper.DripperDashboardScreen
 import com.tranzo.app.ui.dripper.StreamDetailScreen
 import com.tranzo.app.ui.history.TransactionHistoryScreen
 import com.tranzo.app.ui.home.HomeScreenProMax
+import com.tranzo.app.ui.security.BiometricSetupScreen
 import com.tranzo.app.ui.security.PinMode
 import com.tranzo.app.ui.security.PinScreen
 import com.tranzo.app.ui.navigation.Screen
@@ -196,11 +197,36 @@ class MainActivity : FragmentActivity() {
                             PinScreen(
                                 mode = PinMode.SETUP,
                                 onSuccess = { _ ->
-                                    navController.navigate(Screen.Home.route) {
-                                        popUpTo(0) { inclusive = true }
+                                    navController.navigate(Screen.BiometricSetup.route) {
+                                        popUpTo(Screen.PinSetup.route) { inclusive = true }
                                     }
                                 },
                                 onBack = { navController.popBackStack() }
+                            )
+                        }
+
+                        composable(Screen.BiometricSetup.route) {
+                            BiometricSetupScreen(
+                                onEnable = {
+                                    biometricHelper.showPrompt(
+                                        activity = this@MainActivity,
+                                        onSuccess = {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(0) { inclusive = true }
+                                            }
+                                        },
+                                        onError = {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(0) { inclusive = true }
+                                            }
+                                        }
+                                    )
+                                },
+                                onSkip = {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                }
                             )
                         }
 
