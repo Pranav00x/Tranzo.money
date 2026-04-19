@@ -21,327 +21,300 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.TranzoButton
-import com.tranzo.app.ui.theme.TranzoColors
+import com.tranzo.app.ui.home.HomeViewModel
 import com.tranzo.app.util.ThemeManager
 
+/**
+ * CheQ-inspired Profile/Settings screen — monochrome, clean list layout.
+ * Pulls user data from HomeViewModel.
+ */
 @Composable
 fun SettingsScreenProMax(
     themeManager: ThemeManager = hiltViewModel(),
+    homeViewModel: HomeViewModel = hiltViewModel(),
     onLogout: () -> Unit = {},
     onSecurity: () -> Unit = {},
     onTheme: () -> Unit = {},
 ) {
-    val currentThemeId by themeManager.currentThemeId.collectAsState()
-    var showThemeSelector by remember { mutableStateOf(false) }
-    val availableThemes = themeManager.getAvailableThemes()
+    val homeState by homeViewModel.state.collectAsState()
+    val user = homeState.user
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.BackgroundLight)
+            .background(Color(0xFFF5F5F5))
     ) {
         Column(
-            modifier = Modifier.fillMaxSize()
+            modifier = Modifier
+                .fillMaxSize()
+                .verticalScroll(rememberScrollState())
         ) {
-            // Header
-            Row(
+            // ── Profile header (dark) ────────────────────────────
+            Box(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 20.dp),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
+                    .background(Color(0xFF1A1A1A))
+                    .statusBarsPadding()
+                    .padding(24.dp)
             ) {
-                Text(
-                    "Settings",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = TranzoColors.TextPrimary
-                )
+                Row(
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    // Avatar
+                    Box(
+                        modifier = Modifier
+                            .size(56.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF444444)),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        val initials = user?.let {
+                            val f = it.firstName?.firstOrNull() ?: it.email?.firstOrNull() ?: 'T'
+                            val l = it.lastName?.firstOrNull()
+                            if (l != null) "${f.uppercaseChar()}${l.uppercaseChar()}" else "${f.uppercaseChar()}"
+                        } ?: "T"
+                        Text(
+                            initials,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 20.sp
+                        )
+                    }
+
+                    Column {
+                        Text(
+                            user?.displayName ?: user?.firstName ?: "Tranzo User",
+                            style = MaterialTheme.typography.titleLarge,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                        Text(
+                            user?.email ?: "Not connected",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF999999)
+                        )
+                    }
+                }
             }
 
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // ── Menu sections ────────────────────────────────────
+
+            // Account section
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = Color.White
+            ) {
+                Column {
+                    SettingItemRow(
+                        icon = Icons.Outlined.AccountCircle,
+                        label = "Wallet Details",
+                        trailingText = user?.smartAccount?.let {
+                            "${it.take(6)}...${it.takeLast(4)}"
+                        },
+                        onClick = { }
+                    )
+                    Divider16()
+                    SettingItemRow(
+                        icon = Icons.Outlined.History,
+                        label = "Transaction History",
+                        onClick = { }
+                    )
+                    Divider16()
+                    SettingItemRow(
+                        icon = Icons.Outlined.CreditCard,
+                        label = "Manage Card",
+                        onClick = { }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Security section
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = Color.White
+            ) {
+                Column {
+                    SettingItemRow(
+                        icon = Icons.Outlined.Lock,
+                        label = "Security",
+                        trailingText = "Biometric, PIN",
+                        onClick = onSecurity
+                    )
+                    Divider16()
+                    SettingItemRow(
+                        icon = Icons.Outlined.Shield,
+                        label = "Privacy Policy",
+                        onClick = { }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Support section
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = Color.White
+            ) {
+                Column {
+                    SettingItemRow(
+                        icon = Icons.Outlined.HelpOutline,
+                        label = "Help & Support",
+                        onClick = { }
+                    )
+                    Divider16()
+                    SettingItemRow(
+                        icon = Icons.Outlined.Info,
+                        label = "About Tranzo",
+                        trailingText = "v1.0.0",
+                        onClick = { }
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Logout button
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 16.dp)
+                    .clickable(onClick = onLogout),
+                shape = RoundedCornerShape(16.dp),
+                color = Color.White
+            ) {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(16.dp)
+                ) {
+                    Icon(
+                        Icons.Outlined.Logout,
+                        contentDescription = "Logout",
+                        tint = Color(0xFFCC0000),
+                        modifier = Modifier.size(22.dp)
+                    )
+                    Text(
+                        "Logout",
+                        style = MaterialTheme.typography.bodyMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = Color(0xFFCC0000)
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
+            // Footer
             Column(
                 modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                    .fillMaxWidth()
+                    .padding(bottom = 100.dp),
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
-                // Profile section
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Row(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .padding(20.dp),
-                        horizontalArrangement = Arrangement.spacedBy(16.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Box(
-                            modifier = Modifier
-                                .size(64.dp)
-                                .clip(CircleShape)
-                                .background(TranzoColors.PrimaryBlue),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "P",
-                                style = MaterialTheme.typography.displaySmall,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-
-                        Column(
-                            modifier = Modifier.weight(1f),
-                            verticalArrangement = Arrangement.spacedBy(4.dp)
-                        ) {
-                            Text(
-                                "Pranav",
-                                style = MaterialTheme.typography.titleMedium,
-                                fontWeight = FontWeight.Bold,
-                                color = TranzoColors.TextPrimary
-                            )
-                            Text(
-                                "pranav@tranzo.app",
-                                style = MaterialTheme.typography.bodySmall,
-                                color = TranzoColors.TextSecondary
-                            )
-                            Text(
-                                "Smart Account Active",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.Success,
-                                fontWeight = FontWeight.SemiBold
-                            )
-                        }
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // App Settings section
-                SettingsSectionHeader("App Settings")
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        // Theme setting
-                        SettingItemRow(
-                            icon = Icons.Outlined.Palette,
-                            label = "Theme",
-                            description = "Light, Dark, Auto",
-                            onClick = { showThemeSelector = !showThemeSelector }
-                        )
-
-                        if (showThemeSelector) {
-                            HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-                            Spacer(modifier = Modifier.height(12.dp))
-                            ThemeSelectorInline(
-                                currentThemeId = currentThemeId,
-                                availableThemes = availableThemes,
-                                onThemeSelected = { themeId -> themeManager.setTheme(themeId) },
-                                modifier = Modifier.padding(horizontal = 16.dp, vertical = 12.dp)
-                            )
-                        }
-
-                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-
-                        // Notifications
-                        SettingItemRow(
-                            icon = Icons.Outlined.NotificationsActive,
-                            label = "Notifications",
-                            description = "Push and email alerts",
-                            onClick = { }
-                        )
-
-                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-
-                        // Language
-                        SettingItemRow(
-                            icon = Icons.Outlined.Language,
-                            label = "Language",
-                            description = "English",
-                            onClick = { }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Security & Account section
-                SettingsSectionHeader("Security & Account")
-
-                Card(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    shape = RoundedCornerShape(16.dp),
-                    colors = CardDefaults.cardColors(containerColor = Color.White)
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        SettingItemRow(
-                            icon = Icons.Outlined.Lock,
-                            label = "Security",
-                            description = "Biometric, PIN",
-                            onClick = onSecurity
-                        )
-
-                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-
-                        SettingItemRow(
-                            icon = Icons.Outlined.PrivacyTip,
-                            label = "Privacy",
-                            description = "Data and permissions",
-                            onClick = { }
-                        )
-
-                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
-
-                        SettingItemRow(
-                            icon = Icons.Outlined.Info,
-                            label = "About Tranzo",
-                            description = "Version 1.0.0",
-                            onClick = { }
-                        )
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(32.dp))
-
-                // Logout button
-                TranzoButton(
-                    text = "Logout",
-                    onClick = onLogout,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 20.dp),
-                    btnColor = TranzoColors.Error
+                Text(
+                    "Terms & Policies",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF999999)
                 )
-
-                Spacer(modifier = Modifier.height(32.dp))
+                Text(
+                    "Build v1.0.0",
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFFCCCCCC)
+                )
             }
         }
     }
 }
 
-@Composable
-private fun SettingsSectionHeader(title: String) {
-    Text(
-        title,
-        style = MaterialTheme.typography.labelMedium,
-        fontWeight = FontWeight.Bold,
-        color = TranzoColors.TextTertiary,
-        modifier = Modifier.padding(horizontal = 20.dp, vertical = 12.dp)
-    )
-}
-
+// ── Reusable row composable ──────────────────────────────────────
 @Composable
 private fun SettingItemRow(
     icon: ImageVector,
     label: String,
-    description: String,
+    trailingText: String? = null,
     onClick: () -> Unit
 ) {
     Row(
         modifier = Modifier
             .fillMaxWidth()
             .clickable(onClick = onClick)
-            .padding(16.dp),
+            .padding(horizontal = 16.dp, vertical = 14.dp),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
         Row(
-            modifier = Modifier.weight(1f),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically,
+            modifier = Modifier.weight(1f)
         ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = TranzoColors.PrimaryBlue,
-                modifier = Modifier.size(24.dp)
-            )
-
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(
-                    label,
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextPrimary,
-                    fontWeight = FontWeight.Medium
-                )
-                Text(
-                    description,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TranzoColors.TextTertiary
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xFFF5F5F5)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Color(0xFF1A1A1A),
+                    modifier = Modifier.size(20.dp)
                 )
             }
+
+            Text(
+                label,
+                style = MaterialTheme.typography.bodyMedium,
+                color = Color(0xFF1A1A1A),
+                fontWeight = FontWeight.Medium
+            )
         }
 
-        Icon(
-            imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
-            contentDescription = null,
-            tint = TranzoColors.TextTertiary,
-            modifier = Modifier.size(20.dp)
-        )
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(8.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            if (trailingText != null) {
+                Text(
+                    trailingText,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF999999)
+                )
+            }
+            Icon(
+                imageVector = Icons.AutoMirrored.Outlined.ArrowForward,
+                contentDescription = null,
+                tint = Color(0xFFCCCCCC),
+                modifier = Modifier.size(16.dp)
+            )
+        }
     }
 }
 
 @Composable
-private fun ThemeSelectorInline(
-    currentThemeId: String,
-    availableThemes: List<ThemeManager.ThemeOption>,
-    onThemeSelected: (String) -> Unit,
-    modifier: Modifier = Modifier
-) {
-    LazyColumn(
-        modifier = modifier.fillMaxWidth(),
-        verticalArrangement = androidx.compose.foundation.layout.Arrangement.spacedBy(8.dp)
-    ) {
-        items(availableThemes) { theme ->
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onThemeSelected(theme.id) },
-                shape = RoundedCornerShape(8.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = if (theme.id == currentThemeId) TranzoColors.SurfaceLight else Color.White
-                ),
-                elevation = CardDefaults.cardElevation(
-                    defaultElevation = if (theme.id == currentThemeId) 2.dp else 0.dp
-                )
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.SpaceBetween
-                ) {
-                    Text(
-                        theme.displayName,
-                        style = MaterialTheme.typography.labelMedium,
-                        color = TranzoColors.TextPrimary
-                    )
-
-                    if (theme.id == currentThemeId) {
-                        Icon(
-                            imageVector = Icons.Outlined.CheckCircle,
-                            contentDescription = "Selected",
-                            tint = TranzoColors.PrimaryBlue,
-                            modifier = Modifier.size(16.dp)
-                        )
-                    }
-                }
-            }
-        }
-    }
+private fun Divider16() {
+    HorizontalDivider(
+        thickness = 0.5.dp,
+        color = Color(0xFFF0F0F0),
+        modifier = Modifier.padding(horizontal = 16.dp)
+    )
 }

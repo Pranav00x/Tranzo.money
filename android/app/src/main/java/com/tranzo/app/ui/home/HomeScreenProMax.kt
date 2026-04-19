@@ -1,6 +1,5 @@
 package com.tranzo.app.ui.home
 
-import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.animateContentSize
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
@@ -17,21 +16,20 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.TranzoButton
+import com.tranzo.app.data.model.TokenBalance
 import com.tranzo.app.ui.theme.TranzoColors
-import kotlinx.coroutines.launch
 
 /**
- * Ultra-bold home screen - Maximum visual impact and interactivity
+ * Minimal monochrome home — CheQ-inspired black/white Web3 wallet.
+ * All data is live from the backend via HomeViewModel.
  */
 @Composable
 fun HomeScreenProMax(
@@ -43,429 +41,434 @@ fun HomeScreenProMax(
     onCard: () -> Unit = {},
     onSettings: () -> Unit = {},
 ) {
-    var isRefreshing by remember { mutableStateOf(false) }
-    val refreshRotation by animateFloatAsState(
-        targetValue = if (isRefreshing) 360f else 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        ),
-        label = "refresh rotation"
-    )
-
-    val coroutineScope = rememberCoroutineScope()
-    var showBalanceDetails by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.BackgroundLight)
+            .background(Color.White)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
         ) {
-            // Header with settings
+            // ── Top bar ──────────────────────────────────────────
             Row(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 20.dp, vertical = 20.dp),
+                    .statusBarsPadding()
+                    .padding(horizontal = 20.dp, vertical = 16.dp),
                 horizontalArrangement = Arrangement.SpaceBetween,
                 verticalAlignment = Alignment.CenterVertically
             ) {
-                Column {
-                    Text(
-                        "Tranzo Wallet",
-                        style = MaterialTheme.typography.headlineSmall,
-                        fontWeight = FontWeight.ExtraBold,
-                        color = TranzoColors.TextPrimary
-                    )
-                    Text(
-                        "Ready to transact",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.TextTertiary
-                    )
-                }
-
-                IconButton(
-                    onClick = onSettings,
-                    modifier = Modifier
-                        .background(
-                            TranzoColors.SurfaceLight,
-                            shape = CircleShape
-                        )
-                        .size(44.dp)
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Settings,
-                        contentDescription = "Settings",
-                        tint = TranzoColors.TextSecondary
-                    )
-                }
-            }
-
-            Spacer(modifier = Modifier.height(12.dp))
-
-            // Premium balance card
-            Card(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp)
-                    .shadow(elevation = 8.dp, shape = RoundedCornerShape(24.dp))
-                    .clickable { showBalanceDetails = !showBalanceDetails }
-                    .animateContentSize(),
-                shape = RoundedCornerShape(24.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = TranzoColors.PrimaryBlue
-                )
-            ) {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(TranzoColors.PrimaryBlue)
-                        .padding(24.dp)
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth(),
-                        verticalArrangement = Arrangement.spacedBy(20.dp)
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    // Avatar circle
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFF1A1A1A)),
+                        contentAlignment = Alignment.Center
                     ) {
-                        // Top row with label and refresh
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Column {
-                                Text(
-                                    "Total Balance",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = Color.White.copy(alpha = 0.8f)
-                                )
-                                Text(
-                                    "$4,250.50",
-                                    style = MaterialTheme.typography.displayLarge,
-                                    fontWeight = FontWeight.ExtraBold,
-                                    color = Color.White
-                                )
-                            }
-
-                            IconButton(
-                                onClick = {
-                                    isRefreshing = true
-                                    coroutineScope.launch {
-                                        kotlinx.coroutines.delay(1500)
-                                        isRefreshing = false
-                                    }
-                                },
-                                modifier = Modifier
-                                    .size(48.dp)
-                                    .background(
-                                        Color.White.copy(alpha = 0.2f),
-                                        shape = CircleShape
-                                    ),
-                                enabled = !isRefreshing
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Refresh,
-                                    contentDescription = "Refresh",
-                                    tint = Color.White,
-                                    modifier = Modifier
-                                        .size(24.dp)
-                                        .rotate(refreshRotation)
-                                )
-                            }
-                        }
-
-                        // Divider
-                        HorizontalDivider(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .height(1.dp),
-                            color = Color.White.copy(alpha = 0.2f)
+                        val initials = state.user?.let {
+                            val first = it.firstName?.firstOrNull() ?: it.email?.firstOrNull() ?: 'T'
+                            first.uppercaseChar().toString()
+                        } ?: "T"
+                        Text(
+                            initials,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            fontSize = 16.sp
                         )
-
-                        // Balance details (expanded)
-                        if (showBalanceDetails) {
-                            Column(
-                                modifier = Modifier.fillMaxWidth(),
-                                verticalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                BalanceDetailRow("USDC", "$2,500.00")
-                                BalanceDetailRow("ETH", "$1,750.50")
-                            }
-                        } else {
-                            // Compact view
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.spacedBy(24.dp)
-                            ) {
-                                BalanceDetailCompact("USDC", "$2,500")
-                                BalanceDetailCompact("ETH", "$1,750")
-                            }
+                    }
+                    Spacer(modifier = Modifier.width(12.dp))
+                    Column {
+                        Text(
+                            state.user?.displayName ?: state.user?.firstName ?: "Tranzo Wallet",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1A1A1A)
+                        )
+                        // Show truncated wallet address
+                        val addr = state.user?.smartAccount ?: ""
+                        if (addr.isNotEmpty()) {
+                            Text(
+                                "${addr.take(6)}...${addr.takeLast(4)}",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFF999999)
+                            )
                         }
+                    }
+                }
+
+                Row(horizontalArrangement = Arrangement.spacedBy(4.dp)) {
+                    IconButton(
+                        onClick = { viewModel.refresh() },
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Refresh,
+                            contentDescription = "Refresh",
+                            tint = Color(0xFF666666),
+                            modifier = Modifier.size(22.dp)
+                        )
+                    }
+                    IconButton(
+                        onClick = onSettings,
+                        modifier = Modifier.size(40.dp)
+                    ) {
+                        Icon(
+                            Icons.Outlined.Settings,
+                            contentDescription = "Settings",
+                            tint = Color(0xFF666666),
+                            modifier = Modifier.size(22.dp)
+                        )
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Quick actions header
-            Text(
-                "Quick Actions",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = TranzoColors.TextPrimary,
-                modifier = Modifier.padding(horizontal = 20.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Action grid - 2 columns
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                // Row 1
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    QuickActionButtonMax(
-                        icon = Icons.Outlined.CallMade,
-                        label = "Send",
-                        onClick = onSend,
-                        modifier = Modifier.weight(1f),
-                        accentColor = TranzoColors.PrimaryBlue
-                    )
-                    QuickActionButtonMax(
-                        icon = Icons.Outlined.CallReceived,
-                        label = "Receive",
-                        onClick = onReceive,
-                        modifier = Modifier.weight(1f),
-                        accentColor = TranzoColors.PrimaryGreen
-                    )
-                }
-
-                // Row 2
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    QuickActionButtonMax(
-                        icon = Icons.Default.SwapVert,
-                        label = "Swap",
-                        onClick = onSwap,
-                        modifier = Modifier.weight(1f),
-                        accentColor = TranzoColors.PrimaryPurple
-                    )
-                    QuickActionButtonMax(
-                        icon = Icons.Outlined.Water,
-                        label = "Dripper",
-                        onClick = onDripper,
-                        modifier = Modifier.weight(1f),
-                        accentColor = TranzoColors.AccentCyan
-                    )
-                }
-
-                // Row 3
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
-                ) {
-                    QuickActionButtonMax(
-                        icon = Icons.Outlined.CreditCard,
-                        label = "Card",
-                        onClick = onCard,
-                        modifier = Modifier.weight(1f),
-                        accentColor = TranzoColors.PrimaryOrange
-                    )
-                    Box(modifier = Modifier.weight(1f))
-                }
-            }
-
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Recent activity section
-            Text(
-                "Recent Activity",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = TranzoColors.TextPrimary,
-                modifier = Modifier.padding(horizontal = 20.dp)
-            )
-
-            Spacer(modifier = Modifier.height(16.dp))
-
-            // Empty state for recent activity
+            // ── Balance card ─────────────────────────────────────
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
                     .padding(horizontal = 20.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(
-                    containerColor = TranzoColors.SurfaceLight
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp)
+                ) {
+                    Text(
+                        "Total Balance",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = Color(0xFF999999)
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    if (state.isLoading) {
+                        // Loading shimmer placeholder
+                        Text(
+                            "Loading...",
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF666666)
+                        )
+                    } else {
+                        Text(
+                            formatBalance(state.totalUsdBalance),
+                            style = MaterialTheme.typography.displaySmall,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(20.dp))
+                    HorizontalDivider(color = Color(0xFF333333), thickness = 0.5.dp)
+                    Spacer(modifier = Modifier.height(16.dp))
+
+                    // Token rows — from real API
+                    if (state.balances.isNotEmpty()) {
+                        state.balances.forEach { token ->
+                            TokenRow(token)
+                            Spacer(modifier = Modifier.height(12.dp))
+                        }
+                    } else if (!state.isLoading) {
+                        Text(
+                            "No tokens found",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF666666)
+                        )
+                    }
+                }
+            }
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            // ── Quick Actions ────────────────────────────────────
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceEvenly
+            ) {
+                ActionCircle(Icons.Outlined.CallMade, "Send", onClick = onSend)
+                ActionCircle(Icons.Outlined.CallReceived, "Receive", onClick = onReceive)
+                ActionCircle(Icons.Default.SwapVert, "Swap", onClick = onSwap)
+                ActionCircle(Icons.Outlined.CreditCard, "Card", onClick = onCard)
+            }
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            // ── Services Grid ────────────────────────────────────
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
+            ) {
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    ServiceCard(
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Outlined.Water,
+                        title = "Dripper",
+                        subtitle = "Salary streaming",
+                        onClick = onDripper
+                    )
+                    ServiceCard(
+                        modifier = Modifier.weight(1f),
+                        icon = Icons.Outlined.CreditCard,
+                        title = "Virtual Card",
+                        subtitle = "Spend crypto",
+                        onClick = onCard
+                    )
+                }
+            }
+
+            Spacer(modifier = Modifier.height(28.dp))
+
+            // ── Recent Activity ──────────────────────────────────
+            Row(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                Text(
+                    "Recent Activity",
+                    style = MaterialTheme.typography.titleMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A1A1A)
                 )
+                Text(
+                    "View All",
+                    style = MaterialTheme.typography.labelMedium,
+                    fontWeight = FontWeight.SemiBold,
+                    color = Color(0xFF666666)
+                )
+            }
+
+            Spacer(modifier = Modifier.height(12.dp))
+
+            // Empty state
+            Surface(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(horizontal = 20.dp),
+                shape = RoundedCornerShape(16.dp),
+                color = Color(0xFFF5F5F5)
             ) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
                     Box(
                         modifier = Modifier
-                            .size(56.dp)
-                            .background(
-                                TranzoColors.TextTertiary.copy(alpha = 0.1f),
-                                shape = CircleShape
-                            ),
+                            .size(48.dp)
+                            .clip(CircleShape)
+                            .background(Color(0xFFE8E8E8)),
                         contentAlignment = Alignment.Center
                     ) {
                         Icon(
-                            imageVector = Icons.Outlined.History,
+                            Icons.Outlined.Receipt,
                             contentDescription = null,
-                            tint = TranzoColors.TextTertiary,
-                            modifier = Modifier.size(28.dp)
+                            tint = Color(0xFF999999),
+                            modifier = Modifier.size(24.dp)
                         )
                     }
+                    Spacer(modifier = Modifier.height(12.dp))
                     Text(
-                        "No activity yet",
+                        "No transactions yet",
                         style = MaterialTheme.typography.bodyMedium,
                         fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.TextSecondary
+                        color = Color(0xFF666666)
                     )
                     Text(
-                        "Your transactions will appear here",
+                        "Your on-chain activity will appear here",
                         style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.TextTertiary
+                        color = Color(0xFF999999)
                     )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            // Error banner
+            state.error?.let { errorMsg ->
+                Spacer(modifier = Modifier.height(12.dp))
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFFFFF0F0)
+                ) {
+                    Text(
+                        errorMsg,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFFCC0000),
+                        modifier = Modifier.padding(12.dp)
+                    )
+                }
+            }
+
+            // Bottom spacing for nav bar
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
 
+// ── Token row inside balance card ────────────────────────────────
 @Composable
-private fun BalanceDetailRow(
-    label: String,
-    amount: String,
-) {
+private fun TokenRow(token: TokenBalance) {
     Row(
         modifier = Modifier.fillMaxWidth(),
         horizontalArrangement = Arrangement.SpaceBetween,
         verticalAlignment = Alignment.CenterVertically
     ) {
+        Row(verticalAlignment = Alignment.CenterVertically) {
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF333333)),
+                contentAlignment = Alignment.Center
+            ) {
+                Text(
+                    token.symbol.take(1),
+                    color = Color.White,
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 13.sp
+                )
+            }
+            Spacer(modifier = Modifier.width(10.dp))
+            Text(
+                token.symbol,
+                style = MaterialTheme.typography.bodyMedium,
+                fontWeight = FontWeight.SemiBold,
+                color = Color.White
+            )
+        }
         Text(
-            label,
-            style = MaterialTheme.typography.labelMedium,
-            color = Color.White.copy(alpha = 0.7f),
-            fontWeight = FontWeight.SemiBold
-        )
-        Text(
-            amount,
-            style = MaterialTheme.typography.titleLarge,
-            color = Color.White,
-            fontWeight = FontWeight.Bold
-        )
-    }
-}
-
-@Composable
-private fun BalanceDetailCompact(
-    label: String,
-    amount: String,
-) {
-    Column(
-        verticalArrangement = Arrangement.spacedBy(4.dp)
-    ) {
-        Text(
-            label,
-            style = MaterialTheme.typography.labelSmall,
-            color = Color.White.copy(alpha = 0.7f)
-        )
-        Text(
-            amount,
-            style = MaterialTheme.typography.titleMedium,
-            fontWeight = FontWeight.Bold,
-            color = Color.White
+            formatTokenAmount(token.formatted, token.symbol),
+            style = MaterialTheme.typography.bodyMedium,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFFCCCCCC)
         )
     }
 }
 
+// ── Circular action button (Send, Receive, Swap, Card) ──────────
 @Composable
-private fun QuickActionButtonMax(
+private fun ActionCircle(
     icon: ImageVector,
     label: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-    accentColor: Color = TranzoColors.PrimaryBlue,
 ) {
-    var isPressed by remember { mutableStateOf(false) }
-    val scale by animateFloatAsState(
-        targetValue = if (isPressed) 0.95f else 1f,
-        animationSpec = spring(dampingRatio = 0.6f)
-    )
-
-    Card(
-        modifier = modifier
-            .height(100.dp)
-            .clickable(
-                onClickLabel = label,
-                onClick = {
-                    isPressed = true
-                    onClick()
-                },
-                role = null
-            )
-            .graphicsLayer(scaleX = scale, scaleY = scale),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = Color.White
-        ),
-        elevation = CardDefaults.cardElevation(
-            defaultElevation = 4.dp,
-            pressedElevation = 8.dp
-        )
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+        modifier = Modifier.clickable(onClick = onClick)
     ) {
         Box(
-            modifier = Modifier.fillMaxSize(),
+            modifier = Modifier
+                .size(56.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF1A1A1A)),
             contentAlignment = Alignment.Center
         ) {
-            Column(
-                modifier = Modifier.fillMaxSize(),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+            Icon(
+                imageVector = icon,
+                contentDescription = label,
+                tint = Color.White,
+                modifier = Modifier.size(24.dp)
+            )
+        }
+        Spacer(modifier = Modifier.height(6.dp))
+        Text(
+            label,
+            style = MaterialTheme.typography.labelSmall,
+            fontWeight = FontWeight.Medium,
+            color = Color(0xFF1A1A1A)
+        )
+    }
+}
+
+// ── Service card (Dripper, Virtual Card) ─────────────────────────
+@Composable
+private fun ServiceCard(
+    modifier: Modifier = Modifier,
+    icon: ImageVector,
+    title: String,
+    subtitle: String,
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = modifier
+            .height(110.dp)
+            .clickable(onClick = onClick),
+        shape = RoundedCornerShape(16.dp),
+        color = Color(0xFFF5F5F5)
+    ) {
+        Column(
+            modifier = Modifier
+                .fillMaxSize()
+                .padding(16.dp),
+            verticalArrangement = Arrangement.SpaceBetween
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xFF1A1A1A)),
+                contentAlignment = Alignment.Center
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(40.dp)
-                        .background(
-                            accentColor.copy(alpha = 0.12f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = icon,
-                        contentDescription = null,
-                        tint = accentColor,
-                        modifier = Modifier.size(20.dp)
-                    )
-                }
-                Spacer(modifier = Modifier.height(8.dp))
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(18.dp)
+                )
+            }
+            Column {
                 Text(
-                    label,
-                    style = MaterialTheme.typography.labelSmall,
+                    title,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = TranzoColors.TextPrimary
+                    color = Color(0xFF1A1A1A)
+                )
+                Text(
+                    subtitle,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF999999)
                 )
             }
         }
+    }
+}
+
+// ── Formatting helpers ───────────────────────────────────────────
+
+private fun formatBalance(usdValue: Double): String {
+    return if (usdValue == 0.0) {
+        "$0.00"
+    } else {
+        "$${String.format("%.2f", usdValue)}"
+    }
+}
+
+private fun formatTokenAmount(formatted: String, symbol: String): String {
+    val amount = formatted.toDoubleOrNull() ?: 0.0
+    return if (amount == 0.0) {
+        "0 $symbol"
+    } else if (amount < 0.0001) {
+        "<0.0001 $symbol"
+    } else {
+        "${String.format("%.4f", amount)} $symbol"
     }
 }

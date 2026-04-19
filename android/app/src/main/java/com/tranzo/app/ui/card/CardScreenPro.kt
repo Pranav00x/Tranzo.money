@@ -4,6 +4,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -12,216 +13,356 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tranzo.app.ui.components.TranzoButton
-import com.tranzo.app.ui.theme.TranzoColors
+import androidx.hilt.navigation.compose.hiltViewModel
 
+/**
+ * Card screen — CheQ-inspired monochrome look.
+ * Displays card info from CardViewModel.
+ */
 @Composable
 fun CardScreenPro(
+    viewModel: CardViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
     onOrderCard: () -> Unit = {},
-    onCardDetails: (String) -> Unit = { },
-    onManageLimits: () -> Unit = {},
 ) {
-    var cardFrozen by remember { mutableStateOf(false) }
+    val state by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.BackgroundLight)
+            .background(Color(0xFFF5F5F5))
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(20.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
         ) {
             // Header
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween,
-                verticalAlignment = Alignment.CenterVertically
-            ) {
-                IconButton(onClick = onBack, modifier = Modifier.size(40.dp)) {
-                    Icon(Icons.Outlined.ArrowBack, null, tint = TranzoColors.TextSecondary, modifier = Modifier.size(24.dp))
-                }
-                Text("Your Card", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = TranzoColors.TextPrimary)
-                Box(modifier = Modifier.size(40.dp))
-            }
+            Text(
+                "Card",
+                style = MaterialTheme.typography.headlineLarge,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1A1A1A),
+                modifier = Modifier
+                    .statusBarsPadding()
+                    .padding(horizontal = 24.dp, vertical = 16.dp)
+            )
 
-            // Card display
+            // Card visual
             Card(
                 modifier = Modifier
                     .fillMaxWidth()
+                    .padding(horizontal = 20.dp)
                     .height(200.dp),
-                shape = RoundedCornerShape(16.dp),
-                colors = CardDefaults.cardColors(containerColor = TranzoColors.PrimaryBlue)
+                shape = RoundedCornerShape(20.dp),
+                colors = CardDefaults.cardColors(containerColor = Color(0xFF1A1A1A)),
+                elevation = CardDefaults.cardElevation(defaultElevation = 0.dp)
             ) {
-                Box(
+                Column(
                     modifier = Modifier
                         .fillMaxSize()
-                        .background(TranzoColors.PrimaryBlue)
-                        .padding(24.dp)
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.SpaceBetween
                 ) {
-                    Column(
-                        modifier = Modifier.fillMaxSize(),
-                        verticalArrangement = Arrangement.SpaceBetween
+                    // Top row — logo and chip
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
                     ) {
+                        Text(
+                            "TRANZO",
+                            style = MaterialTheme.typography.titleMedium,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 2.sp
+                        )
+                        Icon(
+                            imageVector = Icons.Outlined.CreditCard,
+                            contentDescription = null,
+                            tint = Color.White,
+                            modifier = Modifier.size(24.dp)
+                        )
+                    }
+
+                    // Card number
+                    Column {
+                        Text(
+                            state.card?.maskedPan ?: "**** **** **** ----",
+                            style = MaterialTheme.typography.headlineSmall,
+                            color = Color.White,
+                            fontWeight = FontWeight.Bold,
+                            letterSpacing = 2.sp
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
                         Row(
                             modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
+                            horizontalArrangement = Arrangement.SpaceBetween
                         ) {
-                            Text(
-                                "TRANZO",
-                                style = MaterialTheme.typography.titleMedium,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold
-                            )
-                            Icon(
-                                imageVector = Icons.Outlined.CreditCard,
-                                contentDescription = null,
-                                tint = Color.White,
-                                modifier = Modifier.size(24.dp)
-                            )
-                        }
-
-                        Column {
-                            Text(
-                                "**** **** **** 4242",
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = Color.White,
-                                fontWeight = FontWeight.Bold,
-                                letterSpacing = 2.sp
-                            )
-                            Spacer(modifier = Modifier.height(12.dp))
-                            Row(
-                                modifier = Modifier.fillMaxWidth(),
-                                horizontalArrangement = Arrangement.SpaceBetween
-                            ) {
-                                Column {
-                                    Text("CARDHOLDER", style = MaterialTheme.typography.labelSmall, color = Color.White.copy(alpha = 0.7f))
-                                    Text("John Doe", style = MaterialTheme.typography.labelMedium, color = Color.White, fontWeight = FontWeight.SemiBold)
-                                }
-                                Column {
-                                    Text("EXPIRES", style = MaterialTheme.typography.labelSmall, color = Color.White.copy(alpha = 0.7f))
-                                    Text("12/26", style = MaterialTheme.typography.labelMedium, color = Color.White, fontWeight = FontWeight.SemiBold)
-                                }
+                            Column {
+                                Text(
+                                    "CARDHOLDER",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color.White.copy(alpha = 0.5f)
+                                )
+                                Text(
+                                    state.card?.cardholderName ?: "YOUR NAME",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold
+                                )
+                            }
+                            Column {
+                                Text(
+                                    "EXPIRES",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    color = Color.White.copy(alpha = 0.5f)
+                                )
+                                Text(
+                                    state.card?.expiry ?: "--/--",
+                                    style = MaterialTheme.typography.labelMedium,
+                                    color = Color.White,
+                                    fontWeight = FontWeight.SemiBold
+                                )
                             }
                         }
                     }
                 }
             }
 
-            // Card status
-            Surface(
-                modifier = Modifier.fillMaxWidth(),
-                shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.SurfaceLight
-            ) {
-                Column(
+            Spacer(modifier = Modifier.height(24.dp))
+
+            // Card controls
+            if (state.card != null) {
+                Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(horizontal = 20.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White
+                ) {
+                    Column {
+                        CardControlRow(
+                            icon = Icons.Outlined.Lock,
+                            label = "Freeze Card",
+                            subtitle = if (state.card?.status == "frozen") "Card is frozen" else "Card is active",
+                            onClick = { viewModel.toggleFreeze() }
+                        )
+                        HorizontalDivider(
+                            color = Color(0xFFF0F0F0),
+                            thickness = 0.5.dp,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        CardControlRow(
+                            icon = Icons.Outlined.Visibility,
+                            label = "Card Details",
+                            subtitle = "View full card number",
+                            onClick = { }
+                        )
+                        HorizontalDivider(
+                            color = Color(0xFFF0F0F0),
+                            thickness = 0.5.dp,
+                            modifier = Modifier.padding(horizontal = 16.dp)
+                        )
+                        CardControlRow(
+                            icon = Icons.Outlined.Receipt,
+                            label = "Transactions",
+                            subtitle = "View card spending",
+                            onClick = { }
+                        )
+                    }
+                }
+            } else {
+                // No card — Order CTA
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(24.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally
+                    ) {
+                        Box(
+                            modifier = Modifier
+                                .size(56.dp)
+                                .clip(CircleShape)
+                                .background(Color(0xFFF5F5F5)),
+                            contentAlignment = Alignment.Center
+                        ) {
+                            Icon(
+                                Icons.Outlined.AddCard,
+                                contentDescription = null,
+                                tint = Color(0xFF1A1A1A),
+                                modifier = Modifier.size(28.dp)
+                            )
+                        }
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            "Get a Tranzo Card",
+                            style = MaterialTheme.typography.titleMedium,
+                            fontWeight = FontWeight.Bold,
+                            color = Color(0xFF1A1A1A)
+                        )
+                        Text(
+                            "Spend crypto anywhere Visa is accepted",
+                            style = MaterialTheme.typography.bodySmall,
+                            color = Color(0xFF999999)
+                        )
+                        Spacer(modifier = Modifier.height(16.dp))
+                        Button(
+                            onClick = onOrderCard,
+                            modifier = Modifier.fillMaxWidth(),
+                            shape = RoundedCornerShape(14.dp),
+                            colors = ButtonDefaults.buttonColors(
+                                containerColor = Color(0xFF1A1A1A),
+                                contentColor = Color.White
+                            ),
+                            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+                        ) {
+                            Text(
+                                "Order Card",
+                                modifier = Modifier.padding(vertical = 4.dp),
+                                fontWeight = FontWeight.SemiBold
+                            )
+                        }
+                    }
+                }
+            }
+
+            // Status section
+            if (state.card != null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                Surface(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 20.dp),
+                    shape = RoundedCornerShape(16.dp),
+                    color = Color.White
                 ) {
                     Row(
-                        modifier = Modifier.fillMaxWidth(),
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
                         horizontalArrangement = Arrangement.SpaceBetween,
                         verticalAlignment = Alignment.CenterVertically
                     ) {
                         Column {
-                            Text("Status", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                            Text("Active", style = MaterialTheme.typography.bodyMedium, color = TranzoColors.Success, fontWeight = FontWeight.SemiBold)
+                            Text(
+                                "Status",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFF999999)
+                            )
+                            Text(
+                                state.card?.status?.replaceFirstChar { it.uppercaseChar() } ?: "Unknown",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = if (state.card?.status == "active") Color(0xFF22C55E) else Color(0xFF999999)
+                            )
                         }
-                        Box(
-                            modifier = Modifier
-                                .size(32.dp)
-                                .background(TranzoColors.Success.copy(alpha = 0.1f), shape = RoundedCornerShape(8.dp)),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Icon(Icons.Outlined.Check, null, tint = TranzoColors.Success, modifier = Modifier.size(16.dp))
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text(
+                                "Network",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = Color(0xFF999999)
+                            )
+                            Text(
+                                state.card?.network ?: "Visa",
+                                style = MaterialTheme.typography.bodyMedium,
+                                fontWeight = FontWeight.SemiBold,
+                                color = Color(0xFF1A1A1A)
+                            )
                         }
                     }
                 }
             }
 
-            // Spending limit
-            Text("Spending Limit", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onManageLimits() },
-                shape = RoundedCornerShape(12.dp),
-                color = Color.White
-            ) {
-                Row(
+            // Error
+            state.error?.let { err ->
+                Spacer(modifier = Modifier.height(12.dp))
+                Surface(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                        .padding(horizontal = 20.dp),
+                    shape = RoundedCornerShape(12.dp),
+                    color = Color(0xFFFFF0F0)
                 ) {
-                    Column {
-                        Text("Daily limit", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                        Text("$5,000", style = MaterialTheme.typography.titleMedium, color = TranzoColors.TextPrimary, fontWeight = FontWeight.Bold)
-                    }
-                    Icon(Icons.Outlined.ChevronRight, null, tint = TranzoColors.TextTertiary)
+                    Text(
+                        err,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = Color(0xFFCC0000),
+                        modifier = Modifier.padding(12.dp)
+                    )
                 }
             }
 
-            // Quick actions
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                TranzoButton(
-                    text = if (cardFrozen) "Unfreeze Card" else "Freeze Card",
-                    onClick = { cardFrozen = !cardFrozen },
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                TranzoButton(
-                    text = "View Transactions",
-                    onClick = { },
-                    modifier = Modifier.fillMaxWidth()
-                )
-            }
-
-            // Order new card
-            Surface(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clickable { onOrderCard() },
-                shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.SurfaceLight
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
-                    ) {
-                        Icon(Icons.Outlined.Add, null, tint = TranzoColors.PrimaryBlue, modifier = Modifier.size(24.dp))
-                        Column {
-                            Text("Order new card", style = MaterialTheme.typography.titleMedium, color = TranzoColors.TextPrimary, fontWeight = FontWeight.SemiBold)
-                            Text("Virtual or physical", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                        }
-                    }
-                    Icon(Icons.Outlined.ChevronRight, null, tint = TranzoColors.TextTertiary)
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(100.dp))
         }
+    }
+}
+
+@Composable
+private fun CardControlRow(
+    icon: ImageVector,
+    label: String,
+    subtitle: String,
+    onClick: () -> Unit
+) {
+    Row(
+        modifier = Modifier
+            .fillMaxWidth()
+            .clickable(onClick = onClick)
+            .padding(horizontal = 16.dp, vertical = 14.dp),
+        horizontalArrangement = Arrangement.SpaceBetween,
+        verticalAlignment = Alignment.CenterVertically
+    ) {
+        Row(
+            horizontalArrangement = Arrangement.spacedBy(14.dp),
+            verticalAlignment = Alignment.CenterVertically
+        ) {
+            Box(
+                modifier = Modifier
+                    .size(36.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(Color(0xFFF5F5F5)),
+                contentAlignment = Alignment.Center
+            ) {
+                Icon(
+                    imageVector = icon,
+                    contentDescription = null,
+                    tint = Color(0xFF1A1A1A),
+                    modifier = Modifier.size(20.dp)
+                )
+            }
+            Column {
+                Text(
+                    label,
+                    style = MaterialTheme.typography.bodyMedium,
+                    fontWeight = FontWeight.Medium,
+                    color = Color(0xFF1A1A1A)
+                )
+                Text(
+                    subtitle,
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF999999)
+                )
+            }
+        }
+        Icon(
+            Icons.Outlined.ChevronRight,
+            contentDescription = null,
+            tint = Color(0xFFCCCCCC),
+            modifier = Modifier.size(20.dp)
+        )
     }
 }
