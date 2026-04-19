@@ -25,6 +25,15 @@ android {
         buildConfigField("String", "GOOGLE_CLIENT_ID", "\"753093250645-mjghuinh2qrjfi5mrlqtjq3kei4ecqbn.apps.googleusercontent.com\"")
     }
 
+    signingConfigs {
+        create("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
+    }
+
     buildTypes {
         release {
             isMinifyEnabled = true
@@ -32,6 +41,7 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
+            signingConfig = signingConfigs.getByName("debug")
             buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
             buildConfigField("String", "WEBAUTHN_RP_ID", "\"tranzo.app\"")
             buildConfigField("String", "WEBAUTHN_ORIGIN", "\"https://tranzo.app\"")
