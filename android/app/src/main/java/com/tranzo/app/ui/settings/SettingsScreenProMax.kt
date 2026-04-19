@@ -143,7 +143,7 @@ fun SettingsScreenProMax(
                         )
 
                         if (showThemeSelector) {
-                            Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                            HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
                             Spacer(modifier = Modifier.height(12.dp))
                             ThemeSelectorInline(
                                 currentThemeId = currentThemeId,
@@ -153,7 +153,7 @@ fun SettingsScreenProMax(
                             )
                         }
 
-                        Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
 
                         // Notifications
                         SettingItemRow(
@@ -163,7 +163,7 @@ fun SettingsScreenProMax(
                             onClick = { }
                         )
 
-                        Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
 
                         // Language
                         SettingItemRow(
@@ -195,7 +195,7 @@ fun SettingsScreenProMax(
                             onClick = onSecurity
                         )
 
-                        Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
 
                         SettingItemRow(
                             icon = Icons.Outlined.PrivacyTip,
@@ -204,7 +204,7 @@ fun SettingsScreenProMax(
                             onClick = { }
                         )
 
-                        Divider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
+                        HorizontalDivider(thickness = 1.dp, modifier = Modifier.padding(horizontal = 16.dp))
 
                         SettingItemRow(
                             icon = Icons.Outlined.Info,

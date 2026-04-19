@@ -57,6 +57,8 @@ fun TranzoButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isLoading: Boolean = false,
+    containerColor: Color = TranzoColors.TextPrimary,
+    contentColor: Color = TranzoColors.White,
 ) {
     Button(
         onClick = onClick,
@@ -66,10 +68,10 @@ fun TranzoButton(
         enabled = enabled && !isLoading,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.TextPrimary,
-            contentColor = TranzoColors.White,
-            disabledContainerColor = TranzoColors.TextPrimary.copy(alpha = 0.4f),
-            disabledContentColor = TranzoColors.White.copy(alpha = 0.6f),
+            containerColor = containerColor,
+            contentColor = contentColor,
+            disabledContainerColor = containerColor.copy(alpha = 0.4f),
+            disabledContentColor = contentColor.copy(alpha = 0.6f),
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,

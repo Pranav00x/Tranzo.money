@@ -178,7 +178,7 @@ fun HomeScreenProMax(
                         }
 
                         // Divider
-                        Divider(
+                        HorizontalDivider(
                             modifier = Modifier
                                 .fillMaxWidth()
                                 .height(1.dp),
@@ -400,7 +400,7 @@ private fun BalanceDetailCompact(
 
 @Composable
 private fun QuickActionButtonMax(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: ImageVector,
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

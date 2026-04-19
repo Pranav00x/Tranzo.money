@@ -229,7 +229,7 @@ private fun SettingsSection(
 
 @Composable
 private fun ColumnScope.SettingItem(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: ImageVector,
     label: String,
     description: String,
     onClick: () -> Unit
@@ -279,7 +279,7 @@ private fun ColumnScope.SettingItem(
         )
     }
 
-    Divider(
+    HorizontalDivider(
         color = TranzoColors.DividerGray,
         thickness = 1.dp,
         modifier = Modifier.padding(horizontal = 16.dp)
@@ -351,4 +351,3 @@ private fun ThemeOptionCompact(
     }
 }
 
-private val androidx.compose.material.icons.Icons.Outlined get() = androidx.compose.material.icons.outlined
