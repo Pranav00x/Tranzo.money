@@ -38,7 +38,9 @@ import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreen
 import com.tranzo.app.ui.swap.SwapScreenPro
 import com.tranzo.app.ui.theme.TranzoTheme
+import com.tranzo.app.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.fragment.app.FragmentActivity
 import com.tranzo.app.util.BiometricHelper
@@ -144,7 +146,7 @@ class MainActivity : FragmentActivity() {
 
                         composable(Screen.ProfileSetup.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
-                            val authViewModel = androidx.hilt.navigation.compose.hiltViewModel<com.tranzo.app.ui.auth.AuthViewModel>()
+                            val authViewModel = hiltViewModel<AuthViewModel>()
                             val authState by authViewModel.state.collectAsState()
 
                             // Navigate when profile save completes
