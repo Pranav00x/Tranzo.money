@@ -22,6 +22,7 @@
     "@zerodev/ecdsa-validator": "^5.4.9",
     "@zerodev/permissions": "^5.4.10",
     "@zerodev/sdk": "^5.5.10",
+    "@zerodev/webauthn-key": "^5.4.9",
     "cors": "^2.8.5",
     "dotenv": "^16.4.5",
     "express": "^4.21.1",
