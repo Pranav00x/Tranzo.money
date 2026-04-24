@@ -3,9 +3,9 @@ package com.tranzo.app.ui.auth
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.slideInVertically
 import androidx.compose.foundation.background
-import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
@@ -16,19 +16,18 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.TranzoButton
-import com.tranzo.app.ui.components.TranzoSecondaryButton
-import com.tranzo.app.ui.components.TranzoTextField
-import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Bold profile setup screen - Modern form with confidence
+ * CheQ-inspired profile setup — monochrome, clean form fields.
+ * Shown for new users after authentication.
  */
 @Composable
 fun ProfileSetupScreenPro(
@@ -44,310 +43,217 @@ fun ProfileSetupScreenPro(
     var email by remember { mutableStateOf(prefilledEmail) }
     var phone by remember { mutableStateOf("") }
     var language by remember { mutableStateOf("en") }
-    var currentStep by remember { mutableStateOf(1) }
 
-    // Validation
     val firstNameValid = firstName.length >= 2
     val lastNameValid = lastName.length >= 2
     val emailValid = email.contains("@")
     val allValid = firstNameValid && lastNameValid && emailValid
 
-    Box(
+    Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.BackgroundLight)
+            .background(Color.White)
+            .systemBarsPadding()
     ) {
         Column(
             modifier = Modifier
-                .fillMaxSize()
+                .fillMaxWidth()
+                .weight(1f)
                 .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(24.dp)
+                .padding(horizontal = 32.dp)
         ) {
-            Spacer(modifier = Modifier.height(16.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
-            // Progress header
-            Column(modifier = Modifier.fillMaxWidth()) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Column(modifier = Modifier.weight(1f)) {
-                        Text(
-                            "Create your profile",
-                            style = MaterialTheme.typography.displaySmall,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = TranzoColors.TextPrimary
-                        )
-                        Text(
-                            "Step 1 of 2",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TranzoColors.TextTertiary
-                        )
-                    }
-                    Surface(
-                        modifier = Modifier.size(48.dp),
-                        shape = RoundedCornerShape(12.dp),
-                        color = TranzoColors.PrimaryBlue.copy(alpha = 0.1f)
-                    ) {
-                        Box(
-                            modifier = Modifier.fillMaxSize(),
-                            contentAlignment = Alignment.Center
-                        ) {
-                            Text(
-                                "1/2",
-                                style = MaterialTheme.typography.labelLarge,
-                                color = TranzoColors.PrimaryBlue,
-                                fontWeight = FontWeight.Bold
-                            )
-                        }
-                    }
+            // Avatar circle with initials
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(64.dp)
+                    .clip(CircleShape)
+                    .background(Color(0xFF1A1A1A)),
+                contentAlignment = Alignment.Center
+            ) {
+                val initials = "${firstName.firstOrNull()?.uppercase() ?: ""}${lastName.firstOrNull()?.uppercase() ?: ""}"
+                if (initials.isNotBlank()) {
+                    Text(
+                        initials,
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.White
+                    )
+                } else {
+                    Icon(
+                        Icons.Outlined.Person,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(28.dp)
+                    )
                 }
+            }
 
-                // Progress bar
-                LinearProgressIndicator(
-                    progress = { 0.5f },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(3.dp),
-                    color = TranzoColors.PrimaryBlue,
-                    trackColor = TranzoColors.SurfaceLight
+            Spacer(modifier = Modifier.height(24.dp))
+
+            Text(
+                "Create your profile",
+                style = MaterialTheme.typography.headlineMedium,
+                fontWeight = FontWeight.Bold,
+                color = Color(0xFF1A1A1A),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+            Spacer(modifier = Modifier.height(4.dp))
+            Text(
+                "Tell us a bit about yourself",
+                style = MaterialTheme.typography.bodySmall,
+                color = Color(0xFF999999),
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth()
+            )
+
+            Spacer(modifier = Modifier.height(36.dp))
+
+            // Form fields
+            Column(
+                verticalArrangement = Arrangement.spacedBy(16.dp)
+            ) {
+                MonoTextField(
+                    value = firstName,
+                    onValueChange = { firstName = it },
+                    label = "First name",
+                    placeholder = "John",
+                    isValid = firstNameValid && firstName.isNotEmpty()
+                )
+
+                MonoTextField(
+                    value = lastName,
+                    onValueChange = { lastName = it },
+                    label = "Last name",
+                    placeholder = "Doe",
+                    isValid = lastNameValid && lastName.isNotEmpty()
+                )
+
+                MonoTextField(
+                    value = email,
+                    onValueChange = { if (prefilledEmail.isEmpty()) email = it },
+                    label = "Email",
+                    placeholder = "you@example.com",
+                    enabled = prefilledEmail.isEmpty(),
+                    isValid = emailValid && email.isNotEmpty(),
+                    keyboardType = KeyboardType.Email
+                )
+
+                MonoTextField(
+                    value = phone,
+                    onValueChange = { phone = it },
+                    label = "Phone (optional)",
+                    placeholder = "+1 (555) 000-0000",
+                    isValid = true,
+                    keyboardType = KeyboardType.Phone
                 )
             }
 
-            Spacer(modifier = Modifier.height(8.dp))
-
-            // Form fields with animation
-            AnimatedVisibility(
-                visible = true,
-                enter = slideInVertically()
-            ) {
-                Column(
-                    modifier = Modifier.fillMaxWidth(),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
-                ) {
-                    // First Name
-                    ProfileInputField(
-                        label = "First name",
-                        placeholder = "John",
-                        value = firstName,
-                        onValueChange = { firstName = it },
-                        icon = Icons.Outlined.Person,
-                        isValid = firstNameValid,
-                        isEditing = firstName.isNotEmpty()
-                    )
-
-                    // Last Name
-                    ProfileInputField(
-                        label = "Last name",
-                        placeholder = "Doe",
-                        value = lastName,
-                        onValueChange = { lastName = it },
-                        icon = Icons.Outlined.Person,
-                        isValid = lastNameValid,
-                        isEditing = lastName.isNotEmpty()
-                    )
-
-                    // Email (read-only if prefilled)
-                    ProfileInputField(
-                        label = "Email",
-                        placeholder = "you@example.com",
-                        value = email,
-                        onValueChange = { if (prefilledEmail.isEmpty()) email = it },
-                        icon = Icons.Outlined.Email,
-                        isValid = emailValid,
-                        isEditing = email.isNotEmpty(),
-                        enabled = prefilledEmail.isEmpty(),
-                        keyboardType = KeyboardType.Email
-                    )
-
-                    // Phone (optional)
-                    ProfileInputField(
-                        label = "Phone (optional)",
-                        placeholder = "+1 (555) 000-0000",
-                        value = phone,
-                        onValueChange = { phone = it },
-                        icon = Icons.Outlined.Phone,
-                        isValid = true,
-                        isEditing = phone.isNotEmpty(),
-                        keyboardType = KeyboardType.Phone
-                    )
-
-                    // Language selector
-                    Surface(
-                        modifier = Modifier
-                            .fillMaxWidth()
-                            .border(2.dp, TranzoColors.SurfaceLight, RoundedCornerShape(12.dp)),
-                        shape = RoundedCornerShape(12.dp),
-                        color = Color.White
-                    ) {
-                        Row(
-                            modifier = Modifier
-                                .fillMaxWidth()
-                                .padding(16.dp),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(
-                                verticalAlignment = Alignment.CenterVertically,
-                                horizontalArrangement = Arrangement.spacedBy(12.dp)
-                            ) {
-                                Icon(
-                                    imageVector = Icons.Outlined.Language,
-                                    contentDescription = null,
-                                    tint = TranzoColors.PrimaryBlue,
-                                    modifier = Modifier.size(20.dp)
-                                )
-                                Column {
-                                    Text(
-                                        "Language",
-                                        style = MaterialTheme.typography.labelSmall,
-                                        color = TranzoColors.TextTertiary
-                                    )
-                                    Text(
-                                        "English",
-                                        style = MaterialTheme.typography.bodyMedium,
-                                        color = TranzoColors.TextPrimary,
-                                        fontWeight = FontWeight.SemiBold
-                                    )
-                                }
-                            }
-                            Icon(
-                                imageVector = Icons.Outlined.ChevronRight,
-                                contentDescription = null,
-                                tint = TranzoColors.TextTertiary,
-                                modifier = Modifier.size(20.dp)
-                            )
-                        }
-                    }
-                }
-            }
-
             // Error message
-            if (state.error != null) {
+            state.error?.let { err ->
+                Spacer(modifier = Modifier.height(16.dp))
                 Surface(
                     modifier = Modifier.fillMaxWidth(),
                     shape = RoundedCornerShape(12.dp),
-                    color = TranzoColors.Error.copy(alpha = 0.1f)
+                    color = Color(0xFFFFF0F0)
                 ) {
                     Text(
-                        state.error!!,
+                        err,
                         style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.Error,
+                        color = Color(0xFFCC0000),
                         modifier = Modifier.padding(12.dp)
                     )
                 }
             }
+        }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Action buttons
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+        // Bottom buttons
+        Column(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 32.dp, vertical = 16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp)
+        ) {
+            Button(
+                onClick = { onContinue(firstName, lastName, email, phone, language) },
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                enabled = allValid && !isLoading,
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = Color(0xFF1A1A1A),
+                    contentColor = Color.White,
+                    disabledContainerColor = Color(0xFFE0E0E0),
+                    disabledContentColor = Color(0xFF999999)
+                ),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
             ) {
-                TranzoButton(
-                    text = "Continue",
-                    onClick = {
-                        onContinue(firstName, lastName, email, phone, language)
-                    },
-                    enabled = allValid && !isLoading,
-                    isLoading = isLoading,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                TranzoSecondaryButton(
-                    text = "Skip for now",
-                    onClick = onSkip,
-                    modifier = Modifier.fillMaxWidth()
-                )
+                if (isLoading) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(20.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text("Continue", fontWeight = FontWeight.SemiBold)
+                }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            TextButton(
+                onClick = onSkip,
+                modifier = Modifier.fillMaxWidth()
+            ) {
+                Text(
+                    "Skip for now",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF999999)
+                )
+            }
         }
     }
 }
 
 @Composable
-private fun ProfileInputField(
-    label: String,
-    placeholder: String,
+private fun MonoTextField(
     value: String,
     onValueChange: (String) -> Unit,
-    icon: ImageVector,
-    isValid: Boolean,
-    isEditing: Boolean,
+    label: String,
+    placeholder: String,
+    isValid: Boolean = false,
     enabled: Boolean = true,
     keyboardType: KeyboardType = KeyboardType.Text,
 ) {
-    Surface(
-        modifier = Modifier
-            .fillMaxWidth()
-            .border(
-                2.dp,
-                color = when {
-                    !enabled -> TranzoColors.TextDisabled
-                    isValid && isEditing -> TranzoColors.Success
-                    isEditing -> TranzoColors.Error
-                    else -> TranzoColors.SurfaceLight
-                },
-                shape = RoundedCornerShape(12.dp)
-            ),
-        shape = RoundedCornerShape(12.dp),
-        color = if (enabled) Color.White else TranzoColors.SurfaceLight.copy(alpha = 0.5f)
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 16.dp, vertical = 4.dp),
-            verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(12.dp)
-        ) {
-            Icon(
-                imageVector = icon,
-                contentDescription = null,
-                tint = TranzoColors.PrimaryBlue,
-                modifier = Modifier.size(20.dp)
-            )
-
-            Column(modifier = Modifier.weight(1f)) {
-                Text(
-                    label,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TranzoColors.TextTertiary
-                )
-
-                TextField(
-                    value = value,
-                    onValueChange = onValueChange,
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 8.dp),
-                    placeholder = { Text(placeholder) },
-                    textStyle = MaterialTheme.typography.bodyMedium,
-                    enabled = enabled,
-                    keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
-                    colors = TextFieldDefaults.colors(
-                        unfocusedContainerColor = Color.Transparent,
-                        focusedContainerColor = Color.Transparent,
-                        unfocusedIndicatorColor = Color.Transparent,
-                        focusedIndicatorColor = Color.Transparent
-                    ),
-                    singleLine = true
-                )
-            }
-
-            if (isEditing && isValid) {
+    OutlinedTextField(
+        value = value,
+        onValueChange = onValueChange,
+        modifier = Modifier.fillMaxWidth(),
+        label = { Text(label) },
+        placeholder = { Text(placeholder) },
+        singleLine = true,
+        enabled = enabled,
+        keyboardOptions = KeyboardOptions(keyboardType = keyboardType),
+        shape = RoundedCornerShape(14.dp),
+        trailingIcon = {
+            if (isValid && value.isNotEmpty()) {
                 Icon(
-                    imageVector = Icons.Filled.Check,
+                    Icons.Filled.Check,
                     contentDescription = "Valid",
-                    tint = TranzoColors.Success,
-                    modifier = Modifier.size(20.dp)
+                    tint = Color(0xFF22C55E),
+                    modifier = Modifier.size(18.dp)
                 )
             }
-        }
-    }
+        },
+        colors = OutlinedTextFieldDefaults.colors(
+            focusedBorderColor = Color(0xFF1A1A1A),
+            unfocusedBorderColor = Color(0xFFE0E0E0),
+            disabledBorderColor = Color(0xFFE0E0E0),
+            focusedLabelColor = Color(0xFF1A1A1A),
+            unfocusedLabelColor = Color(0xFF999999),
+            cursorColor = Color(0xFF1A1A1A),
+        )
+    )
 }

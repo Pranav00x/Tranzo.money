@@ -1,34 +1,28 @@
 package com.tranzo.app.ui.auth
 
-import androidx.compose.animation.*
 import androidx.compose.animation.core.*
 import androidx.compose.foundation.background
-import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material.icons.outlined.Wallet
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.TranzoButton
-import com.tranzo.app.ui.theme.TranzoColors
 import kotlinx.coroutines.delay
 
 /**
- * Bold wallet creation screen - Shows progress and achievement
+ * CheQ-inspired wallet creation — monochrome step progress.
+ * Simulates ERC-4337 smart account deployment.
  */
 @Composable
 fun WalletCreationScreenPro(
@@ -39,248 +33,222 @@ fun WalletCreationScreenPro(
     var step by remember { mutableStateOf(0) }
     val isCreating = remember { mutableStateOf(false) }
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(TranzoColors.BackgroundLight)
-    ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .padding(24.dp),
-            verticalArrangement = Arrangement.spacedBy(32.dp),
-            horizontalAlignment = Alignment.CenterHorizontally
-        ) {
-            Spacer(modifier = Modifier.height(48.dp))
+    // Auto-start creation
+    LaunchedEffect(Unit) {
+        isCreating.value = true
+    }
 
-            // Large header with animation
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                Box(
-                    modifier = Modifier
-                        .size(80.dp)
-                        .background(
-                            color = TranzoColors.PrimaryBlue.copy(alpha = 0.15f),
-                            shape = CircleShape
-                        ),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Wallet,
-                        contentDescription = null,
-                        tint = TranzoColors.PrimaryBlue,
-                        modifier = Modifier.size(40.dp)
-                    )
-                }
-
-                Text(
-                    "Creating your wallet",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.ExtraBold,
-                    color = TranzoColors.TextPrimary
-                )
-
-                Text(
-                    "Setting up your smart account",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary
-                )
+    // Step progression
+    LaunchedEffect(isCreating.value, step) {
+        if (isCreating.value && step < 3) {
+            delay(1500)
+            step++
+            if (step >= 3) {
+                isCreating.value = false
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Steps progress
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 12.dp),
-                verticalArrangement = Arrangement.spacedBy(16.dp)
-            ) {
-                StepItem(
-                    number = 1,
-                    title = "Initializing",
-                    description = "Setting up your blockchain account",
-                    completed = step > 0,
-                    current = step == 0,
-                    isCreating = isCreating.value && step == 0
-                )
-
-                StepItem(
-                    number = 2,
-                    title = "Securing",
-                    description = "Generating your wallet keys",
-                    completed = step > 1,
-                    current = step == 1,
-                    isCreating = isCreating.value && step == 1
-                )
-
-                StepItem(
-                    number = 3,
-                    title = "Finalizing",
-                    description = "Registering your account",
-                    completed = step > 2,
-                    current = step == 2,
-                    isCreating = isCreating.value && step == 2
-                )
-            }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // Action buttons
-            Column(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 8.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
-            ) {
-                TranzoButton(
-                    text = if (step < 3) "Creating..." else "Continue",
-                    onClick = {
-                        if (step >= 3) {
-                            onComplete()
-                        } else {
-                            if (!isCreating.value) {
-                                isCreating.value = true
-                            }
-                        }
-                    },
-                    enabled = step >= 3,
-                    isLoading = step < 3 && isCreating.value,
-                    modifier = Modifier.fillMaxWidth()
-                )
-
-                if (step < 3) {
-                    TextButton(
-                        onClick = onSkip,
-                        modifier = Modifier.fillMaxWidth()
-                    ) {
-                        Text(
-                            "Skip for now",
-                            color = TranzoColors.TextSecondary,
-                            fontWeight = FontWeight.Medium
-                        )
-                    }
-                }
-            }
-
-            Spacer(modifier = Modifier.height(24.dp))
         }
     }
 
-    // Simulate wallet creation steps
-    LaunchedEffect(isCreating.value) {
-        if (isCreating.value && step < 3) {
-            delay(2000)
-            step++
-            if (step < 3) {
-                // Continue to next step
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .background(Color.White)
+            .systemBarsPadding()
+            .padding(32.dp),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Spacer(modifier = Modifier.height(60.dp))
+
+        // Icon
+        Box(
+            modifier = Modifier
+                .size(72.dp)
+                .clip(CircleShape)
+                .background(Color(0xFF1A1A1A)),
+            contentAlignment = Alignment.Center
+        ) {
+            if (step >= 3) {
+                Icon(
+                    Icons.Filled.Check,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
+                )
             } else {
-                isCreating.value = false
+                Icon(
+                    Icons.Outlined.Wallet,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp)
+                )
+            }
+        }
+
+        Spacer(modifier = Modifier.height(24.dp))
+
+        Text(
+            if (step >= 3) "Wallet ready" else "Creating your wallet",
+            style = MaterialTheme.typography.headlineMedium,
+            fontWeight = FontWeight.Bold,
+            color = Color(0xFF1A1A1A),
+            textAlign = TextAlign.Center
+        )
+        Spacer(modifier = Modifier.height(4.dp))
+        Text(
+            if (step >= 3) "Your ERC-4337 smart account is live"
+            else "Deploying your smart account on-chain",
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF999999),
+            textAlign = TextAlign.Center
+        )
+
+        Spacer(modifier = Modifier.height(48.dp))
+
+        // Steps
+        Column(
+            modifier = Modifier.fillMaxWidth(),
+            verticalArrangement = Arrangement.spacedBy(12.dp)
+        ) {
+            StepRow(
+                number = 1,
+                title = "Initializing account",
+                description = "Setting up your blockchain identity",
+                completed = step > 0,
+                active = step == 0 && isCreating.value
+            )
+            StepRow(
+                number = 2,
+                title = "Generating keys",
+                description = "Creating your secure wallet keys",
+                completed = step > 1,
+                active = step == 1 && isCreating.value
+            )
+            StepRow(
+                number = 3,
+                title = "Registering on-chain",
+                description = "Deploying your smart contract account",
+                completed = step > 2,
+                active = step == 2 && isCreating.value
+            )
+        }
+
+        Spacer(modifier = Modifier.weight(1f))
+
+        // Continue button
+        Button(
+            onClick = onComplete,
+            modifier = Modifier
+                .fillMaxWidth()
+                .height(56.dp),
+            enabled = step >= 3,
+            shape = RoundedCornerShape(14.dp),
+            colors = ButtonDefaults.buttonColors(
+                containerColor = Color(0xFF1A1A1A),
+                contentColor = Color.White,
+                disabledContainerColor = Color(0xFFE0E0E0),
+                disabledContentColor = Color(0xFF999999)
+            ),
+            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+        ) {
+            if (step < 3) {
+                CircularProgressIndicator(
+                    modifier = Modifier.size(20.dp),
+                    color = Color(0xFF999999),
+                    strokeWidth = 2.dp
+                )
+                Spacer(modifier = Modifier.width(12.dp))
+                Text("Creating...", fontWeight = FontWeight.SemiBold)
+            } else {
+                Text("Continue", fontWeight = FontWeight.SemiBold)
+            }
+        }
+
+        Spacer(modifier = Modifier.height(12.dp))
+
+        if (step < 3) {
+            TextButton(onClick = onSkip) {
+                Text(
+                    "Skip for now",
+                    style = MaterialTheme.typography.bodySmall,
+                    color = Color(0xFF999999)
+                )
             }
         }
     }
 }
 
 @Composable
-private fun StepItem(
+private fun StepRow(
     number: Int,
     title: String,
     description: String,
     completed: Boolean,
-    current: Boolean,
-    isCreating: Boolean,
+    active: Boolean,
 ) {
-    val rotation by animateFloatAsState(
-        targetValue = if (isCreating) 360f else 0f,
-        animationSpec = infiniteRepeatable(
-            animation = tween(1500, easing = LinearEasing),
-            repeatMode = RepeatMode.Restart
-        )
-    )
-
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(14.dp),
         color = when {
-            completed -> TranzoColors.Success.copy(alpha = 0.08f)
-            current -> TranzoColors.PrimaryBlue.copy(alpha = 0.08f)
-            else -> TranzoColors.SurfaceLight
-        },
-        border = BorderStroke(
-            width = if (current) 2.dp else 1.dp,
-            color = when {
-                completed -> TranzoColors.Success
-                current -> TranzoColors.PrimaryBlue
-                else -> TranzoColors.TextTertiary.copy(alpha = 0.2f)
-            }
-        )
+            completed -> Color(0xFFF0FFF0)
+            active -> Color(0xFFF5F5F5)
+            else -> Color(0xFFFAFAFA)
+        }
     ) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
                 .padding(16.dp),
             verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.spacedBy(16.dp)
+            horizontalArrangement = Arrangement.spacedBy(14.dp)
         ) {
-            // Step number
+            // Step indicator
             Box(
                 modifier = Modifier
-                    .size(40.dp)
+                    .size(36.dp)
+                    .clip(CircleShape)
                     .background(
-                        color = when {
-                            completed -> TranzoColors.Success
-                            current -> TranzoColors.PrimaryBlue
-                            else -> TranzoColors.TextTertiary.copy(alpha = 0.2f)
-                        },
-                        shape = CircleShape
+                        when {
+                            completed -> Color(0xFF22C55E)
+                            active -> Color(0xFF1A1A1A)
+                            else -> Color(0xFFE0E0E0)
+                        }
                     ),
                 contentAlignment = Alignment.Center
             ) {
-                when {
-                    completed -> {
-                        Icon(
-                            imageVector = Icons.Filled.Check,
-                            contentDescription = "Completed",
-                            tint = Color.White,
-                            modifier = Modifier.size(20.dp)
-                        )
-                    }
-                    isCreating -> {
-                        CircularProgressIndicator(
-                            modifier = Modifier
-                                .size(24.dp)
-                                .graphicsLayer(rotationZ = rotation),
-                            color = TranzoColors.PrimaryBlue,
-                            strokeWidth = 2.dp
-                        )
-                    }
-                    else -> {
-                        Text(
-                            "$number",
-                            style = MaterialTheme.typography.labelMedium,
-                            color = if (current) Color.White else TranzoColors.TextTertiary,
-                            fontWeight = FontWeight.Bold
-                        )
-                    }
+                if (completed) {
+                    Icon(
+                        Icons.Filled.Check,
+                        contentDescription = "Done",
+                        tint = Color.White,
+                        modifier = Modifier.size(18.dp)
+                    )
+                } else if (active) {
+                    CircularProgressIndicator(
+                        modifier = Modifier.size(18.dp),
+                        color = Color.White,
+                        strokeWidth = 2.dp
+                    )
+                } else {
+                    Text(
+                        "$number",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Bold,
+                        color = Color(0xFF999999)
+                    )
                 }
             }
 
-            // Step description
             Column(modifier = Modifier.weight(1f)) {
                 Text(
                     title,
-                    style = MaterialTheme.typography.titleMedium,
+                    style = MaterialTheme.typography.bodyMedium,
                     fontWeight = FontWeight.SemiBold,
-                    color = TranzoColors.TextPrimary
+                    color = if (completed || active) Color(0xFF1A1A1A) else Color(0xFF999999)
                 )
                 Text(
                     description,
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.TextSecondary
+                    style = MaterialTheme.typography.labelSmall,
+                    color = Color(0xFF999999)
                 )
             }
         }

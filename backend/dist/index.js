@@ -12,6 +12,8 @@ import dripperRoutes from "./routes/dripper.routes.js";
 import settingsRoutes from "./routes/settings.routes.js";
 import cardRoutes from "./routes/card.routes.js";
 import swapRoutes from "./routes/swap.routes.js";
+import passkeyRoutes from "./routes/passkey.routes.js";
+import path from "path";
 const app = express();
 app.use(helmet());
 app.use(cors());
@@ -27,6 +29,9 @@ app.use("/dripper", requireAuth, dripperRoutes);
 app.use("/user", requireAuth, settingsRoutes);
 app.use("/card", cardRoutes);
 app.use("/swap", requireAuth, swapRoutes);
+app.use("/auth/passkey", passkeyRoutes);
+// Static uploads
+app.use("/uploads", express.static(path.join(process.cwd(), "uploads")));
 app.use(errorHandler);
 const PORT = process.env.PORT || ENV.PORT;
 app.listen(PORT, () => {

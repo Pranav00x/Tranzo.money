@@ -6,15 +6,12 @@ import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
-import com.tranzo.app.ui.theme.TranzoColors
 
 data class BottomNavItem(
     val label: String,
@@ -44,7 +41,7 @@ fun TranzoBottomBar(navController: NavHostController) {
 
     if (showBottomBar) {
         NavigationBar(
-            containerColor = TranzoColors.SurfaceLight,
+            containerColor = Color.White,
             tonalElevation = 0.dp,
         ) {
             bottomNavItems.forEach { item ->
@@ -75,11 +72,11 @@ fun TranzoBottomBar(navController: NavHostController) {
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = TranzoColors.NavActive,
-                        selectedTextColor = TranzoColors.NavActive,
-                        unselectedIconColor = TranzoColors.NavInactive,
-                        unselectedTextColor = TranzoColors.NavInactive,
-                        indicatorColor = TranzoColors.BackgroundLight,
+                        selectedIconColor = Color(0xFF1A1A1A),
+                        selectedTextColor = Color(0xFF1A1A1A),
+                        unselectedIconColor = Color(0xFFAAAAAA),
+                        unselectedTextColor = Color(0xFFAAAAAA),
+                        indicatorColor = Color(0xFFF0F0F0),
                     ),
                 )
             }

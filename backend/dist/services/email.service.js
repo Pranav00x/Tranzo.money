@@ -5,7 +5,7 @@ import { ENV } from "../config/env.js";
 export class EmailService {
     static RESEND_API_URL = "https://api.resend.com/emails";
     /**
-     * Send OTP via Resend API
+     * Send OTP via Resend API - Minimal design (text only, no logos)
      */
     static async sendOTP(email, otp) {
         try {
@@ -18,31 +18,40 @@ export class EmailService {
                 body: JSON.stringify({
                     from: ENV.EMAIL_FROM,
                     to: email,
-                    subject: `${otp} is your Tranzo verification code`,
+                    subject: `Your Tranzo OTP: ${otp.substring(0, 3)}***`,
                     html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 440px; margin: 0 auto; padding: 32px 24px;">
-              <div style="text-align: center; margin-bottom: 32px;">
-                <div style="background: #1D9E75; border-radius: 16px; width: 56px; height: 56px; display: inline-flex; align-items: center; justify-content: center;">
-                  <span style="color: white; font-size: 24px; font-weight: bold;">T</span>
-                </div>
-              </div>
-              <h2 style="color: #1A1A2E; font-size: 22px; text-align: center; margin-bottom: 8px;">
-                Verify your email
-              </h2>
-              <p style="color: #6B7280; font-size: 15px; text-align: center; margin-bottom: 32px;">
-                Enter this code in the Tranzo app to continue
-              </p>
-              <div style="background: #F5F7FA; border-radius: 16px; padding: 24px; text-align: center; margin-bottom: 32px;">
-                <span style="font-size: 36px; font-weight: 700; letter-spacing: 8px; color: #1D9E75;">
-                  ${otp}
-                </span>
-              </div>
-              <p style="color: #9CA3AF; font-size: 13px; text-align: center;">
-                This code expires in 10 minutes.<br/>
-                If you didn't request this, you can safely ignore this email.
-              </p>
-            </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+        .container { background: white; padding: 40px; border-radius: 8px; }
+        .logo { font-size: 20px; font-weight: bold; margin-bottom: 30px; }
+        .otp-box { background: #f5f5f5; padding: 30px; text-align: center; border-radius: 6px; margin: 30px 0; }
+        .otp-code { font-size: 32px; font-weight: bold; letter-spacing: 2px; font-family: monospace; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; text-align: center; }
+        a { color: #4A9DFF; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Tranzo</div>
+        <p>Your One-Time Password (OTP) for Tranzo:</p>
+        <div class="otp-box">
+            <div class="otp-code">${otp}</div>
+            <p style="font-size: 12px; color: #999; margin: 15px 0 0 0;">Expires in 10 minutes</p>
+        </div>
+        <p style="color: #666;">If you didn't request this, ignore this email.</p>
+        <div class="footer">
+            <p>Questions? Email <a href="mailto:hi@tranzo.money">hi@tranzo.money</a></p>
+            <p><a href="https://tranzo.app">Visit tranzo.app</a></p>
+            <p>© 2024 Tranzo. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
           `,
+                    text: `Tranzo OTP\n\nYour One-Time Password (OTP) for Tranzo is:\n\n${otp}\n\nThis code expires in 10 minutes.\n\nIf you didn't request this, please ignore this email.\n\n---\n\nQuestions? Email hi@tranzo.money\nVisit: tranzo.app\n\n© 2024 Tranzo. All rights reserved.`,
                 }),
             });
             if (!response.ok) {
@@ -57,7 +66,7 @@ export class EmailService {
         }
     }
     /**
-     * Send welcome email via Resend API
+     * Send welcome email via Resend API - Minimal design
      */
     static async sendWelcome(email, name) {
         try {
@@ -70,29 +79,42 @@ export class EmailService {
                 body: JSON.stringify({
                     from: ENV.EMAIL_FROM,
                     to: email,
-                    subject: "Welcome to Tranzo 🎉",
+                    subject: `Welcome to Tranzo${name ? `, ${name}` : ""}! 🎉`,
                     html: `
-            <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 440px; margin: 0 auto; padding: 32px 24px;">
-              <h2 style="color: #1A1A2E; font-size: 22px;">
-                Welcome${name ? `, ${name}` : ""}! 👋
-              </h2>
-              <p style="color: #6B7280; font-size: 15px; line-height: 1.6;">
-                Your self-custody wallet is ready. You now have a smart account on Base
-                that you fully control — no custodians, no compromises.
-              </p>
-              <div style="background: #F5F7FA; border-radius: 16px; padding: 20px; margin: 24px 0;">
-                <p style="color: #1A1A2E; font-size: 14px; margin: 0;"><strong>Next steps:</strong></p>
-                <ul style="color: #6B7280; font-size: 14px; margin: 8px 0 0; padding-left: 20px;">
-                  <li>Fund your wallet with USDC</li>
-                  <li>Set up biometric security</li>
-                  <li>Explore Dripper salary streaming</li>
-                </ul>
-              </div>
-              <p style="color: #9CA3AF; font-size: 13px;">
-                Questions? Reach us at <a href="mailto:pranav@tranzo.money" style="color: #1D9E75;">pranav@tranzo.money</a>
-              </p>
-            </div>
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        body { font-family: system-ui, -apple-system, sans-serif; color: #333; max-width: 600px; margin: 0 auto; padding: 40px 20px; }
+        .container { background: white; padding: 40px; border-radius: 8px; }
+        .logo { font-size: 20px; font-weight: bold; margin-bottom: 30px; }
+        .footer { margin-top: 40px; padding-top: 20px; border-top: 1px solid #eee; font-size: 12px; color: #666; text-align: center; }
+        a { color: #4A9DFF; text-decoration: none; }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">Tranzo</div>
+        <p>Welcome${name ? ` ${name}` : ""}! 👋</p>
+        <p>Your Tranzo account has been created successfully!</p>
+        <p style="margin-top: 20px;">You now have access to:</p>
+        <ul style="color: #666;">
+            <li>Secure crypto wallet with smart account abstraction</li>
+            <li>Tranzo debit card for spending crypto</li>
+            <li>Fast and low-cost transactions</li>
+            <li>Complete financial control</li>
+        </ul>
+        <p style="margin-top: 20px;">Get started by setting up your wallet and exploring Tranzo.</p>
+        <div class="footer">
+            <p><a href="https://tranzo.app">Visit Tranzo.app</a></p>
+            <p>Questions? Email <a href="mailto:hi@tranzo.money">hi@tranzo.money</a></p>
+            <p>© 2024 Tranzo. All rights reserved.</p>
+        </div>
+    </div>
+</body>
+</html>
           `,
+                    text: `Welcome${name ? ` ${name}` : ""}!\n\nYour Tranzo account has been created successfully!\n\nYou now have access to:\n- Secure crypto wallet with smart account abstraction\n- Tranzo debit card for spending crypto\n- Fast and low-cost transactions\n- Complete financial control\n\nGet started by setting up your wallet and exploring Tranzo.\n\n---\n\nVisit: tranzo.app\nQuestions? Email hi@tranzo.money\n\n© 2024 Tranzo. All rights reserved.`,
                 }),
             });
             if (!response.ok) {

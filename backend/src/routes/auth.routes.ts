@@ -56,6 +56,24 @@ router.post("/google", async (req: Request, res: Response) => {
   }
 });
 
+// ─── Twitter Auth ──────────────────────────────────────────────
+
+const twitterSchema = z.object({
+  twitterId: z.string(),
+  email: z.string().email().optional(),
+  name: z.string().optional(),
+});
+
+router.post("/twitter", async (req: Request, res: Response) => {
+  try {
+    const { twitterId, email, name } = twitterSchema.parse(req.body);
+    const result = await AuthService.loginWithTwitter(twitterId, email, name);
+    res.json(result);
+  } catch (err: any) {
+    res.status(400).json({ error: err.message });
+  }
+});
+
 // ─── Refresh Token ─────────────────────────────────────────────
 
 const refreshSchema = z.object({

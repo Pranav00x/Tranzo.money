@@ -123,7 +123,7 @@ fun SwapScreenPro(
                         Text("Exchange rate", style = MaterialTheme.typography.bodySmall, color = TranzoColors.TextSecondary)
                         Text("1 USDC = 0.000058 ETH", style = MaterialTheme.typography.bodySmall, color = TranzoColors.TextPrimary, fontWeight = FontWeight.SemiBold)
                     }
-                    Divider(thickness = 1.dp, color = TranzoColors.TextTertiary.copy(alpha = 0.2f))
+                    HorizontalDivider(thickness = 1.dp, color = TranzoColors.TextTertiary.copy(alpha = 0.2f))
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween

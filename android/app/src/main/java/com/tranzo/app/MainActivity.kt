@@ -23,6 +23,7 @@ import com.tranzo.app.ui.dripper.DripperDashboardScreen
 import com.tranzo.app.ui.dripper.StreamDetailScreen
 import com.tranzo.app.ui.history.TransactionHistoryScreen
 import com.tranzo.app.ui.home.HomeScreenProMax
+import com.tranzo.app.ui.security.BiometricSetupScreen
 import com.tranzo.app.ui.security.PinMode
 import com.tranzo.app.ui.security.PinScreen
 import com.tranzo.app.ui.navigation.Screen
@@ -37,7 +38,9 @@ import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreen
 import com.tranzo.app.ui.swap.SwapScreenPro
 import com.tranzo.app.ui.theme.TranzoTheme
+import com.tranzo.app.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
+import androidx.hilt.navigation.compose.hiltViewModel
 
 import androidx.fragment.app.FragmentActivity
 import com.tranzo.app.util.BiometricHelper
@@ -48,6 +51,7 @@ import javax.inject.Inject
 class MainActivity : FragmentActivity() {
     @Inject lateinit var biometricHelper: BiometricHelper
     @Inject lateinit var themeManager: ThemeManager
+    @Inject lateinit var sessionManager: com.tranzo.app.util.SessionManager
 
     override fun onCreate(savedInstanceState: Bundle?) {
         installSplashScreen()
@@ -71,6 +75,7 @@ class MainActivity : FragmentActivity() {
                         // ── Auth Flow (Non-Custodial) ───────────────
                         composable(Screen.Splash.route) {
                             SplashScreen(
+                                isLoggedIn = sessionManager.isLoggedIn(),
                                 onNavigateToOnboarding = {
                                     navController.navigate(Screen.Onboarding.route) {
                                         popUpTo(Screen.Splash.route) { inclusive = true }
@@ -141,7 +146,7 @@ class MainActivity : FragmentActivity() {
 
                         composable(Screen.ProfileSetup.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
-                            val authViewModel = androidx.hilt.navigation.compose.hiltViewModel<com.tranzo.app.ui.auth.AuthViewModel>()
+                            val authViewModel = hiltViewModel<AuthViewModel>()
                             val authState by authViewModel.state.collectAsState()
 
                             // Navigate when profile save completes
@@ -196,11 +201,36 @@ class MainActivity : FragmentActivity() {
                             PinScreen(
                                 mode = PinMode.SETUP,
                                 onSuccess = { _ ->
-                                    navController.navigate(Screen.Home.route) {
-                                        popUpTo(0) { inclusive = true }
+                                    navController.navigate(Screen.BiometricSetup.route) {
+                                        popUpTo(Screen.PinSetup.route) { inclusive = true }
                                     }
                                 },
                                 onBack = { navController.popBackStack() }
+                            )
+                        }
+
+                        composable(Screen.BiometricSetup.route) {
+                            BiometricSetupScreen(
+                                onEnable = {
+                                    biometricHelper.showPrompt(
+                                        activity = this@MainActivity,
+                                        onSuccess = {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(0) { inclusive = true }
+                                            }
+                                        },
+                                        onError = {
+                                            navController.navigate(Screen.Home.route) {
+                                                popUpTo(0) { inclusive = true }
+                                            }
+                                        }
+                                    )
+                                },
+                                onSkip = {
+                                    navController.navigate(Screen.Home.route) {
+                                        popUpTo(0) { inclusive = true }
+                                    }
+                                }
                             )
                         }
 
@@ -323,7 +353,6 @@ class MainActivity : FragmentActivity() {
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
                             SettingsScreenProMax(
-                                themeManager = themeManager,
                                 onLogout = {
                                     navController.navigate(Screen.Welcome.route) {
                                         popUpTo(0) { inclusive = true }
@@ -358,10 +387,6 @@ class MainActivity : FragmentActivity() {
                             CardScreenPro(
                                 onBack = { navController.popBackStack() },
                                 onOrderCard = { navController.navigate(Screen.OrderCard.route) },
-                                onCardDetails = { cardId ->
-                                    navController.navigate(Screen.CardDetails.createRoute(cardId))
-                                },
-                                onManageLimits = { /* Future */ }
                             )
                         }
 

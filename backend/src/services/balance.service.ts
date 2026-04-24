@@ -70,7 +70,7 @@ export class BalanceService {
           if (token.address === "native") {
             balance = await client.getBalance({ address: addr });
           } else {
-            balance = (await client.readContract({
+            balance = (await (client as any).readContract({
               address: token.address as `0x${string}`,
               abi: erc20Abi,
               functionName: "balanceOf",

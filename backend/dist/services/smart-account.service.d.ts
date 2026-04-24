@@ -11,10 +11,7 @@ export declare class SmartAccountService {
      */
     static getOrCreateSmartAccount(userId: string, email: string): Promise<string>;
     /**
-     * Send a gasless transaction via ZeroDev
+     * Send a gasless transaction via ZeroDev (Unified Signature)
      */
-    static sendGaslessTransaction(userId: string, tx: any): Promise<{
-        hash: string;
-        status: string;
-    }>;
+    static sendGaslessTransaction(signerPrivateKey: `0x${string}`, to: `0x${string}`, value: bigint, data: `0x${string}`, chainId?: number): Promise<any>;
 }

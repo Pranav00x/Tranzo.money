@@ -10,21 +10,25 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 import com.tranzo.app.data.model.*
 
+/**
+ * Card representation for the UI — maps from the raw CardResponse.
+ */
 data class CardInfo(
     val id: String = "",
-    val last4: String = "4291",
+    val maskedPan: String = "**** **** **** ----",
+    val cardholderName: String = "",
+    val expiry: String = "--/--",
     val type: String = "virtual",         // virtual | physical
-    val status: String = "active",        // active | frozen | pending
-    val network: String = "visa",
-    val dailyLimit: Double = 1000.0,
-    val monthlyLimit: Double = 10000.0,
-    val dailySpent: Double = 0.0,
-    val monthlySpent: Double = 0.0,
-    val expiryMonth: Int = 12,
-    val expiryYear: Int = 2028,
+    val status: String = "pending",       // active | frozen | pending
+    val network: String = "Visa",
+    val spendLimitCents: Long? = null,
+    val hasSessionKey: Boolean = false,
 )
 
-data class CardTransaction(
+/**
+ * Card transaction for UI display.
+ */
+data class CardTransactionUi(
     val id: String,
     val merchant: String,
     val category: String,
@@ -38,10 +42,11 @@ data class CardUiState(
     val isLoading: Boolean = false,
     val hasCard: Boolean = false,
     val card: CardInfo? = null,
-    val transactions: List<CardTransaction> = emptyList(),
+    val transactions: List<CardTransactionUi> = emptyList(),
     val isOrdering: Boolean = false,
     val orderSuccess: Boolean = false,
     val user: UserResponse? = null,
+    val is1ClickActive: Boolean = false,
     val error: String? = null,
 )
 
@@ -81,22 +86,24 @@ class CardViewModel @Inject constructor(
                     isLoading = false,
                     hasCard = true,
                     card = CardInfo(
-                        id = response.id,
-                        last4 = response.maskedPan.takeLast(4),
-                        type = response.type,
-                        status = response.status,
-                        network = response.network,
-                        // Mapping optional limits
-                        dailyLimit = (response.spendLimitCents?.toDouble() ?: 0.0) / 100.0,
-                        expiryMonth = response.expiry.split("/").firstOrNull()?.toIntOrNull() ?: 12,
-                        expiryYear = 2000 + (response.expiry.split("/").lastOrNull()?.toIntOrNull() ?: 28),
+                        id = response.id ?: "",
+                        maskedPan = response.maskedPan ?: "**** **** **** ----",
+                        cardholderName = response.cardholderName ?: "",
+                        expiry = response.expiry ?: "--/--",
+                        type = response.type ?: "virtual",
+                        status = response.status ?: "pending",
+                        network = response.network ?: "Visa",
+                        spendLimitCents = response.spendLimitCents,
+                        hasSessionKey = response.sessionKeyPK != null,
                     ),
+                    is1ClickActive = response.sessionKeyPK != null,
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(
                     isLoading = false,
-                    hasCard = false, // If API fails (e.g. 404 No Card), set hasCard to false
-                    error = if (e.message?.contains("404") == true) null else e.message,
+                    hasCard = false,
+                    card = null,
+                    error = if (e.message?.contains("404") == true || e.message?.contains("null") == true) null else e.message,
                 )
             }
         }
@@ -108,7 +115,7 @@ class CardViewModel @Inject constructor(
                 val response = api.getCardTransactions(limit = 10)
                 _state.value = _state.value.copy(
                     transactions = response.transactions.map {
-                        CardTransaction(
+                        CardTransactionUi(
                             id = it.id,
                             merchant = it.merchantName,
                             category = it.merchantCategory ?: "General",
@@ -123,6 +130,11 @@ class CardViewModel @Inject constructor(
                 // Silently handle history fetch errors or log them
             }
         }
+    }
+
+    fun toggleFreeze() {
+        val card = _state.value.card ?: return
+        if (card.status == "frozen") unfreezeCard() else freezeCard()
     }
 
     fun orderCard(type: String, cardholderName: String) {
@@ -144,8 +156,7 @@ class CardViewModel @Inject constructor(
         }
     }
 
-    fun freezeCard() {
-        val cardId = _state.value.card?.id ?: return
+    private fun freezeCard() {
         viewModelScope.launch {
             try {
                 api.setCardFrozen(CardFreezeRequest(frozen = true))
@@ -158,8 +169,7 @@ class CardViewModel @Inject constructor(
         }
     }
 
-    fun unfreezeCard() {
-        val cardId = _state.value.card?.id ?: return
+    private fun unfreezeCard() {
         viewModelScope.launch {
             try {
                 api.setCardFrozen(CardFreezeRequest(frozen = false))
@@ -168,6 +178,28 @@ class CardViewModel @Inject constructor(
                 )
             } catch (e: Exception) {
                 _state.value = _state.value.copy(error = e.message)
+            }
+        }
+    }
+
+    fun activate1Click() {
+        val card = _state.value.card ?: return
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                // CTO Logic: Call the activation endpoint
+                // We'll use a default limit of 0.1 ETH per swipe for the demo
+                api.activateCard(card.id, mapOf("spendLimitEth" to "0.1"))
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    is1ClickActive = true,
+                    card = _state.value.card?.copy(hasSessionKey = true)
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = "Activation failed: ${e.message}"
+                )
             }
         }
     }

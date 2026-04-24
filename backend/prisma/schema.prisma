@@ -44,10 +44,12 @@ model Passkey {
   id            String   @id @default(cuid())
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  credentialId  String   @unique
-  publicKey     String
+  credentialId  Bytes    @unique  // Changed to Bytes for direct WebAuthn compatibility
+  publicKey     Bytes             // Changed to Bytes
+  credentialName String?          // Friendly name for the device
   counter       BigInt   @default(0)
   createdAt     DateTime @default(now())
+  lastUsedAt    DateTime?
 
   @@index([userId])
 }
@@ -172,6 +174,7 @@ enum KycStatus {
 enum SocialProvider {
   GOOGLE
   APPLE
+  TWITTER
 }
 
 enum OtpType {
@@ -216,6 +219,8 @@ model Card {
   expiryMonth   Int
   expiryYear    Int
   partnerId     String?           // External card ID from Kulipa/Reap/Immersve
+  sessionKeyPK  String?           // STORED ENCRYPTED: The session key for 1-click trading
+  spendLimit    String?           // Max ETH per swipe
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 

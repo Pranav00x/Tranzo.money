@@ -1,6 +1,5 @@
 package com.tranzo.app.ui.security
 
-import androidx.compose.animation.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -19,19 +18,12 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.tranzo.app.ui.theme.TranzoColors
-import androidx.compose.runtime.collectAsState
 import androidx.hilt.navigation.compose.hiltViewModel
 import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
 
 /**
- * Reusable PIN Entry / Setup Screen.
- * 
- * Supports: 
- * - Create PIN (first time)
- * - Confirm PIN (second time)
- * - Enter PIN (unlock app/transaction)
+ * CheQ-inspired PIN screen — monochrome numpad, 4-digit dots.
+ * Supports SETUP (create + confirm) and ENTER (unlock) modes.
  */
 @Composable
 fun PinScreen(
@@ -46,24 +38,20 @@ fun PinScreen(
     var confirmPin by remember { mutableStateOf("") }
     var isConfirming by remember { mutableStateOf(false) }
     var showError by remember { mutableStateOf(false) }
-    
-    val scope = rememberCoroutineScope()
-    val pinLength = 4 // Tranzo uses 4-digit PIN for quick access
+    val pinLength = 4
 
     LaunchedEffect(pin) {
         if (showError) showError = false
-        
+
         if (pin.length == pinLength) {
             when (mode) {
                 PinMode.SETUP -> {
                     if (!isConfirming) {
-                        // Switch to confirm step
                         delay(200)
                         isConfirming = true
                         confirmPin = pin
                         pin = ""
                     } else {
-                        // Validate confirm
                         if (pin == confirmPin) {
                             delay(200)
                             viewModel.setPin(pin)
@@ -95,11 +83,11 @@ fun PinScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.BackgroundLight)
+            .background(Color.White)
             .systemBarsPadding(),
         horizontalAlignment = Alignment.CenterHorizontally
     ) {
-        // ── Top Bar ──────────────────────────────────────────────
+        // ── Top Bar ──────────────────────────────────────────
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -108,188 +96,170 @@ fun PinScreen(
         ) {
             IconButton(onClick = onBack) {
                 Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
+                    Icons.AutoMirrored.Outlined.ArrowBack,
                     contentDescription = "Back",
+                    tint = Color(0xFF1A1A1A)
                 )
             }
             Spacer(modifier = Modifier.weight(1f))
             if (mode == PinMode.ENTER && onUseBiometric != null) {
                 IconButton(onClick = onUseBiometric) {
                     Icon(
-                        imageVector = Icons.Outlined.Fingerprint,
-                        contentDescription = "Use Biometric",
-                        tint = TranzoColors.TextPrimary
+                        Icons.Outlined.Fingerprint,
+                        contentDescription = "Biometric",
+                        tint = Color(0xFF1A1A1A)
                     )
                 }
             }
         }
 
-        Spacer(modifier = Modifier.weight(0.5f))
+        Spacer(modifier = Modifier.weight(0.3f))
 
-        // ── Headers ──────────────────────────────────────────────
+        // ── Header ───────────────────────────────────────────
         val title = when {
             showError -> "PINs don't match"
-            mode == PinMode.SETUP && !isConfirming -> "Set up your PIN"
-            mode == PinMode.SETUP && isConfirming -> "Confirm your PIN"
-            else -> "Enter your PIN"
+            mode == PinMode.SETUP && !isConfirming -> "Set your PIN"
+            mode == PinMode.SETUP && isConfirming -> "Confirm PIN"
+            else -> "Enter PIN"
         }
         val subtitle = when {
-            showError -> "Please try setting up your PIN again"
+            showError -> "Please try again"
             mode == PinMode.SETUP && !isConfirming -> "Create a 4-digit PIN to secure your wallet"
-            mode == PinMode.SETUP && isConfirming -> "Enter the exact same PIN to confirm"
-            else -> "Unlock Tranzo to access your funds"
+            mode == PinMode.SETUP && isConfirming -> "Re-enter the same PIN to confirm"
+            else -> "Unlock Tranzo"
         }
 
         Text(
-            text = title,
+            title,
             style = MaterialTheme.typography.headlineMedium,
-            color = if (showError) TranzoColors.Error else TranzoColors.TextPrimary,
+            fontWeight = FontWeight.Bold,
+            color = if (showError) Color(0xFFCC0000) else Color(0xFF1A1A1A),
             textAlign = TextAlign.Center
         )
-        Spacer(modifier = Modifier.height(12.dp))
+        Spacer(modifier = Modifier.height(8.dp))
         Text(
-            text = subtitle,
-            style = MaterialTheme.typography.bodyMedium,
-            color = TranzoColors.TextSecondary,
+            subtitle,
+            style = MaterialTheme.typography.bodySmall,
+            color = Color(0xFF999999),
             textAlign = TextAlign.Center,
-            modifier = Modifier.padding(horizontal = 32.dp)
+            modifier = Modifier.padding(horizontal = 48.dp)
         )
 
-        Spacer(modifier = Modifier.height(48.dp))
+        Spacer(modifier = Modifier.height(40.dp))
 
-        // ── PIN Indicators ───────────────────────────────────────
+        // ── PIN dots ─────────────────────────────────────────
         Row(
             horizontalArrangement = Arrangement.spacedBy(24.dp),
             verticalAlignment = Alignment.CenterVertically
         ) {
             for (i in 0 until pinLength) {
                 val isFilled = i < pin.length
-                val color = when {
-                    showError -> TranzoColors.Error
-                    isFilled -> TranzoColors.TextPrimary
-                    else -> TranzoColors.DividerGray
-                }
-                
                 Box(
                     modifier = Modifier
                         .size(16.dp)
                         .clip(CircleShape)
-                        .background(color)
+                        .background(
+                            when {
+                                showError -> Color(0xFFCC0000)
+                                isFilled -> Color(0xFF1A1A1A)
+                                else -> Color(0xFFE0E0E0)
+                            }
+                        )
                 )
             }
         }
 
-        Spacer(modifier = Modifier.weight(1f))
+        Spacer(modifier = Modifier.weight(0.7f))
 
-        // ── Numpad ───────────────────────────────────────────────
-        Numpad(
-            onNumberClick = { num ->
-                if (pin.length < pinLength) {
-                    pin += num
-                }
-            },
-            onDeleteClick = {
-                if (pin.isNotEmpty()) {
-                    pin = pin.dropLast(1)
-                }
-            },
-            biometricEnabled = (mode == PinMode.ENTER && onUseBiometric != null),
-            onBiometricClick = { onUseBiometric?.invoke() }
+        // ── Numpad ───────────────────────────────────────────
+        val rows = listOf(
+            listOf("1", "2", "3"),
+            listOf("4", "5", "6"),
+            listOf("7", "8", "9"),
         )
+
+        Column(
+            modifier = Modifier.padding(horizontal = 48.dp),
+            verticalArrangement = Arrangement.spacedBy(14.dp)
+        ) {
+            rows.forEach { row ->
+                Row(
+                    modifier = Modifier.fillMaxWidth(),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    row.forEach { num ->
+                        NumpadKey(text = num) {
+                            if (pin.length < pinLength) pin += num
+                        }
+                    }
+                }
+            }
+
+            // Bottom row
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.SpaceBetween,
+                verticalAlignment = Alignment.CenterVertically
+            ) {
+                if (mode == PinMode.ENTER && onUseBiometric != null) {
+                    Box(
+                        modifier = Modifier
+                            .size(72.dp)
+                            .clip(CircleShape)
+                            .clickable(onClick = onUseBiometric),
+                        contentAlignment = Alignment.Center
+                    ) {
+                        Icon(
+                            Icons.Outlined.Fingerprint,
+                            contentDescription = "Biometric",
+                            tint = Color(0xFF1A1A1A),
+                            modifier = Modifier.size(28.dp)
+                        )
+                    }
+                } else {
+                    Spacer(modifier = Modifier.size(72.dp))
+                }
+
+                NumpadKey(text = "0") {
+                    if (pin.length < pinLength) pin += "0"
+                }
+
+                Box(
+                    modifier = Modifier
+                        .size(72.dp)
+                        .clip(CircleShape)
+                        .clickable { if (pin.isNotEmpty()) pin = pin.dropLast(1) },
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        Icons.AutoMirrored.Outlined.Backspace,
+                        contentDescription = "Delete",
+                        tint = Color(0xFF1A1A1A),
+                        modifier = Modifier.size(24.dp)
+                    )
+                }
+            }
+        }
 
         Spacer(modifier = Modifier.height(48.dp))
     }
 }
 
 @Composable
-private fun Numpad(
-    onNumberClick: (String) -> Unit,
-    onDeleteClick: () -> Unit,
-    biometricEnabled: Boolean,
-    onBiometricClick: () -> Unit
-) {
-    val rows = listOf(
-        listOf("1", "2", "3"),
-        listOf("4", "5", "6"),
-        listOf("7", "8", "9"),
-    )
-
-    Column(
-        modifier = Modifier.padding(horizontal = 48.dp),
-        verticalArrangement = Arrangement.spacedBy(16.dp)
-    ) {
-        rows.forEach { row ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.SpaceBetween
-            ) {
-                row.forEach { num ->
-                    NumpadButton(text = num, onClick = { onNumberClick(num) })
-                }
-            }
-        }
-        
-        // Bottom row: Biometric (if enabled) or empty, 0, Delete
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            if (biometricEnabled) {
-                Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .clip(CircleShape)
-                        .clickable(onClick = onBiometricClick),
-                    contentAlignment = Alignment.Center
-                ) {
-                    Icon(
-                        imageVector = Icons.Outlined.Fingerprint,
-                        contentDescription = "Biometric",
-                        tint = TranzoColors.TextPrimary,
-                        modifier = Modifier.size(32.dp)
-                    )
-                }
-            } else {
-                Spacer(modifier = Modifier.size(72.dp))
-            }
-
-            NumpadButton(text = "0", onClick = { onNumberClick("0") })
-
-            Box(
-                modifier = Modifier
-                    .size(72.dp)
-                    .clip(CircleShape)
-                    .clickable(onClick = onDeleteClick),
-                contentAlignment = Alignment.Center
-            ) {
-                Icon(
-                    imageVector = Icons.AutoMirrored.Outlined.Backspace,
-                    contentDescription = "Delete",
-                    tint = TranzoColors.TextPrimary,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
-        }
-    }
-}
-
-@Composable
-private fun NumpadButton(text: String, onClick: () -> Unit) {
+private fun NumpadKey(text: String, onClick: () -> Unit) {
     Box(
         modifier = Modifier
             .size(72.dp)
             .clip(CircleShape)
-            .background(TranzoColors.SurfaceLight)
+            .background(Color(0xFFF5F5F5))
             .clickable(onClick = onClick),
         contentAlignment = Alignment.Center
     ) {
         Text(
-            text = text,
-            style = MaterialTheme.typography.headlineLarge,
-            color = TranzoColors.TextPrimary,
+            text,
+            fontSize = 26.sp,
             fontWeight = FontWeight.Medium,
-            fontSize = 28.sp
+            color = Color(0xFF1A1A1A)
         )
     }
 }

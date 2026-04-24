@@ -49,7 +49,7 @@ router.get("/", requireAuth, async (req: Request, res: Response) => {
 
 router.get("/:id", requireAuth, async (req: Request, res: Response) => {
   try {
-    const stream = await StreamService.getStream(req.params.id);
+    const stream = await StreamService.getStream(req.params.id as string);
     res.json(stream);
   } catch (err: any) {
     res.status(404).json({ error: err.message });
@@ -61,7 +61,7 @@ router.get("/:id", requireAuth, async (req: Request, res: Response) => {
 router.post("/:id/withdraw", requireAuth, async (req: Request, res: Response) => {
   try {
     const result = await StreamService.withdrawFromStream(
-      req.params.id,
+      req.params.id as string,
       req.user!.sub
     );
     res.json(result);
@@ -75,7 +75,7 @@ router.post("/:id/withdraw", requireAuth, async (req: Request, res: Response) =>
 router.post("/:id/cancel", requireAuth, async (req: Request, res: Response) => {
   try {
     const result = await StreamService.cancelStream(
-      req.params.id,
+      req.params.id as string,
       req.user!.sub
     );
     res.json(result);

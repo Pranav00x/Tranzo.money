@@ -84,14 +84,14 @@ export class OpenfortService {
      * Check the status of a transaction intent.
      */
     static async getTransactionStatus(intentId) {
-        return await openfort.transactionIntents.get({ id: intentId });
+        return await openfort.transactionIntents.get(intentId);
     }
     /**
      * List recent transaction intents for a player.
      */
     static async getTransactionHistory(playerId, limit = 20) {
         return await openfort.transactionIntents.list({
-            player: playerId,
+            player: [playerId],
             limit,
         });
     }

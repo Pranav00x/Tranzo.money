@@ -129,7 +129,12 @@ export class AuthService {
 
     const refreshToken = await this.createRefreshToken(user.id);
 
-    return { accessToken, refreshToken, isNewUser };
+    return { 
+      accessToken, 
+      refreshToken, 
+      isNewUser,
+      user: this.mapUserResponse(user)
+    };
   }
 
   // ─── Google OAuth ────────────────────────────────────────────
@@ -139,7 +144,7 @@ export class AuthService {
    */
   static async loginWithGoogle(
     idToken: string
-  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean }> {
+  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean; user: any }> {
     if (!ENV.GOOGLE_CLIENT_ID) {
       throw new Error("Google OAuth not configured");
     }
@@ -211,7 +216,82 @@ export class AuthService {
 
     const refreshToken = await this.createRefreshToken(user.id);
 
-    return { accessToken, refreshToken, isNewUser };
+    return { 
+      accessToken, 
+      refreshToken, 
+      isNewUser,
+      user: this.mapUserResponse(user)
+    };
+  }
+
+  // ─── Twitter (X) Auth ──────────────────────────────────────────
+
+  /**
+   * Login with Twitter OAuth2.
+   */
+  static async loginWithTwitter(
+    twitterId: string,
+    email?: string,
+    name?: string
+  ) {
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(email ? [{ email }] : []),
+          { socialAccounts: { some: { provider: "TWITTER", providerId: twitterId } } },
+        ],
+      },
+      include: { socialAccounts: true },
+    });
+
+    let isNewUser = false;
+
+    if (!user) {
+      if (!email) throw new Error("Email required for new Twitter account");
+      
+      const privateKey = generatePrivateKey();
+      const { address: smartAccountAddress } = await SmartAccountService.createAccount(privateKey);
+
+      user = await prisma.user.create({
+        data: {
+          email,
+          displayName: name,
+          smartAccount: smartAccountAddress,
+          signerPrivateKey: privateKey,
+          socialAccounts: {
+            create: { provider: "TWITTER", providerId: twitterId },
+          },
+        },
+        include: { socialAccounts: true },
+      });
+      isNewUser = true;
+    }
+
+    const accessToken = this.signAccessToken({
+      sub: user.id,
+      smartAccount: user.smartAccount,
+      chainId: ENV.DEFAULT_CHAIN_ID,
+    });
+
+    const refreshToken = await this.createRefreshToken(user.id);
+
+    return { 
+      accessToken, 
+      refreshToken, 
+      isNewUser,
+      user: this.mapUserResponse(user)
+    };
+  }
+
+  private static mapUserResponse(user: any) {
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+      smartAccount: user.smartAccount,
+      kycStatus: user.kycStatus,
+    };
   }
 
   // ─── JWT ─────────────────────────────────────────────────────

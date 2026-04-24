@@ -13,9 +13,16 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.launch
 import javax.inject.Inject
+import androidx.credentials.CredentialManager
+import androidx.credentials.CreatePublicKeyCredentialRequest
+import androidx.credentials.CreatePublicKeyCredentialResponse
+import androidx.credentials.GetCredentialRequest
+import androidx.credentials.GetPublicKeyCredentialOption
+import androidx.credentials.PublicKeyCredential
+import com.google.gson.Gson
 
 enum class AuthMethod {
-    EMAIL_OTP, GOOGLE, BIOMETRIC, PASSKEY
+    EMAIL_OTP, GOOGLE, BIOMETRIC, PASSKEY, TWITTER
 }
 
 data class AuthUiState(
@@ -131,6 +138,44 @@ class AuthViewModel @Inject constructor(
         }
     }
 
+    fun loginWithTwitter(twitterId: String, email: String?, name: String?) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                val request = com.tranzo.app.data.model.TwitterLoginRequest(twitterId, email, name)
+                val response = api.loginWithTwitter(request)
+
+                // Save tokens
+                saveTokens(response.accessToken, response.refreshToken)
+
+                // Fetch current user data
+                val userResponse = api.getMe()
+                sessionManager.saveUserData(
+                    userId = userResponse.id,
+                    email = userResponse.email ?: email ?: "",
+                    firstName = userResponse.firstName,
+                    lastName = userResponse.lastName,
+                    phone = userResponse.phone,
+                    avatarUrl = userResponse.avatarUrl,
+                    walletAddress = userResponse.smartAccount,
+                )
+
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    isAuthenticated = true,
+                    isNewUser = response.isNewUser,
+                    authMethod = AuthMethod.TWITTER,
+                    lastEmail = userResponse.email ?: email ?: "",
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Twitter login failed",
+                )
+            }
+        }
+    }
+
     fun biometricLogin(email: String) {
         viewModelScope.launch {
             _state.value = _state.value.copy(isLoading = true, error = null)
@@ -156,6 +201,91 @@ class AuthViewModel @Inject constructor(
                 _state.value = _state.value.copy(
                     isLoading = false,
                     error = e.message ?: "Biometric login failed",
+                )
+            }
+        }
+    }
+
+    fun registerPasskey(context: android.content.Context) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                // 1. Get options from backend
+                val optionsJson = api.getPasskeyRegisterOptions()
+                
+                // 2. Use Credential Manager to create passkey
+                val credentialManager = CredentialManager.create(context)
+                val request = CreatePublicKeyCredentialRequest(
+                    requestJson = Gson().toJson(optionsJson)
+                )
+                
+                val result = credentialManager.createCredential(
+                    context = context,
+                    request = request
+                )
+                
+                // 3. Verify with backend
+                val responseJson = result.data.getString("androidx.credentials.BUNDLE_KEY_REGISTRATION_RESPONSE_JSON")
+                val verifyMap = Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
+                api.verifyPasskeyRegister(verifyMap)
+                
+                _state.value = _state.value.copy(isLoading = false, authMethod = AuthMethod.PASSKEY)
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Passkey registration failed"
+                )
+            }
+        }
+    }
+
+    fun loginWithPasskey(context: android.content.Context, email: String) {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(isLoading = true, error = null)
+            try {
+                // 1. Get options from backend
+                val optionsJson = api.getPasskeyLoginOptions(mapOf("email" to email))
+                
+                // 2. Use Credential Manager to get passkey
+                val credentialManager = CredentialManager.create(context)
+                val getOption = GetPublicKeyCredentialOption(
+                    requestJson = Gson().toJson(optionsJson)
+                )
+                
+                val request = GetCredentialRequest(
+                    listOf(getOption)
+                )
+                
+                val result = credentialManager.getCredential(
+                    context = context,
+                    request = request
+                )
+                
+                // 3. Verify with backend
+                val responseJson = (result.credential as PublicKeyCredential).data.getString("androidx.credentials.BUNDLE_KEY_AUTHENTICATION_RESPONSE_JSON")
+                val verifyMap = Gson().fromJson(responseJson, Map::class.java) as Map<String, Any>
+                val authResponse = api.verifyPasskeyLogin(verifyMap)
+                
+                // 4. Save session
+                saveTokens(authResponse.accessToken, authResponse.refreshToken)
+                val userResponse = api.getMe()
+                sessionManager.saveUserData(
+                    userId = userResponse.id,
+                    email = userResponse.email ?: email,
+                    firstName = userResponse.firstName,
+                    lastName = userResponse.lastName,
+                    walletAddress = userResponse.smartAccount
+                )
+                
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    isAuthenticated = true,
+                    authMethod = AuthMethod.PASSKEY
+                )
+            } catch (e: Exception) {
+                _state.value = _state.value.copy(
+                    isLoading = false,
+                    error = e.message ?: "Passkey login failed"
                 )
             }
         }
