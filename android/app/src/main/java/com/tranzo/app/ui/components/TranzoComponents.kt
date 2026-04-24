@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.theme.TranzoColors
@@ -57,6 +58,7 @@ fun TranzoButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isLoading: Boolean = false,
+    containerColor: Color = TranzoColors.TextPrimary,
 ) {
     Button(
         onClick = onClick,
@@ -66,9 +68,9 @@ fun TranzoButton(
         enabled = enabled && !isLoading,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.TextPrimary,
+            containerColor = containerColor,
             contentColor = TranzoColors.White,
-            disabledContainerColor = TranzoColors.TextPrimary.copy(alpha = 0.4f),
+            disabledContainerColor = containerColor.copy(alpha = 0.4f),
             disabledContentColor = TranzoColors.White.copy(alpha = 0.6f),
         ),
         elevation = ButtonDefaults.buttonElevation(

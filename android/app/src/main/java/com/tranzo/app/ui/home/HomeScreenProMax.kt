@@ -400,7 +400,7 @@ private fun BalanceDetailCompact(
 
 @Composable
 private fun QuickActionButtonMax(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,

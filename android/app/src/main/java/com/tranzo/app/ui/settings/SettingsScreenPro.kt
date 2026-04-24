@@ -229,7 +229,7 @@ private fun SettingsSection(
 
 @Composable
 private fun ColumnScope.SettingItem(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
     description: String,
     onClick: () -> Unit
@@ -350,5 +350,3 @@ private fun ThemeOptionCompact(
         }
     }
 }
-
-private val androidx.compose.material.icons.Icons.Outlined get() = androidx.compose.material.icons.outlined

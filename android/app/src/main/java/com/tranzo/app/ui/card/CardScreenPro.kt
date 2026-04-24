@@ -15,6 +15,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.theme.TranzoColors
 
@@ -95,7 +96,7 @@ fun CardScreenPro(
                                 style = MaterialTheme.typography.headlineSmall,
                                 color = Color.White,
                                 fontWeight = FontWeight.Bold,
-                                letterSpacing = 2.dp
+                                letterSpacing = 2.sp
                             )
                             Spacer(modifier = Modifier.height(12.dp))
                             Row(

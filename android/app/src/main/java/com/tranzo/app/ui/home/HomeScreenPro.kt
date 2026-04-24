@@ -340,7 +340,7 @@ private fun BalanceItem(
 
 @Composable
 private fun QuickActionButton(
-    icon: androidx.compose.material.icons.Icons.Outlined,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
     label: String,
     onClick: () -> Unit,
     modifier: Modifier = Modifier
@@ -377,5 +377,3 @@ private fun QuickActionButton(
         }
     }
 }
-
-private val androidx.compose.material.icons.Icons.Outlined get() = androidx.compose.material.icons.outlined
