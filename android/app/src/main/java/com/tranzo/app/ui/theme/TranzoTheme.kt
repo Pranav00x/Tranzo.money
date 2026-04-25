@@ -13,11 +13,16 @@ object TranzoColors {
     val PrimaryPink = Color(0xFFFF6B9D)        // Vibrant pink (accent)
     val PrimaryGreen = Color(0xFF4ECCA3)       // Mint green
     val PrimaryYellow = Color(0xFFFFD166)      // Soft gold
+    val PrimaryOrange = Color(0xFFFF9F66)      // Vibrant orange
+
 
     // Secondary gradient stops for smooth transitions
     val BlueLight = Color(0xFF7BA8F7)          // Light blue
     val PurpleLight = Color(0xFFB89FE0)        // Light purple
     val PinkLight = Color(0xFFFF8FB3)          // Light pink
+    val AccentEmerald = Color(0xFF34D399)      // Emerald accent
+    val AccentCyan = Color(0xFF22D3EE)         // Cyan accent
+
 
     // Neutral palette - refined, warm-tinted
     val TextPrimary = Color(0xFF1A1A2E)        // Deep navy
