@@ -35,6 +35,7 @@ fun ProfileSetupScreenProClay(
 ) {
     var fullName by remember { mutableStateOf("") }
     var username by remember { mutableStateOf("") }
+    val uiState by viewModel.state.collectAsState()
 
     var showContent by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
@@ -148,7 +149,7 @@ fun ProfileSetupScreenProClay(
                     viewModel.saveProfile(
                         firstName = firstName,
                         lastName = lastName,
-                        email = state.lastEmail ?: ""
+                        email = uiState.lastEmail ?: ""
                     )
                     onProfileCreated()
                 },

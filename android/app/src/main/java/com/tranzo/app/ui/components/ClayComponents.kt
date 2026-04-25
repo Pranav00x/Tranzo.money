@@ -166,37 +166,35 @@ fun ClayTextField(
     keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
     singleLine: Boolean = true,
 ) {
-    OutlinedTextField(
-        value = value,
-        onValueChange = onValueChange,
-        modifier = modifier
-            .fillMaxWidth()
-            .shadow(
-                elevation = 4.dp,
-                shape = RoundedCornerShape(24.dp),
-                ambientColor = Color.Black.copy(alpha = 0.05f)
-            ),
-        placeholder = {
-            Text(
-                text = placeholder,
-                color = TranzoColors.TextTertiary,
-                style = MaterialTheme.typography.bodyMedium,
+        OutlinedTextField(
+            value = value,
+            onValueChange = onValueChange,
+            modifier = modifier
+                .fillMaxWidth()
+                .shadow(
+                    elevation = 4.dp,
+                    shape = RoundedCornerShape(24.dp),
+                    ambientColor = Color.Black.copy(alpha = 0.05f)
+                ),
+            placeholder = {
+                Text(
+                    text = placeholder,
+                    color = TranzoColors.TextTertiary,
+                    style = MaterialTheme.typography.bodyMedium,
+                )
+            },
+            leadingIcon = leadingIcon,
+            trailingIcon = trailingIcon,
+            keyboardOptions = keyboardOptions,
+            singleLine = singleLine,
+            shape = RoundedCornerShape(24.dp),
+            colors = OutlinedTextFieldDefaults.colors(
+                focusedBorderColor = TranzoColors.PrimaryBlue,
+                unfocusedBorderColor = TranzoColors.DividerGray,
+                focusedContainerColor = TranzoColors.White,
+                unfocusedContainerColor = TranzoColors.BackgroundLight,
             )
-        },
-        leadingIcon = leadingIcon,
-        trailingIcon = trailingIcon,
-        keyboardOptions = keyboardOptions,
-        singleLine = singleLine,
-        shape = RoundedCornerShape(24.dp),
-        colors = OutlinedTextFieldDefaults.colors(
-            focusedBorderColor = TranzoColors.PrimaryBlue,
-            unfocusedBorderColor = TranzoColors.DividerGray,
-            focusedContainerColor = TranzoColors.White,
-            unfocusedContainerColor = TranzoColors.BackgroundLight,
-        ),
-        singleLine = true,
-        textStyle = MaterialTheme.typography.bodyMedium,
-    )
+        )
 }
 
 /**
