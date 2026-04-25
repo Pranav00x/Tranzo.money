@@ -7,6 +7,17 @@ import androidx.compose.ui.graphics.Color
 // Claymorphism premium crypto palette for Gen Z
 // Trust-focused with vibrant, playful surfaces
 object TranzoColors {
+    // ─── CLAYMORPHISM CORE ────────────────────────────
+    // Derived from reference image: baby-blue bg, white cards, solid blue CTA
+    val ClayBlue = Color(0xFF3B6BF6)           // Royal blue (buttons & accents)
+    val ClayBackground = Color(0xFFDBE9FE)     // Soft baby blue background
+    val ClayCard = Color(0xFFFFFFFF)            // Pure white for cards
+    val ClayShadowBlue = Color(0x263B6BF6)     // 15% blue-tinted shadow
+    val ClayShadowDark = Color(0x1A000020)     // 10% dark shadow for cards
+    val ClayInputBg = Color(0xFFF5F7FA)        // Light gray for text fields
+    val ClayInputBorder = Color(0xFFE8E8F0)    // Subtle border
+    val ClayGreen = Color(0xFF2BD98E)          // Vibrant green for Buy/Receive
+
     // Primary gradient colors - vibrant, sophisticated
     val PrimaryBlue = Color(0xFF5B8DEF)        // Warm blue (primary)
     val PrimaryPurple = Color(0xFF9D6BD5)      // Soft purple
@@ -15,14 +26,12 @@ object TranzoColors {
     val PrimaryYellow = Color(0xFFFFD166)      // Soft gold
     val PrimaryOrange = Color(0xFFFF9F66)      // Vibrant orange
 
-
     // Secondary gradient stops for smooth transitions
     val BlueLight = Color(0xFF7BA8F7)          // Light blue
     val PurpleLight = Color(0xFFB89FE0)        // Light purple
     val PinkLight = Color(0xFFFF8FB3)          // Light pink
     val AccentEmerald = Color(0xFF34D399)      // Emerald accent
     val AccentCyan = Color(0xFF22D3EE)         // Cyan accent
-
 
     // Neutral palette - refined, warm-tinted
     val TextPrimary = Color(0xFF1A1A2E)        // Deep navy
@@ -31,10 +40,10 @@ object TranzoColors {
     val TextDisabled = Color(0xFFD0D4E8)       // Lighter slate
 
     val White = Color(0xFFFEFEFE)
-    val BackgroundLight = Color(0xFFF8F6FF)    // Soft lavender-white
-    val SurfaceLight = Color(0xFFF0EDFF)       // Light lavender
-    val SurfaceAlt = Color(0xFFE8E5FF)         // Secondary surface
-    val DividerGray = Color(0xFFE8E5FF)        // Divider
+    val BackgroundLight = Color(0xFFDBE9FE)    // Baby blue (= ClayBackground)
+    val SurfaceLight = Color(0xFFEBF2FF)       // Lighter baby blue
+    val SurfaceAlt = Color(0xFFE0EBFF)         // Secondary surface
+    val DividerGray = Color(0xFFE8E8F0)        // Divider
 
     // Dark mode variants
     val BackgroundDark = Color(0xFF0F0F1E)
@@ -43,14 +52,14 @@ object TranzoColors {
     val TextDarkSecondary = Color(0xFFB8BFDB)
 
     // Status colors with claymorphism tint
-    val Success = Color(0xFF4ECCA3)
+    val Success = Color(0xFF2BD98E)
     val Error = Color(0xFFFF6B6B)
     val ErrorLight = Color(0xFFFFF0F0)
     val Warning = Color(0xFFFFB84D)
-    val Info = Color(0xFF5B8DEF)
+    val Info = Color(0xFF3B6BF6)
 
     // Navigation colors
-    val NavActive = Color(0xFF5B8DEF)
+    val NavActive = Color(0xFF3B6BF6)
     val NavInactive = Color(0xFFB8BFDB)
 }
 

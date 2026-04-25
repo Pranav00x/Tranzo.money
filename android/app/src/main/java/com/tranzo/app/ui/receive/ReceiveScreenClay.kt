@@ -35,12 +35,7 @@ fun ReceiveScreenClay() {
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        TranzoColors.BackgroundLight,
-                        TranzoColors.SurfaceLight.copy(alpha = 0.7f)
-                    )
-                )
+                color = TranzoColors.ClayBackground
             )
     ) {
         Column(
@@ -195,3 +190,5 @@ fun ReceiveScreenClay() {
         }
     }
 }
+
+

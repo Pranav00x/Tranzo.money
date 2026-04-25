@@ -4,7 +4,6 @@ import android.app.Activity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -19,17 +18,14 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import com.tranzo.app.ui.components.ClayAuthMethodCard
 import com.tranzo.app.ui.components.ClayButton
-import com.tranzo.app.ui.components.ClayCard
 import com.tranzo.app.ui.components.ClayTextField
 import com.tranzo.app.ui.theme.TranzoColors
 import com.tranzo.app.util.GoogleSignInHelper
@@ -46,8 +42,8 @@ interface GoogleSignInEntryPointProClay {
 }
 
 /**
- * Claymorphism Welcome Screen - Premium, playful design for Gen Z
- * Soft gradients, generous spacing, trust-focused
+ * Claymorphism Welcome Screen — Baby blue background, white cards,
+ * solid blue CTA. Matches reference image login screen (right panel).
  */
 @Composable
 fun WelcomeScreenProClay(
@@ -68,11 +64,8 @@ fun WelcomeScreenProClay(
         ).googleSignInHelper()
     }
 
-    // Animation state
     var showContent by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        showContent = true
-    }
+    LaunchedEffect(Unit) { showContent = true }
 
     val contentAlpha by animateFloatAsState(
         targetValue = if (showContent) 1f else 0f,
@@ -83,14 +76,7 @@ fun WelcomeScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        TranzoColors.BackgroundLight,
-                        TranzoColors.SurfaceLight.copy(alpha = 0.7f)
-                    )
-                )
-            )
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier
@@ -100,181 +86,166 @@ fun WelcomeScreenProClay(
                 .padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Header space
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
-            // Logo & Branding - Claymorphism style
+            // ── Logo ────────────────────────────────────────
             Column(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
+                // Clay-style logo
                 Box(
                     modifier = Modifier
                         .size(72.dp)
-                        .clip(RoundedCornerShape(28.dp))
-                        .background(
-                            brush = Brush.linearGradient(
-                                colors = listOf(
-                                    TranzoColors.PrimaryBlue,
-                                    TranzoColors.PrimaryPurple
-                                )
-                            )
-                        )
                         .shadow(
-                            elevation = 12.dp,
-                            shape = RoundedCornerShape(28.dp),
-                            ambientColor = TranzoColors.PrimaryBlue.copy(alpha = 0.25f)
-                        ),
-                    contentAlignment = Alignment.Center
+                            elevation = 16.dp,
+                            shape = RoundedCornerShape(24.dp),
+                            ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.3f),
+                        )
+                        .clip(RoundedCornerShape(24.dp))
+                        .background(TranzoColors.ClayBlue),
+                    contentAlignment = Alignment.Center,
                 ) {
                     Text(
-                        "₮",
+                        "T",
                         style = MaterialTheme.typography.displayMedium,
                         color = Color.White,
                         fontWeight = FontWeight.Bold,
-                        fontSize = 40.sp
+                        fontSize = 36.sp,
                     )
                 }
 
                 Spacer(modifier = Modifier.height(24.dp))
 
                 Text(
-                    "Tranzo",
-                    style = MaterialTheme.typography.displaySmall,
+                    "Hello, Stranger!",
+                    style = MaterialTheme.typography.headlineMedium,
                     fontWeight = FontWeight.Bold,
                     color = TranzoColors.TextPrimary,
-                    fontSize = 32.sp
                 )
 
+                Spacer(modifier = Modifier.height(4.dp))
+
                 Text(
-                    "Crypto card + smart wallet",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary
+                    "Let's sign you in",
+                    style = MaterialTheme.typography.bodyLarge,
+                    color = TranzoColors.TextSecondary,
                 )
             }
 
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(32.dp))
 
             if (!showEmailInput) {
-                // Auth method selection
-                Text(
-                    "How do you want to login?",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary
-                )
-
-                Spacer(modifier = Modifier.height(16.dp))
-
-                // Email option - Clay Card
+                // ── Auth Methods ─────────────────────────────
                 ClayAuthMethodCard(
                     icon = Icons.Outlined.Email,
                     title = "Email",
-                    description = "One-time code",
+                    description = "Sign in with OTP code",
                     onClick = { showEmailInput = true },
-                    gradientStart = TranzoColors.PrimaryBlue,
-                    gradientEnd = TranzoColors.BlueLight,
+                    iconColor = TranzoColors.ClayBlue,
                 )
 
-                // Google option
                 ClayAuthMethodCard(
                     icon = Icons.Outlined.Lock,
                     title = "Google",
-                    description = "Sign in with Google",
+                    description = "Quick sign in",
                     onClick = {
                         coroutineScope.launch {
-                            val idToken = googleSignInHelper.signIn(context as? Activity ?: return@launch)
+                            val idToken = googleSignInHelper.signIn(
+                                context as? Activity ?: return@launch
+                            )
                             if (idToken != null) {
                                 viewModel.loginWithGoogle(idToken)
                             }
                         }
                     },
-                    gradientStart = TranzoColors.PrimaryPink,
-                    gradientEnd = TranzoColors.PinkLight,
+                    iconColor = TranzoColors.PrimaryPurple,
                 )
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
 
-                // Trust & Security message
+                // Trust badge
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
                         .clip(RoundedCornerShape(16.dp))
-                        .background(TranzoColors.Success.copy(alpha = 0.08f))
+                        .background(Color.White.copy(alpha = 0.7f))
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(
-                        imageVector = Icons.Outlined.Lock,
+                        Icons.Outlined.Lock,
                         contentDescription = "Secure",
-                        tint = TranzoColors.Success,
-                        modifier = Modifier.size(20.dp)
+                        tint = TranzoColors.ClayGreen,
+                        modifier = Modifier.size(20.dp),
                     )
-
                     Text(
-                        "Your assets are protected by account abstraction & Kernel validators",
+                        "Protected by account abstraction & Kernel validators",
                         style = MaterialTheme.typography.labelSmall,
                         color = TranzoColors.TextSecondary,
-                        fontWeight = FontWeight.Medium
+                        fontWeight = FontWeight.Medium,
                     )
                 }
             } else {
-                // Email input view
+                // ── Email Input ──────────────────────────────
                 Text(
-                    "Sign in with Email",
+                    "Enter your email",
                     style = MaterialTheme.typography.headlineSmall,
                     fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary
+                    color = TranzoColors.TextPrimary,
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
                 ClayTextField(
                     value = email,
                     onValueChange = { email = it },
-                    placeholder = "Enter your email",
+                    placeholder = "Username or email",
                     leadingIcon = {
                         Icon(
                             Icons.Outlined.Email,
                             contentDescription = null,
-                            tint = TranzoColors.PrimaryBlue,
-                            modifier = Modifier.size(20.dp)
+                            tint = TranzoColors.ClayBlue,
+                            modifier = Modifier.size(20.dp),
                         )
-                    }
+                    },
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                if (state.error != null) {
+                    Text(
+                        state.error!!,
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TranzoColors.Error,
+                        modifier = Modifier.padding(vertical = 4.dp),
+                    )
+                }
+
+                Spacer(modifier = Modifier.height(16.dp))
 
                 ClayButton(
-                    text = "Send Code",
+                    text = "Sign In",
                     onClick = {
                         coroutineScope.launch {
                             viewModel.sendOtp(email)
                             onNavigateToOtp(email)
                         }
                     },
-                    gradientStart = TranzoColors.PrimaryBlue,
-                    gradientEnd = TranzoColors.PrimaryPurple,
+                    enabled = email.contains("@") && !state.isLoading,
+                    isLoading = state.isLoading,
                 )
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                Button(
+                TextButton(
                     onClick = { showEmailInput = false },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color.Transparent,
-                        contentColor = TranzoColors.PrimaryBlue,
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
+                    modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(
                         "Back",
                         style = MaterialTheme.typography.labelLarge,
                         fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.ClayBlue,
                     )
                 }
             }
@@ -284,85 +255,4 @@ fun WelcomeScreenProClay(
     }
 }
 
-/**
- * Claymorphism Auth Method Card
- */
-@Composable
-private fun ClayAuthMethodCard(
-    icon: ImageVector,
-    title: String,
-    description: String,
-    onClick: () -> Unit,
-    gradientStart: Color = TranzoColors.PrimaryBlue,
-    gradientEnd: Color = TranzoColors.BlueLight,
-) {
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(100.dp)
-            .clip(RoundedCornerShape(24.dp))
-            .background(Color.White)
-            .shadow(
-                elevation = 8.dp,
-                shape = RoundedCornerShape(24.dp),
-                ambientColor = Color.Black.copy(alpha = 0.08f)
-            )
-            .clickable(onClick = onClick)
-            .padding(16.dp),
-    ) {
-        Row(
-            modifier = Modifier
-                .fillMaxSize(),
-            horizontalArrangement = Arrangement.spacedBy(16.dp),
-            verticalAlignment = Alignment.CenterVertically
-        ) {
-            // Icon box with gradient
-            Box(
-                modifier = Modifier
-                    .size(56.dp)
-                    .clip(RoundedCornerShape(20.dp))
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(gradientStart, gradientEnd)
-                        ),
-                        shape = RoundedCornerShape(20.dp)
-                    ),
-                contentAlignment = Alignment.Center,
-            ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = title,
-                    tint = Color.White,
-                    modifier = Modifier.size(28.dp)
-                )
-            }
 
-            // Text content
-            Column(
-                modifier = Modifier
-                    .weight(1f),
-                verticalArrangement = Arrangement.spacedBy(4.dp)
-            ) {
-                Text(
-                    title,
-                    style = MaterialTheme.typography.titleSmall,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TranzoColors.TextPrimary
-                )
-                Text(
-                    description,
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TranzoColors.TextSecondary
-                )
-            }
-
-            // Arrow indicator
-            Icon(
-                imageVector = Icons.Outlined.Email, // TODO: Use ChevronRight
-                contentDescription = null,
-                tint = TranzoColors.TextTertiary,
-                modifier = Modifier.size(20.dp)
-            )
-        }
-    }
-}

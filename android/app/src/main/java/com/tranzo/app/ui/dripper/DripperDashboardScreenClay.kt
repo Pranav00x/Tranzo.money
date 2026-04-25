@@ -41,12 +41,7 @@ fun DripperDashboardScreenClay(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        TranzoColors.BackgroundLight,
-                        TranzoColors.SurfaceLight.copy(alpha = 0.7f)
-                    )
-                )
+                color = TranzoColors.ClayBackground
             )
     ) {
         if (uiState.isLoading && uiState.streams.isEmpty()) {
@@ -281,3 +276,5 @@ private fun StreamItemClay(
         }
     }
 }
+
+

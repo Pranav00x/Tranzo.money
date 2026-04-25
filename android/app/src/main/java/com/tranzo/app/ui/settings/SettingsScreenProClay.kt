@@ -49,12 +49,7 @@ fun SettingsScreenProClay(
         modifier = Modifier
             .fillMaxSize()
             .background(
-                brush = Brush.linearGradient(
-                    colors = listOf(
-                        TranzoColors.BackgroundLight,
-                        TranzoColors.SurfaceLight.copy(alpha = 0.5f)
-                    )
-                )
+                color = TranzoColors.ClayBackground
             )
     ) {
         Column(
@@ -461,3 +456,5 @@ private fun ThemeOptionCompactClay(
         }
     }
 }
+
+
