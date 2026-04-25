@@ -31,9 +31,11 @@ import com.tranzo.app.ui.theme.TranzoColors
 /**
  * Claymorphism Home Screen - Dashboard with stats and quick actions
  * Vibrant gradients, soft shadows, premium aesthetic
+ * Integrated with HomeViewModel to fetch balance and transaction data from API
  */
 @Composable
 fun HomeScreenProClay(
+    viewModel: HomeViewModel = hiltViewModel(),
     themeManager: com.tranzo.app.util.ThemeManager = hiltViewModel(),
     onNavigateToTransfer: () -> Unit = {},
     onNavigateToSwap: () -> Unit = {},
@@ -41,6 +43,8 @@ fun HomeScreenProClay(
     onNavigateToSettings: () -> Unit = {},
 ) {
     var showContent by remember { mutableStateOf(false) }
+    val uiState by viewModel.state.collectAsState()
+
     LaunchedEffect(Unit) {
         showContent = true
     }
@@ -63,85 +67,119 @@ fun HomeScreenProClay(
                 )
             )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .alpha(contentAlpha)
-        ) {
-            // Header with greeting
+        if (uiState.isLoading && uiState.user == null) {
+            // Loading state
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = TranzoColors.PrimaryBlue)
+            }
+        } else if (uiState.error != null && uiState.user == null) {
+            // Error state
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Welcome back, User",
+                    "Error loading dashboard",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary,
-                    fontSize = 28.sp
+                    color = TranzoColors.Error
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    "Manage your crypto assets with ease",
+                    uiState.error ?: "Unknown error",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary
+                    color = TranzoColors.TextSecondary,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                ClayButton(
+                    text = "Retry",
+                    onClick = { viewModel.refresh() },
+                    gradientStart = TranzoColors.PrimaryBlue,
+                    gradientEnd = TranzoColors.BlueLight
                 )
             }
-
-            // Balance Cards - Claymorphism gradients
+        } else {
+            // Content
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
+                    .alpha(contentAlpha)
             ) {
-                Text(
-                    "Your Assets",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TranzoColors.TextTertiary
-                )
-
-                // Main balance card
-                ClayStatCard(
-                    label = "Total Balance",
-                    value = "$12,450",
-                    unit = "USD",
-                    modifier = Modifier.height(140.dp),
-                    gradientStart = TranzoColors.PrimaryBlue,
-                    gradientEnd = TranzoColors.PrimaryPurple,
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                // Header with greeting
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    ClayStatCard(
-                        label = "USDC Balance",
-                        value = "$8,950",
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(100.dp),
-                        gradientStart = TranzoColors.PrimaryBlue,
-                        gradientEnd = TranzoColors.BlueLight,
+                    val userName = uiState.user?.firstName?.takeIf { it.isNotBlank() } ?: "User"
+                    Text(
+                        "Welcome back, $userName",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = TranzoColors.TextPrimary,
+                        fontSize = 28.sp
                     )
-
-                    ClayStatCard(
-                        label = "ETH Balance",
-                        value = "1.2",
-                        unit = "ETH",
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(100.dp),
-                        gradientStart = TranzoColors.PrimaryPurple,
-                        gradientEnd = TranzoColors.PinkLight,
+                    Text(
+                        "Manage your crypto assets with ease",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TranzoColors.TextSecondary
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(32.dp))
+                // Balance Cards - Claymorphism gradients
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                ) {
+                    Text(
+                        "Your Assets",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.TextTertiary
+                    )
+
+                    // Main balance card with actual data
+                    ClayStatCard(
+                        label = "Total Balance",
+                        value = "$" + String.format("%.2f", uiState.totalUsdBalance),
+                        unit = "USD",
+                        modifier = Modifier.height(140.dp),
+                        gradientStart = TranzoColors.PrimaryBlue,
+                        gradientEnd = TranzoColors.PrimaryPurple,
+                    )
+
+                    // Display individual balances from API
+                    if (uiState.balances.isNotEmpty()) {
+                        Row(
+                            modifier = Modifier.fillMaxWidth(),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            uiState.balances.take(2).forEachIndexed { index, balance ->
+                                ClayStatCard(
+                                    label = balance.symbol ?: "Token $index",
+                                    value = balance.formatted ?: "0.00",
+                                    modifier = Modifier
+                                        .weight(1f)
+                                        .height(100.dp),
+                                    gradientStart = if (index == 0) TranzoColors.PrimaryBlue else TranzoColors.PrimaryPurple,
+                                    gradientEnd = if (index == 0) TranzoColors.BlueLight else TranzoColors.PinkLight,
+                                )
+                            }
+                        }
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(32.dp))
 
             // Quick Actions
             Column(
@@ -210,7 +248,7 @@ fun HomeScreenProClay(
 
             Spacer(modifier = Modifier.height(32.dp))
 
-            // Recent Transactions
+            // Recent Transactions - Will be populated from API when added to HomeViewModel
             Column(
                 modifier = Modifier
                     .fillMaxWidth()
@@ -236,14 +274,29 @@ fun HomeScreenProClay(
                     )
                 }
 
-                // Sample transactions
-                repeat(3) { index ->
-                    ClayTransactionCard(
-                        type = if (index % 2 == 0) "Sent" else "Received",
-                        amount = if (index % 2 == 0) "-$500 USDC" else "+$1200 USDC",
-                        timestamp = "2 hours ago",
-                        status = "Completed"
-                    )
+                // Show loading or transactions
+                if (uiState.isLoading && uiState.balances.isEmpty()) {
+                    // Loading state
+                    repeat(2) {
+                        Box(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .height(80.dp)
+                                .clip(RoundedCornerShape(20.dp))
+                                .background(TranzoColors.SurfaceLight)
+                        )
+                    }
+                } else {
+                    // Display sample transactions for now
+                    // TODO: Add transactions list to HomeViewModel and display real data
+                    repeat(3) { index ->
+                        ClayTransactionCard(
+                            type = if (index % 2 == 0) "Sent" else "Received",
+                            amount = if (index % 2 == 0) "-$500 USDC" else "+$1200 USDC",
+                            timestamp = "2 hours ago",
+                            status = "Completed"
+                        )
+                    }
                 }
             }
 
