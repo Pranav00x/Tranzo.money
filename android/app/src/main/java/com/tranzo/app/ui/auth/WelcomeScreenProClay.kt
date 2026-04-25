@@ -182,8 +182,9 @@ fun WelcomeScreenProClay(
                     description = "Sign in with Google",
                     onClick = {
                         coroutineScope.launch {
-                            googleSignInHelper.signIn(context as Activity) { success, newUser ->
-                                if (success) onAuthenticationSuccess(newUser)
+                            val idToken = googleSignInHelper.signIn(context as? Activity ?: return@launch)
+                            if (idToken != null) {
+                                viewModel.loginWithGoogle(idToken)
                             }
                         }
                     },
@@ -248,7 +249,7 @@ fun WelcomeScreenProClay(
                     text = "Send Code",
                     onClick = {
                         coroutineScope.launch {
-                            viewModel.requestOtp(email)
+                            viewModel.sendOtp(email)
                             onNavigateToOtp(email)
                         }
                     },

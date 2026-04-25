@@ -161,6 +161,8 @@ fun ClayTextField(
     placeholder: String = "",
     leadingIcon: @Composable (() -> Unit)? = null,
     trailingIcon: @Composable (() -> Unit)? = null,
+    keyboardOptions: KeyboardOptions = KeyboardOptions.Default,
+    singleLine: Boolean = true,
 ) {
     OutlinedTextField(
         value = value,
@@ -181,6 +183,8 @@ fun ClayTextField(
         },
         leadingIcon = leadingIcon,
         trailingIcon = trailingIcon,
+        keyboardOptions = keyboardOptions,
+        singleLine = singleLine,
         shape = RoundedCornerShape(24.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = TranzoColors.PrimaryBlue,

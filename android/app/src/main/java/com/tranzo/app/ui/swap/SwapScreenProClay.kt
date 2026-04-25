@@ -216,7 +216,7 @@ fun SwapScreenProClay(
                     }
 
                     TextField(
-                        value = toAmount,
+                        value = uiState.quote?.toAmount ?: "",
                         onValueChange = {},
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("0.00") },
@@ -272,7 +272,7 @@ fun SwapScreenProClay(
             ClayButton(
                 text = "Review Swap",
                 onClick = {
-                    viewModel.initiateSwap(fromToken, toToken, fromAmount)
+                    viewModel.executeSwap()
                     onSwapInitiated()
                 },
                 enabled = fromAmount.isNotBlank(),

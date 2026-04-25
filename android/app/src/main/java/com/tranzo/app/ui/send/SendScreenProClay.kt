@@ -235,7 +235,9 @@ fun SendScreenProClay(
                 value = amount,
                 onValueChange = { amount = it },
                 placeholder = "0.00",
-                keyboardType = KeyboardType.Decimal,
+                keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
+                    keyboardType = KeyboardType.Decimal
+                ),
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.AttachMoney,
