@@ -305,6 +305,8 @@ fun HomeScreenProClay(
     }
 }
 
+}
+
 /**
  * Clay Transaction Card - Shows transaction details
  */
@@ -400,3 +402,4 @@ private fun ClayTransactionCard(
         }
     }
 }
+
