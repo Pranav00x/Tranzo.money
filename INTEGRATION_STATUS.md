@@ -76,24 +76,26 @@
 
 ## 🔄 In Progress / Next Steps
 
-### Phase 1: Connect Core Screens (High Priority)
-These screens have ViewModels but UI not yet connected to API:
+### ✅ COMPLETED: Core Screens Connected
 
-1. **SendViewModel** + SendScreenProClay
-   - ViewModel exists: `com/tranzo/app/ui/send/SendViewModel.kt`
-   - Need to: Connect screen to ViewModel, display sendToken() API response
-   - Endpoint: `POST /transfers/send`
-   - Response: TransferResponse (opHash, status)
+1. **✅ SendViewModel** + **SendScreenProClay** ✅ CONNECTED
+   - Screen now calls viewModel.sendToken(to, tokenSymbol, amount)
+   - Shows loading spinner during transfer
+   - Displays error state with retry button
+   - Navigates on successful transfer
+   - Endpoint: `POST /transfers/send` ✅ WORKING
 
-2. **SwapViewModel** + SwapScreenProClay
-   - ViewModel may exist or need creation
-   - Need to: Fetch swap quotes, execute swaps
-   - Endpoints: `POST /swap/quote`, `POST /swap/execute`
+2. **✅ SwapViewModel** + **SwapScreenProClay** ✅ CONNECTED
+   - Collects uiState from ViewModel
+   - TextField calls viewModel.onFromAmountChanged() to fetch quote
+   - Auto-refreshes quote as user enters amount
+   - Endpoints: `POST /swap/quote`, `POST /swap/execute` ✅ WORKING
 
-3. **TransactionHistoryScreenProClay**
-   - Need to: Fetch from API (getTransactionHistory)
-   - Currently shows hardcoded sample data
-   - Use existing transaction list from HomeViewModel or create dedicated HistoryViewModel
+3. **✅ CardViewModel** + **CardScreenProClay** ✅ CONNECTED
+   - Fixed state collection (viewModel.state)
+   - Loads card data from API
+   - Shows card details and transactions
+   - Endpoint: `GET /card` ✅ WORKING
 
 ### Phase 2: Navigation Setup
 - Set up NavGraph to show auth screens if no token
@@ -122,12 +124,13 @@ These screens have ViewModels but UI not yet connected to API:
 |----------|----------|--------|--------|
 | Auth | POST /auth/verify-otp | OtpScreenProClay | ✅ Connected via AuthViewModel |
 | Balances | GET /balances | HomeScreenProClay | ✅ Connected |
-| Transfers | POST /transfers/send | SendScreenProClay | ⏳ Needs connection |
+| Transfers | POST /transfers/send | SendScreenProClay | ✅ **Connected** |
 | Transfers | GET /transfers/history | TransactionHistoryScreenClay | ⏳ Needs connection |
-| Swaps | POST /swap/quote | SwapScreenProClay | ⏳ Needs connection |
-| Card | GET /card | CardScreenProClay | ⏳ Needs connection |
+| Swaps | POST /swap/quote | SwapScreenProClay | ✅ **Connected** |
+| Swaps | POST /swap/execute | SwapScreenProClay | ✅ **Connected** |
+| Card | GET /card | CardScreenProClay | ✅ **Connected** |
 | Streams | GET /dripper | DripperDashboardScreenClay | ⏳ Needs connection |
-| User | GET /auth/me | HomeScreenProClay | ✅ Connected |
+| User | GET /auth/me | HomeScreenProClay + CardScreenProClay | ✅ Connected |
 
 ---
 
