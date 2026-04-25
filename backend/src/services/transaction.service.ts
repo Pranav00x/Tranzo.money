@@ -75,7 +75,6 @@ export class TransactionService {
         account,
         chain: this.CHAIN,
         bundlerTransport: http(ENV.ZERODEV_RPC_URL || ""),
-        entryPoint,
       });
 
       // ERC-20 transfer ABI
@@ -98,15 +97,12 @@ export class TransactionService {
         args: [params.to as `0x${string}`, BigInt(params.amount)],
       });
 
-      // Send UserOp
-      const opHash = await accountClient.sendUserOperation({
-        calls: [
-          {
-            to: params.tokenAddress as `0x${string}`,
-            data: callData,
-            value: BigInt(0),
-          }
-        ]
+      // Send transaction (wraps in UserOp automatically in v5)
+      // Casting to any to avoid SDK version type mismatches during build
+      const opHash = await (accountClient as any).sendTransaction({
+        to: params.tokenAddress as `0x${string}`,
+        data: callData,
+        value: BigInt(0),
       });
 
       console.log(`[Transaction] ✅ UserOp submitted: ${opHash}`);

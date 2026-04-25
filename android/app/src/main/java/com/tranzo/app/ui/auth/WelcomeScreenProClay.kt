@@ -40,7 +40,7 @@ import kotlinx.coroutines.launch
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
-interface GoogleSignInEntryPointPro {
+interface GoogleSignInEntryPointProClay {
     fun googleSignInHelper(): GoogleSignInHelper
 }
 
@@ -63,7 +63,7 @@ fun WelcomeScreenProClay(
     val googleSignInHelper = remember {
         EntryPointAccessors.fromApplication(
             context,
-            GoogleSignInEntryPointPro::class.java
+            GoogleSignInEntryPointProClay::class.java
         ).googleSignInHelper()
     }
 
