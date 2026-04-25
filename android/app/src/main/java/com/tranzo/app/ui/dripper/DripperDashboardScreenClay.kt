@@ -5,16 +5,16 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,8 +27,7 @@ import com.tranzo.app.ui.components.ClayStatCard
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Claymorphism Dripper Dashboard Screen
- * View and manage payment streams
+ * Claymorphism Dripper Dashboard — Baby blue bg, gradient stat cards, white stream cards.
  */
 @Composable
 fun DripperDashboardScreenClay(
@@ -40,146 +39,104 @@ fun DripperDashboardScreenClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = TranzoColors.ClayBackground
-            )
+            .background(TranzoColors.ClayBackground)
     ) {
         if (uiState.isLoading && uiState.streams.isEmpty()) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = TranzoColors.PrimaryBlue)
+            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                CircularProgressIndicator(color = TranzoColors.ClayBlue)
             }
         } else if (uiState.error != null && uiState.streams.isEmpty()) {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
+                modifier = Modifier.fillMaxSize().padding(24.dp),
                 verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
+                horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Text(
-                    "Error loading streams",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = TranzoColors.Error
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    uiState.error ?: "Unknown error",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
+                Text("Error loading streams", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold, color = TranzoColors.TextPrimary)
+                Spacer(Modifier.height(8.dp))
+                Text(uiState.error ?: "", style = MaterialTheme.typography.bodyMedium, color = TranzoColors.TextSecondary, textAlign = TextAlign.Center)
             }
         } else {
             Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .verticalScroll(rememberScrollState())
+                modifier = Modifier.fillMaxSize().verticalScroll(rememberScrollState()),
             ) {
                 // Header
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(24.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                    modifier = Modifier.fillMaxWidth().padding(24.dp),
                 ) {
                     Text(
                         "Streams",
-                        style = MaterialTheme.typography.headlineSmall,
+                        style = MaterialTheme.typography.headlineMedium,
                         fontWeight = FontWeight.Bold,
                         color = TranzoColors.TextPrimary,
-                        fontSize = 28.sp
                     )
+                    Spacer(Modifier.height(4.dp))
                     Text(
                         "Manage your payment streams",
                         style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.TextSecondary
+                        color = TranzoColors.TextSecondary,
                     )
                 }
 
                 Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 24.dp),
-                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
                     // Stats
-                    Text(
-                        "Overview",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.TextTertiary
-                    )
-
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         ClayStatCard(
                             label = "Active Streams",
                             value = uiState.activeCount.toString(),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(100.dp),
-                            gradientStart = TranzoColors.PrimaryBlue,
-                            gradientEnd = TranzoColors.BlueLight,
+                            modifier = Modifier.weight(1f).height(100.dp),
+                            gradientStart = TranzoColors.ClayBlue,
+                            gradientEnd = Color(0xFF6C8DFF),
                         )
-
                         ClayStatCard(
                             label = "Monthly Flow",
                             value = calculateMonthlyFlow(uiState.streams),
-                            modifier = Modifier
-                                .weight(1f)
-                                .height(100.dp),
-                            gradientStart = TranzoColors.PrimaryGreen,
-                            gradientEnd = TranzoColors.AccentEmerald,
+                            modifier = Modifier.weight(1f).height(100.dp),
+                            gradientStart = TranzoColors.ClayGreen,
+                            gradientEnd = Color(0xFF5AE8A8),
                         )
                     }
 
                     Spacer(modifier = Modifier.height(8.dp))
 
-                    // Active streams
                     Text(
                         "Active Streams",
-                        style = MaterialTheme.typography.labelMedium,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.TextTertiary
+                        style = MaterialTheme.typography.labelLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = TranzoColors.TextPrimary,
                     )
 
                     if (uiState.streams.isEmpty()) {
                         Text(
-                            "No active streams",
+                            "No active streams yet",
                             style = MaterialTheme.typography.bodyMedium,
                             color = TranzoColors.TextSecondary,
-                            modifier = Modifier.padding(vertical = 16.dp)
+                            modifier = Modifier.padding(vertical = 16.dp),
                         )
                     } else {
-                        LazyColumn(
-                            verticalArrangement = Arrangement.spacedBy(12.dp)
-                        ) {
-                            items(uiState.streams) { stream ->
-                                StreamItemClay(
-                                    recipient = stream.employeeAddress.take(10) + "...",
-                                    amount = formatStreamAmount(stream.amountPerSecond),
-                                    status = stream.status
-                                )
-                            }
+                        uiState.streams.forEach { stream ->
+                            StreamCard(
+                                recipient = stream.employeeAddress.take(10) + "...",
+                                amount = formatStreamAmount(stream.amountPerSecond),
+                                status = stream.status,
+                            )
                         }
                     }
 
-                    Spacer(modifier = Modifier.height(24.dp))
+                    Spacer(modifier = Modifier.height(16.dp))
 
-                    // Create stream button
                     ClayButton(
                         text = "Create New Stream",
                         onClick = onCreateStream,
-                        gradientStart = TranzoColors.PrimaryPurple,
-                        gradientEnd = TranzoColors.PinkLight,
+                        containerColor = TranzoColors.PrimaryPurple,
                     )
 
-                    Spacer(modifier = Modifier.height(32.dp))
+                    Spacer(modifier = Modifier.height(100.dp))
                 }
             }
         }
@@ -195,7 +152,6 @@ private fun calculateMonthlyFlow(streams: List<com.tranzo.app.data.model.StreamD
             java.math.BigDecimal.ZERO
         }
     }.fold(java.math.BigDecimal.ZERO) { acc, value -> acc + value }
-
     return "$" + String.format("%.0f", monthlyTotal)
 }
 
@@ -209,72 +165,42 @@ private fun formatStreamAmount(amountPerSecond: String): String {
 }
 
 @Composable
-private fun StreamItemClay(
+private fun StreamCard(
     recipient: String,
     amount: String,
     status: String,
 ) {
     ClayCard(
-        modifier = Modifier
-            .fillMaxWidth()
-            .height(80.dp),
-        backgroundGradient = listOf(Color.White, TranzoColors.BackgroundLight.copy(alpha = 0.7f))
+        modifier = Modifier.fillMaxWidth().height(72.dp),
+        shadowElevation = 6.dp,
+        cornerRadius = 20.dp,
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxSize().padding(horizontal = 16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
-            verticalAlignment = Alignment.CenterVertically
+            verticalAlignment = Alignment.CenterVertically,
         ) {
             Row(
                 horizontalArrangement = Arrangement.spacedBy(12.dp),
                 verticalAlignment = Alignment.CenterVertically,
-                modifier = Modifier.weight(1f)
+                modifier = Modifier.weight(1f),
             ) {
                 Box(
                     modifier = Modifier
-                        .size(44.dp)
-                        .clip(androidx.compose.foundation.shape.RoundedCornerShape(16.dp))
-                        .background(
-                            color = TranzoColors.PrimaryPurple.copy(alpha = 0.12f),
-                            shape = androidx.compose.foundation.shape.RoundedCornerShape(16.dp)
-                        ),
+                        .size(40.dp)
+                        .shadow(6.dp, RoundedCornerShape(14.dp), ambientColor = TranzoColors.PrimaryPurple.copy(alpha = 0.3f))
+                        .clip(RoundedCornerShape(14.dp))
+                        .background(TranzoColors.PrimaryPurple),
                     contentAlignment = Alignment.Center,
                 ) {
-                    Icon(
-                        Icons.Outlined.Timer,
-                        contentDescription = "Stream",
-                        tint = TranzoColors.PrimaryPurple,
-                        modifier = Modifier.size(20.dp)
-                    )
+                    Icon(Icons.Outlined.Timer, contentDescription = null, tint = Color.White, modifier = Modifier.size(18.dp))
                 }
-
-                Column(
-                    verticalArrangement = Arrangement.spacedBy(2.dp)
-                ) {
-                    Text(
-                        "Pay $recipient",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.TextPrimary
-                    )
-                    Text(
-                        amount,
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.TextTertiary
-                    )
+                Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+                    Text("Pay $recipient", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
+                    Text(amount, style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
                 }
             }
-
-            Text(
-                status,
-                style = MaterialTheme.typography.labelSmall,
-                color = TranzoColors.Success,
-                fontWeight = FontWeight.SemiBold
-            )
+            Text(status, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.ClayGreen)
         }
     }
 }
-
-

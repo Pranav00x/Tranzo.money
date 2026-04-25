@@ -6,9 +6,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.CreditCard
-import androidx.compose.material.icons.outlined.Lock
-import androidx.compose.material.icons.outlined.Settings
+import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -24,10 +22,11 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.ClayActionButton
 import com.tranzo.app.ui.components.ClayButton
 import com.tranzo.app.ui.components.ClayCard
+import com.tranzo.app.ui.components.ClayGradientCard
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Claymorphism Card Management Screen
+ * Claymorphism Card Screen — Baby blue bg, gradient card visual, white detail cards.
  */
 @Composable
 fun CardScreenProClay(
@@ -39,196 +38,146 @@ fun CardScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = TranzoColors.ClayBackground
-            )
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 24.dp),
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Header
             Text(
                 "Your Card",
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = TranzoColors.TextPrimary,
-                fontSize = 28.sp
             )
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Card visual
-            Box(
+            ClayGradientCard(
                 modifier = Modifier
                     .fillMaxWidth()
-                    .height(200.dp)
-                    .clip(RoundedCornerShape(28.dp))
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                TranzoColors.PrimaryBlue,
-                                TranzoColors.PrimaryPurple
-                            )
-                        ),
-                        shape = RoundedCornerShape(28.dp)
-                    )
-                    .shadow(
-                        elevation = 12.dp,
-                        shape = RoundedCornerShape(28.dp),
-                        ambientColor = TranzoColors.PrimaryBlue.copy(alpha = 0.25f)
-                    )
-                    .padding(24.dp),
+                    .height(200.dp),
+                gradientStart = TranzoColors.ClayBlue,
+                gradientEnd = Color(0xFF6C8DFF),
             ) {
                 Column(
-                    modifier = Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.SpaceBetween
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.SpaceBetween,
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
                     ) {
-                        Text(
-                            "Tranzo",
-                            style = MaterialTheme.typography.headlineSmall,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold
-                        )
-
-                        Icon(
-                            Icons.Outlined.CreditCard,
-                            contentDescription = "Card",
-                            tint = Color.White,
-                            modifier = Modifier.size(28.dp)
-                        )
+                        Text("Tranzo", color = Color.White, fontWeight = FontWeight.Bold, fontSize = 18.sp)
+                        Text("VISA", color = Color.White.copy(alpha = 0.8f), fontWeight = FontWeight.Bold, fontSize = 16.sp)
                     }
 
-                    Column {
-                        Text(
-                            "Card Number",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White.copy(alpha = 0.7f)
-                        )
-                        Text(
-                            "5432 •••• •••• 8901",
-                            style = MaterialTheme.typography.titleMedium,
-                            color = Color.White,
-                            fontWeight = FontWeight.Bold,
-                            letterSpacing = 2.sp
-                        )
-                    }
+                    Text(
+                        uiState.card?.maskedPan ?: "**** **** **** 4242",
+                        color = Color.White,
+                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 20.sp,
+                        letterSpacing = 3.sp,
+                    )
 
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Column {
+                            Text("Card Holder", color = Color.White.copy(alpha = 0.7f), fontSize = 10.sp)
                             Text(
-                                "Valid Thru",
-                                style = MaterialTheme.typography.labelSmall,
-                                color = Color.White.copy(alpha = 0.7f)
-                            )
-                            Text(
-                                "12/26",
-                                style = MaterialTheme.typography.labelSmall,
+                                uiState.card?.cardholderName ?: "YOUR NAME",
                                 color = Color.White,
-                                fontWeight = FontWeight.SemiBold
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
                             )
                         }
-
-                        Text(
-                            "Pranav",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = Color.White,
-                            fontWeight = FontWeight.SemiBold
-                        )
+                        Column(horizontalAlignment = Alignment.End) {
+                            Text("Expires", color = Color.White.copy(alpha = 0.7f), fontSize = 10.sp)
+                            Text(
+                                uiState.card?.expiry ?: "12/28",
+                                color = Color.White,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 14.sp,
+                            )
+                        }
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
-
-            // Quick actions
+            // Card actions
             Row(
                 modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(12.dp)
+                horizontalArrangement = Arrangement.SpaceEvenly,
             ) {
                 ClayActionButton(
-                    label = "Lock",
-                    onClick = { /* action */ },
-                    modifier = Modifier.weight(1f),
+                    label = "Freeze",
+                    onClick = { viewModel.toggleFreeze() },
+                    backgroundColor = TranzoColors.ClayBlue,
                     icon = {
-                        Icon(
-                            Icons.Outlined.Lock,
-                            contentDescription = "Lock",
-                            tint = TranzoColors.Error,
-                            modifier = Modifier.size(24.dp)
-                        )
+                        Icon(Icons.Outlined.Lock, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
                     },
-                    backgroundColor = TranzoColors.Error.copy(alpha = 0.12f)
                 )
-
+                ClayActionButton(
+                    label = "Details",
+                    onClick = {},
+                    backgroundColor = TranzoColors.ClayBlue,
+                    icon = {
+                        Icon(Icons.Outlined.Info, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
+                    },
+                )
                 ClayActionButton(
                     label = "Settings",
-                    onClick = { /* action */ },
-                    modifier = Modifier.weight(1f),
+                    onClick = {},
+                    backgroundColor = TranzoColors.ClayBlue,
                     icon = {
-                        Icon(
-                            Icons.Outlined.Settings,
-                            contentDescription = "Settings",
-                            tint = TranzoColors.PrimaryBlue,
-                            modifier = Modifier.size(24.dp)
-                        )
+                        Icon(Icons.Outlined.Settings, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
                     },
-                    backgroundColor = TranzoColors.PrimaryBlue.copy(alpha = 0.12f)
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Card details
             Text(
                 "Card Details",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextTertiary
+                style = MaterialTheme.typography.labelLarge,
+                fontWeight = FontWeight.Bold,
+                color = TranzoColors.TextPrimary,
             )
 
-            Spacer(modifier = Modifier.height(12.dp))
-
-            ClayCard(
-                modifier = Modifier.fillMaxWidth(),
-                backgroundGradient = listOf(Color.White, TranzoColors.BackgroundLight.copy(alpha = 0.7f))
-            ) {
+            ClayCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(16.dp)
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
                 ) {
-                    CardDetailRow("Status", "Active")
+                    CardDetailRow("Status", uiState.card?.status?.replaceFirstChar { it.uppercase() } ?: "Active")
                     CardDetailRow("Spending Limit", "$5,000 / month")
-                    CardDetailRow("Currency", "USD / EUR / GBP")
-                    CardDetailRow("CVV", "•••")
+                    CardDetailRow("Network", uiState.card?.network ?: "Visa")
+                    CardDetailRow("Type", uiState.card?.type?.replaceFirstChar { it.uppercase() } ?: "Virtual")
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            if (uiState.card == null) {
+                Spacer(modifier = Modifier.height(16.dp))
+                ClayButton(
+                    text = "Order Your Card",
+                    onClick = onOrderCard,
+                )
+            }
 
-            // Order new card button
-            ClayButton(
-                text = "Order New Card",
-                onClick = onOrderCard,
-                gradientStart = TranzoColors.PrimaryGreen,
-                gradientEnd = TranzoColors.AccentEmerald,
-            )
-
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(100.dp))
         }
     }
 }
@@ -237,20 +186,9 @@ fun CardScreenProClay(
 private fun CardDetailRow(label: String, value: String) {
     Row(
         modifier = Modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.SpaceBetween
+        horizontalArrangement = Arrangement.SpaceBetween,
     ) {
-        Text(
-            label,
-            style = MaterialTheme.typography.bodySmall,
-            color = TranzoColors.TextSecondary
-        )
-        Text(
-            value,
-            style = MaterialTheme.typography.bodySmall,
-            fontWeight = FontWeight.SemiBold,
-            color = TranzoColors.TextPrimary
-        )
+        Text(label, style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
+        Text(value, style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
     }
 }
-
-

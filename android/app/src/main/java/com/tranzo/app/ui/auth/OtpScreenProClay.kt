@@ -6,10 +6,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.outlined.Check
+import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -17,20 +16,20 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.ClayButton
+import com.tranzo.app.ui.components.ClayCard
 import com.tranzo.app.ui.components.ClayTextField
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Claymorphism OTP Verification Screen
+ * Claymorphism OTP Screen — Baby blue bg, white card for OTP input,
+ * solid blue verify button.
  */
 @Composable
 fun OtpScreenProClay(
@@ -43,9 +42,7 @@ fun OtpScreenProClay(
     val state by viewModel.state.collectAsState()
 
     var showContent by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        showContent = true
-    }
+    LaunchedEffect(Unit) { showContent = true }
 
     val contentAlpha by animateFloatAsState(
         targetValue = if (showContent) 1f else 0f,
@@ -56,9 +53,7 @@ fun OtpScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = TranzoColors.ClayBackground
-            )
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier
@@ -66,74 +61,109 @@ fun OtpScreenProClay(
                 .verticalScroll(rememberScrollState())
                 .alpha(contentAlpha)
                 .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
-            Spacer(modifier = Modifier.height(40.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
-            // Header
+            // Email icon in clay circle
+            Box(
+                modifier = Modifier
+                    .align(Alignment.CenterHorizontally)
+                    .size(72.dp)
+                    .shadow(
+                        elevation = 16.dp,
+                        shape = RoundedCornerShape(24.dp),
+                        ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.3f),
+                    )
+                    .clip(RoundedCornerShape(24.dp))
+                    .background(TranzoColors.ClayBlue),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Outlined.Email,
+                    contentDescription = null,
+                    tint = Color.White,
+                    modifier = Modifier.size(32.dp),
+                )
+            }
+
+            Spacer(modifier = Modifier.height(16.dp))
+
             Text(
                 "Verify Your Email",
-                style = MaterialTheme.typography.headlineSmall,
+                style = MaterialTheme.typography.headlineMedium,
                 fontWeight = FontWeight.Bold,
                 color = TranzoColors.TextPrimary,
-                fontSize = 28.sp
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Text(
-                "We sent a code to $email",
+                "We sent a 6-digit code to\n$email",
                 style = MaterialTheme.typography.bodyMedium,
-                color = TranzoColors.TextSecondary
+                color = TranzoColors.TextSecondary,
+                textAlign = TextAlign.Center,
+                modifier = Modifier.fillMaxWidth(),
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
-            // OTP Input
-            ClayTextField(
-                value = otp,
-                onValueChange = { if (it.length <= 6) otp = it },
-                placeholder = "000000",
-                modifier = Modifier.fillMaxWidth()
-            )
+            // OTP Input in a white card
+            ClayCard(
+                modifier = Modifier.fillMaxWidth(),
+            ) {
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(16.dp),
+                ) {
+                    Text(
+                        "Enter verification code",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.TextSecondary,
+                    )
+                    ClayTextField(
+                        value = otp,
+                        onValueChange = { if (it.length <= 6) otp = it },
+                        placeholder = "000000",
+                    )
+                }
+            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            if (state.error != null) {
+                Text(
+                    state.error!!,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TranzoColors.Error,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
 
-            // Verify Button
+            Spacer(modifier = Modifier.height(16.dp))
+
             ClayButton(
                 text = "Verify Code",
                 onClick = {
                     viewModel.verifyOtp(email, otp)
                     onOtpVerified()
                 },
-                gradientStart = TranzoColors.PrimaryBlue,
-                gradientEnd = TranzoColors.PrimaryPurple,
+                enabled = otp.length == 6 && !state.isLoading,
+                isLoading = state.isLoading,
             )
 
             // Resend
-            if (showResend) {
-                Button(
-                    onClick = { viewModel.sendOtp(email) },
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(48.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = TranzoColors.SurfaceLight,
-                        contentColor = TranzoColors.PrimaryBlue,
-                    ),
-                    elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp),
-                    shape = RoundedCornerShape(24.dp),
-                ) {
-                    Text(
-                        "Resend Code",
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                }
-            } else {
+            TextButton(
+                onClick = { viewModel.sendOtp(email) },
+                modifier = Modifier.fillMaxWidth(),
+            ) {
                 Text(
-                    "Resend in 30s",
-                    style = MaterialTheme.typography.labelSmall,
-                    color = TranzoColors.TextTertiary,
-                    textAlign = TextAlign.Center,
-                    modifier = Modifier.fillMaxWidth()
+                    if (showResend) "Resend Code" else "Resend in 30s",
+                    style = MaterialTheme.typography.labelLarge,
+                    fontWeight = FontWeight.SemiBold,
+                    color = if (showResend) TranzoColors.ClayBlue else TranzoColors.TextTertiary,
                 )
             }
 
@@ -141,5 +171,3 @@ fun OtpScreenProClay(
         }
     }
 }
-
-

@@ -10,13 +10,14 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.AttachMoney
 import androidx.compose.material.icons.outlined.Person
+import androidx.compose.material.icons.outlined.Send
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
@@ -29,7 +30,7 @@ import com.tranzo.app.ui.components.ClayTextField
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Claymorphism Send/Transfer Screen
+ * Claymorphism Send Screen — Baby blue bg, white form cards, solid blue CTA.
  */
 @Composable
 fun SendScreenProClay(
@@ -42,11 +43,8 @@ fun SendScreenProClay(
     val uiState by viewModel.state.collectAsState()
 
     var showContent by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        showContent = true
-    }
+    LaunchedEffect(Unit) { showContent = true }
 
-    // Handle success - navigate to confirmation
     LaunchedEffect(uiState.isSent) {
         if (uiState.isSent) {
             onConfirm()
@@ -63,168 +61,130 @@ fun SendScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = TranzoColors.ClayBackground
-            )
+            .background(TranzoColors.ClayBackground)
     ) {
-        if (uiState.isLoading) {
-            Box(
-                modifier = Modifier.fillMaxSize(),
-                contentAlignment = Alignment.Center
-            ) {
-                CircularProgressIndicator(color = TranzoColors.PrimaryBlue)
-            }
-        } else if (uiState.error != null) {
-            Column(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(24.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally
-            ) {
-                Text(
-                    "Transfer Failed",
-                    style = MaterialTheme.typography.headlineSmall,
-                    color = TranzoColors.Error
-                )
-                Spacer(modifier = Modifier.height(16.dp))
-                Text(
-                    uiState.error ?: "Unknown error",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary,
-                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
-                )
-                Spacer(modifier = Modifier.height(24.dp))
-                ClayButton(
-                    text = "Go Back",
-                    onClick = { viewModel.reset() },
-                    gradientStart = TranzoColors.PrimaryBlue,
-                    gradientEnd = TranzoColors.BlueLight
-                )
-            }
-        } else {
-            Column(
+        Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
                 .alpha(contentAlpha)
                 .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
-            // Header
-            Text(
-                "Send Crypto",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = TranzoColors.TextPrimary,
-                fontSize = 28.sp
-            )
+            // Header with icon
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .shadow(
+                            elevation = 12.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.3f),
+                        )
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(TranzoColors.ClayBlue),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        Icons.Outlined.Send,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp),
+                    )
+                }
+                Text(
+                    "Send Crypto",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = TranzoColors.TextPrimary,
+                )
+            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
             // Token selector
-            Text(
-                "Token",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextTertiary
-            )
-
-            ClayCard(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .height(100.dp),
-                backgroundGradient = listOf(
-                    Color.White,
-                    TranzoColors.BackgroundLight.copy(alpha = 0.7f)
-                )
-            ) {
+            ClayCard(modifier = Modifier.fillMaxWidth()) {
                 Row(
                     modifier = Modifier
-                        .fillMaxSize()
+                        .fillMaxWidth()
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically
+                    verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Row(
                         horizontalArrangement = Arrangement.spacedBy(12.dp),
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Box(
                             modifier = Modifier
-                                .size(44.dp)
-                                .clip(RoundedCornerShape(16.dp))
-                                .background(
-                                    color = TranzoColors.PrimaryBlue.copy(alpha = 0.12f)
-                                ),
-                            contentAlignment = Alignment.Center
+                                .size(40.dp)
+                                .clip(RoundedCornerShape(14.dp))
+                                .background(TranzoColors.ClayBlue),
+                            contentAlignment = Alignment.Center,
                         ) {
                             Text(
-                                "₌",
-                                style = MaterialTheme.typography.headlineSmall,
-                                color = TranzoColors.PrimaryBlue,
-                                fontWeight = FontWeight.Bold
+                                "$",
+                                color = Color.White,
+                                fontWeight = FontWeight.Bold,
+                                fontSize = 18.sp,
                             )
                         }
-
                         Column {
                             Text(
                                 selectedToken,
                                 style = MaterialTheme.typography.titleSmall,
-                                fontWeight = FontWeight.SemiBold,
-                                color = TranzoColors.TextPrimary
+                                fontWeight = FontWeight.Bold,
+                                color = TranzoColors.TextPrimary,
                             )
                             Text(
-                                "Balance: $8,950",
+                                "Base Sepolia",
                                 style = MaterialTheme.typography.labelSmall,
-                                color = TranzoColors.TextTertiary
+                                color = TranzoColors.TextTertiary,
                             )
                         }
                     }
-
-                    Icon(
-                        Icons.Outlined.AttachMoney,
-                        contentDescription = "Change",
-                        tint = TranzoColors.TextTertiary,
-                        modifier = Modifier.size(20.dp)
+                    Text(
+                        "Change",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TranzoColors.ClayBlue,
+                        fontWeight = FontWeight.SemiBold,
                     )
                 }
             }
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             // Recipient
             Text(
                 "Recipient",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextTertiary
+                color = TranzoColors.TextSecondary,
             )
 
             ClayTextField(
                 value = recipient,
                 onValueChange = { recipient = it },
-                placeholder = "0x742d... or @username",
+                placeholder = "Wallet address (0x...)",
                 leadingIcon = {
                     Icon(
                         Icons.Outlined.Person,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryBlue,
-                        modifier = Modifier.size(20.dp)
+                        tint = TranzoColors.ClayBlue,
+                        modifier = Modifier.size(20.dp),
                     )
-                }
+                },
             )
-
-            Spacer(modifier = Modifier.height(24.dp))
 
             // Amount
             Text(
                 "Amount",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextTertiary
+                color = TranzoColors.TextSecondary,
             )
 
             ClayTextField(
@@ -238,64 +198,62 @@ fun SendScreenProClay(
                     Icon(
                         Icons.Outlined.AttachMoney,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryGreen,
-                        modifier = Modifier.size(20.dp)
+                        tint = TranzoColors.ClayGreen,
+                        modifier = Modifier.size(20.dp),
                     )
-                }
+                },
             )
 
-            // Quick amount buttons
+            // Quick amounts
             Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(top = 12.dp),
-                horizontalArrangement = Arrangement.spacedBy(8.dp)
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(8.dp),
             ) {
-                repeat(3) { index ->
-                    Button(
-                        onClick = { amount = listOf("100", "500", "1000")[index] },
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(36.dp),
-                        colors = ButtonDefaults.buttonColors(
-                            containerColor = TranzoColors.SurfaceLight,
-                            contentColor = TranzoColors.PrimaryBlue
+                listOf("25", "50", "100", "500").forEach { quickAmount ->
+                    AssistChip(
+                        onClick = { amount = quickAmount },
+                        label = {
+                            Text(
+                                "$$quickAmount",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.SemiBold,
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                        shape = RoundedCornerShape(14.dp),
+                        colors = AssistChipDefaults.assistChipColors(
+                            containerColor = Color.White,
+                            labelColor = TranzoColors.TextPrimary,
                         ),
-                        shape = RoundedCornerShape(16.dp),
-                        elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-                    ) {
-                        Text(
-                            "$" + listOf("100", "500", "1000")[index],
-                            style = MaterialTheme.typography.labelSmall,
-                            fontWeight = FontWeight.SemiBold
-                        )
-                    }
+                        border = AssistChipDefaults.assistChipBorder(
+                            enabled = true,
+                            borderColor = TranzoColors.ClayInputBorder,
+                        ),
+                    )
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            // Error
+            if (uiState.error != null) {
+                Text(
+                    uiState.error!!,
+                    style = MaterialTheme.typography.bodySmall,
+                    color = TranzoColors.Error,
+                )
+            }
 
-            // Send Button
+            Spacer(modifier = Modifier.height(24.dp))
+
             ClayButton(
                 text = "Review Transfer",
                 onClick = {
-                    viewModel.sendToken(
-                        to = recipient,
-                        tokenSymbol = selectedToken,
-                        amount = amount
-                    )
+                    viewModel.sendToken(recipient, selectedToken, amount)
                 },
                 enabled = recipient.isNotBlank() && amount.isNotBlank() && !uiState.isLoading,
-                gradientStart = TranzoColors.PrimaryBlue,
-                gradientEnd = TranzoColors.PrimaryPurple,
+                isLoading = uiState.isLoading,
             )
 
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
-
-
-}
-
-

@@ -15,7 +15,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.draw.shadow
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
@@ -23,11 +23,10 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.ClayButton
 import com.tranzo.app.ui.components.ClayCard
-import com.tranzo.app.ui.components.ClayTextField
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Claymorphism Swap Screen
+ * Claymorphism Swap Screen — Baby blue bg, white token cards, swap arrow, solid blue CTA.
  */
 @Composable
 fun SwapScreenProClay(
@@ -38,18 +37,12 @@ fun SwapScreenProClay(
     val fromToken = uiState.fromToken
     val toToken = uiState.toToken
     val fromAmount = uiState.fromAmount
-    val quote = uiState.quote
 
     var showContent by remember { mutableStateOf(false) }
-    LaunchedEffect(Unit) {
-        showContent = true
-    }
+    LaunchedEffect(Unit) { showContent = true }
 
-    // Handle swap completion
     LaunchedEffect(uiState.isSwapped) {
-        if (uiState.isSwapped) {
-            onSwapInitiated()
-        }
+        if (uiState.isSwapped) onSwapInitiated()
     }
 
     val contentAlpha by animateFloatAsState(
@@ -61,9 +54,7 @@ fun SwapScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                color = TranzoColors.ClayBackground
-            )
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier
@@ -71,70 +62,103 @@ fun SwapScreenProClay(
                 .verticalScroll(rememberScrollState())
                 .alpha(contentAlpha)
                 .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(20.dp)
+            verticalArrangement = Arrangement.spacedBy(16.dp)
         ) {
             Spacer(modifier = Modifier.height(24.dp))
 
             // Header
-            Text(
-                "Swap Tokens",
-                style = MaterialTheme.typography.headlineSmall,
-                fontWeight = FontWeight.Bold,
-                color = TranzoColors.TextPrimary,
-                fontSize = 28.sp
-            )
+            Row(
+                verticalAlignment = Alignment.CenterVertically,
+                horizontalArrangement = Arrangement.spacedBy(12.dp),
+            ) {
+                Box(
+                    modifier = Modifier
+                        .size(48.dp)
+                        .shadow(
+                            elevation = 12.dp,
+                            shape = RoundedCornerShape(16.dp),
+                            ambientColor = TranzoColors.PrimaryPurple.copy(alpha = 0.3f),
+                        )
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(TranzoColors.PrimaryPurple),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    Icon(
+                        Icons.Outlined.SwapVert,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(24.dp),
+                    )
+                }
+                Text(
+                    "Swap Tokens",
+                    style = MaterialTheme.typography.headlineMedium,
+                    fontWeight = FontWeight.Bold,
+                    color = TranzoColors.TextPrimary,
+                )
+            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+            Spacer(modifier = Modifier.height(8.dp))
 
-            // From section
+            // From card
             Text(
                 "From",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextTertiary
+                color = TranzoColors.TextSecondary,
             )
 
-            ClayCard(
-                modifier = Modifier.fillMaxWidth(),
-                backgroundGradient = listOf(
-                    Color.White,
-                    TranzoColors.BackgroundLight.copy(alpha = 0.7f)
-                )
-            ) {
+            ClayCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            fromToken,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TranzoColors.TextPrimary
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(TranzoColors.ClayBlue),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    fromToken.first().toString(),
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            Text(
+                                fromToken,
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = TranzoColors.TextPrimary,
+                            )
+                        }
                         Text(
                             "Bal: $8,950",
                             style = MaterialTheme.typography.labelSmall,
-                            color = TranzoColors.TextTertiary
+                            color = TranzoColors.TextTertiary,
                         )
                     }
 
                     TextField(
                         value = fromAmount,
-                        onValueChange = { amount ->
-                            viewModel.onFromAmountChanged(amount)
-                        },
+                        onValueChange = { viewModel.onFromAmountChanged(it) },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("0.00") },
                         textStyle = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
+                            fontSize = 28.sp,
                         ),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
@@ -146,67 +170,76 @@ fun SwapScreenProClay(
                 }
             }
 
-            // Swap button
+            // Swap direction button
             Box(
                 modifier = Modifier
                     .align(Alignment.CenterHorizontally)
                     .size(44.dp)
-                    .clip(RoundedCornerShape(16.dp))
-                    .background(
-                        brush = Brush.linearGradient(
-                            colors = listOf(
-                                TranzoColors.PrimaryPurple,
-                                TranzoColors.PrimaryPink
-                            )
-                        ),
-                        shape = RoundedCornerShape(16.dp)
-                    ),
-                contentAlignment = Alignment.Center
+                    .shadow(
+                        elevation = 10.dp,
+                        shape = RoundedCornerShape(14.dp),
+                        ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.3f),
+                    )
+                    .clip(RoundedCornerShape(14.dp))
+                    .background(TranzoColors.ClayBlue),
+                contentAlignment = Alignment.Center,
             ) {
                 Icon(
                     Icons.Outlined.SwapVert,
-                    contentDescription = "Swap",
+                    contentDescription = "Swap direction",
                     tint = Color.White,
-                    modifier = Modifier.size(24.dp)
+                    modifier = Modifier.size(24.dp),
                 )
             }
 
-            // To section
+            // To card
             Text(
                 "To",
                 style = MaterialTheme.typography.labelMedium,
                 fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextTertiary
+                color = TranzoColors.TextSecondary,
             )
 
-            ClayCard(
-                modifier = Modifier.fillMaxWidth(),
-                backgroundGradient = listOf(
-                    Color.White,
-                    TranzoColors.BackgroundLight.copy(alpha = 0.7f)
-                )
-            ) {
+            ClayCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp)
+                        .padding(20.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
-                        verticalAlignment = Alignment.CenterVertically
+                        verticalAlignment = Alignment.CenterVertically,
                     ) {
-                        Text(
-                            toToken,
-                            style = MaterialTheme.typography.bodyMedium,
-                            fontWeight = FontWeight.SemiBold,
-                            color = TranzoColors.TextPrimary
-                        )
+                        Row(
+                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            verticalAlignment = Alignment.CenterVertically,
+                        ) {
+                            Box(
+                                modifier = Modifier
+                                    .size(36.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(TranzoColors.ClayGreen),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text(
+                                    toToken.first().toString(),
+                                    color = Color.White,
+                                    fontWeight = FontWeight.Bold,
+                                )
+                            }
+                            Text(
+                                toToken,
+                                style = MaterialTheme.typography.titleSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = TranzoColors.TextPrimary,
+                            )
+                        }
                         Text(
                             "Bal: 1.2",
                             style = MaterialTheme.typography.labelSmall,
-                            color = TranzoColors.TextTertiary
+                            color = TranzoColors.TextTertiary,
                         )
                     }
 
@@ -218,7 +251,7 @@ fun SwapScreenProClay(
                         enabled = false,
                         textStyle = MaterialTheme.typography.headlineSmall.copy(
                             fontWeight = FontWeight.Bold,
-                            fontSize = 24.sp
+                            fontSize = 28.sp,
                         ),
                         colors = TextFieldDefaults.colors(
                             disabledContainerColor = Color.Transparent,
@@ -228,42 +261,33 @@ fun SwapScreenProClay(
                 }
             }
 
-            Spacer(modifier = Modifier.height(24.dp))
-
-            // Info
-            ClayCard(
-                modifier = Modifier.fillMaxWidth(),
-                backgroundGradient = listOf(
-                    TranzoColors.Info.copy(alpha = 0.08f),
-                    TranzoColors.BlueLight.copy(alpha = 0.05f)
-                )
-            ) {
+            // Rate info
+            ClayCard(modifier = Modifier.fillMaxWidth()) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(12.dp),
-                    verticalArrangement = Arrangement.spacedBy(6.dp)
+                        .padding(16.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text("Rate", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
                         Text("1 USDC = 0.00062 ETH", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.SpaceBetween
+                        horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text("Fee", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                        Text("~$5.00 (0.5%)", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
+                        Text("~$0.10 (gasless)", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.ClayGreen)
                     }
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(16.dp))
 
-            // Swap button
             ClayButton(
                 text = "Review Swap",
                 onClick = {
@@ -271,13 +295,9 @@ fun SwapScreenProClay(
                     onSwapInitiated()
                 },
                 enabled = fromAmount.isNotBlank(),
-                gradientStart = TranzoColors.PrimaryPurple,
-                gradientEnd = TranzoColors.PrimaryPink,
             )
 
             Spacer(modifier = Modifier.height(32.dp))
         }
     }
 }
-
-
