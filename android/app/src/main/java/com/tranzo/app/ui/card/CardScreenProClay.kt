@@ -34,7 +34,7 @@ fun CardScreenProClay(
     viewModel: CardViewModel = hiltViewModel(),
     onOrderCard: () -> Unit = {},
 ) {
-    val cardState by viewModel.cardState.collectAsState(null)
+    val uiState by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
