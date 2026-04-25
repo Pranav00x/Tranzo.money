@@ -75,26 +75,26 @@ fun SecurityScreenClay(
                         icon = Icons.Outlined.Fingerprint,
                         title = "Biometric Unlock",
                         description = "Use fingerprint or face",
-                        isEnabled = uiState.biometricEnabled,
-                        onToggle = { viewModel.toggleBiometric() },
+                        isEnabled = uiState.isBiometricEnabled,
+                        onToggle = { viewModel.setBiometricEnabled(!uiState.isBiometricEnabled) },
                         iconColor = TranzoColors.ClayBlue,
                     )
                     HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(horizontal = 16.dp))
                     SecurityToggleItem(
-                        icon = Icons.Outlined.Pin,
-                        title = "PIN Lock",
-                        description = "4-digit security PIN",
-                        isEnabled = uiState.pinEnabled,
-                        onToggle = { viewModel.togglePin() },
+                        icon = Icons.Outlined.Lock,
+                        title = "Transaction Lock",
+                        description = "Require auth for transactions",
+                        isEnabled = uiState.isTransactionLockEnabled,
+                        onToggle = { viewModel.setTransactionLockEnabled(!uiState.isTransactionLockEnabled) },
                         iconColor = TranzoColors.PrimaryPurple,
                     )
                     HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(horizontal = 16.dp))
                     SecurityToggleItem(
                         icon = Icons.Outlined.Notifications,
-                        title = "Transaction Alerts",
-                        description = "Notify on every transaction",
-                        isEnabled = uiState.alertsEnabled,
-                        onToggle = { viewModel.toggleAlerts() },
+                        title = "Auto Lock",
+                        description = "Lock app when inactive",
+                        isEnabled = uiState.isAutoLockEnabled,
+                        onToggle = { viewModel.setAutoLockEnabled(!uiState.isAutoLockEnabled) },
                         iconColor = TranzoColors.ClayGreen,
                     )
                 }
