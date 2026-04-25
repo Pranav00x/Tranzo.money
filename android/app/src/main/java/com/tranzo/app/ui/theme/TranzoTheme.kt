@@ -4,48 +4,49 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-// Bold, modern crypto wallet color palette
+// Claymorphism premium crypto palette for Gen Z
+// Trust-focused with vibrant, playful surfaces
 object TranzoColors {
-    // Primary brand colors - vibrant, distinctive
-    val PrimaryBlue = Color(0xFF0052CC)
-    val PrimaryPurple = Color(0xFF7C3AED)
-    val PrimaryGreen = Color(0xFF10B981)
-    val PrimaryOrange = Color(0xFFF97316)
-    val PrimaryPink = Color(0xFFEC4899)
+    // Primary gradient colors - vibrant, sophisticated
+    val PrimaryBlue = Color(0xFF5B8DEF)        // Warm blue (primary)
+    val PrimaryPurple = Color(0xFF9D6BD5)      // Soft purple
+    val PrimaryPink = Color(0xFFFF6B9D)        // Vibrant pink (accent)
+    val PrimaryGreen = Color(0xFF4ECCA3)       // Mint green
+    val PrimaryYellow = Color(0xFFFFD166)      // Soft gold
 
-    // Accent colors for status and interactions
-    val AccentCyan = Color(0xFF06B6D4)
-    val AccentViolet = Color(0xFFA78BFA)
-    val AccentEmerald = Color(0xFF34D399)
+    // Secondary gradient stops for smooth transitions
+    val BlueLight = Color(0xFF7BA8F7)          // Light blue
+    val PurpleLight = Color(0xFFB89FE0)        // Light purple
+    val PinkLight = Color(0xFFFF8FB3)          // Light pink
 
-    // Neutral palette - refined, modern
-    val TextPrimary = Color(0xFF0F172A)        // Deep slate
-    val TextSecondary = Color(0xFF64748B)      // Muted slate
-    val TextTertiary = Color(0xFFAEB9D0)       // Light slate
-    val TextDisabled = Color(0xFFCBD5E1)       // Lighter slate
+    // Neutral palette - refined, warm-tinted
+    val TextPrimary = Color(0xFF1A1A2E)        // Deep navy
+    val TextSecondary = Color(0xFF5A5F7F)      // Slate
+    val TextTertiary = Color(0xFF9BA3B8)       // Light slate
+    val TextDisabled = Color(0xFFD0D4E8)       // Lighter slate
 
-    val White = Color(0xFFFFFFFF)
-    val BackgroundLight = Color(0xFFFAFBFE)    // Cool white
-    val SurfaceLight = Color(0xFFF1F5F9)       // Light cool
-    val SurfaceAlt = Color(0xFFE2E8F0)         // Secondary surface
-    val DividerGray = Color(0xFFE2E8F0)        // Divider
+    val White = Color(0xFFFEFEFE)
+    val BackgroundLight = Color(0xFFF8F6FF)    // Soft lavender-white
+    val SurfaceLight = Color(0xFFF0EDFF)       // Light lavender
+    val SurfaceAlt = Color(0xFFE8E5FF)         // Secondary surface
+    val DividerGray = Color(0xFFE8E5FF)        // Divider
 
     // Dark mode variants
-    val BackgroundDark = Color(0xFF0F1117)
-    val SurfaceDark = Color(0xFF161B22)
-    val TextDarkPrimary = Color(0xFFF0F6FC)
-    val TextDarkSecondary = Color(0xFF8B949E)
+    val BackgroundDark = Color(0xFF0F0F1E)
+    val SurfaceDark = Color(0xFF1A1A2E)
+    val TextDarkPrimary = Color(0xFFF5F3FF)
+    val TextDarkSecondary = Color(0xFFB8BFDB)
 
-    // Status colors
-    val Success = Color(0xFF10B981)
-    val Error = Color(0xFFEF4444)
-    val ErrorLight = Color(0xFFFFEBEE)
-    val Warning = Color(0xFFFBBF24)
-    val Info = Color(0xFF3B82F6)
+    // Status colors with claymorphism tint
+    val Success = Color(0xFF4ECCA3)
+    val Error = Color(0xFFFF6B6B)
+    val ErrorLight = Color(0xFFFFF0F0)
+    val Warning = Color(0xFFFFB84D)
+    val Info = Color(0xFF5B8DEF)
 
     // Navigation colors
-    val NavActive = Color(0xFF0052CC)
-    val NavInactive = Color(0xFF64748B)
+    val NavActive = Color(0xFF5B8DEF)
+    val NavInactive = Color(0xFFB8BFDB)
 }
 
 @Composable
