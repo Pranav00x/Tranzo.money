@@ -28,15 +28,7 @@ import com.tranzo.app.ui.theme.TranzoColors
 fun TransactionHistoryScreenClay(
     viewModel: HistoryViewModel = hiltViewModel(),
 ) {
-    val transactions = listOf(
-        "Sent $500 USDC" to "2 hours ago",
-        "Received $1200 USDC" to "5 hours ago",
-        "Swapped 2 ETH for $3400 USDC" to "1 day ago",
-        "Sent $250 USDC" to "2 days ago",
-        "Received $800 USDC" to "3 days ago",
-        "Card Purchase $45.99" to "3 days ago",
-        "Sent $1000 USDC" to "4 days ago",
-    )
+    val uiState by viewModel.state.collectAsState()
 
     Box(
         modifier = Modifier
@@ -50,42 +42,73 @@ fun TransactionHistoryScreenClay(
                 )
             )
     ) {
-        Column(modifier = Modifier.fillMaxSize()) {
-            // Header
+        if (uiState.isLoading && uiState.transactions.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = TranzoColors.PrimaryBlue)
+            }
+        } else if (uiState.error != null && uiState.transactions.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "History",
+                    "Error loading history",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary,
-                    fontSize = 28.sp
+                    color = TranzoColors.Error
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    "Your recent transactions",
+                    uiState.error ?: "Unknown error",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary
+                    color = TranzoColors.TextSecondary,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }
-
-            // Transaction list
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxSize()
-                    .padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(12.dp),
-                contentPadding = PaddingValues(bottom = 32.dp)
-            ) {
-                items(transactions) { (description, time) ->
-                    TransactionItemClay(
-                        description = description,
-                        time = time,
-                        type = if ("Sent" in description) "sent" else "received"
+        } else {
+            Column(modifier = Modifier.fillMaxSize()) {
+                // Header
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
+                ) {
+                    Text(
+                        "History",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = TranzoColors.TextPrimary,
+                        fontSize = 28.sp
                     )
+                    Text(
+                        "Your recent transactions",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TranzoColors.TextSecondary
+                    )
+                }
+
+                // Transaction list from API
+                LazyColumn(
+                    modifier = Modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    contentPadding = PaddingValues(bottom = 32.dp)
+                ) {
+                    items(uiState.transactions) { tx ->
+                        TransactionItemClay(
+                            description = tx.type ?: "Transaction",
+                            time = java.text.SimpleDateFormat("MMM dd, HH:mm", java.util.Locale.US)
+                                .format(java.util.Date(tx.createdAt * 1000)),
+                            type = if ("Sent" in (tx.type ?: "")) "sent" else "received"
+                        )
+                    }
                 }
             }
         }

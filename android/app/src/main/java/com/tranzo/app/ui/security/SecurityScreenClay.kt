@@ -11,6 +11,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
@@ -27,6 +28,8 @@ import com.tranzo.app.ui.theme.TranzoColors
 fun SecurityScreenClay(
     viewModel: SecurityViewModel = hiltViewModel(),
 ) {
+    val uiState by viewModel.state.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -113,18 +116,30 @@ fun SecurityScreenClay(
                 icon = Icons.Outlined.Fingerprint,
                 title = "Biometric",
                 description = "Face ID / Fingerprint",
-                isEnabled = true,
+                isEnabled = uiState.isBiometricEnabled,
+                onToggle = { viewModel.setBiometricEnabled(!uiState.isBiometricEnabled) },
                 gradientStart = TranzoColors.PrimaryBlue,
                 gradientEnd = TranzoColors.BlueLight
             )
 
             SecurityItemClay(
                 icon = Icons.Outlined.Lock,
-                title = "PIN Code",
-                description = "6-digit security PIN",
-                isEnabled = true,
+                title = "Transaction Lock",
+                description = "Require biometric for transactions",
+                isEnabled = uiState.isTransactionLockEnabled,
+                onToggle = { viewModel.setTransactionLockEnabled(!uiState.isTransactionLockEnabled) },
                 gradientStart = TranzoColors.PrimaryGreen,
                 gradientEnd = TranzoColors.AccentEmerald
+            )
+
+            SecurityItemClay(
+                icon = Icons.Outlined.Schedule,
+                title = "Auto-Lock",
+                description = "Lock wallet when inactive",
+                isEnabled = uiState.isAutoLockEnabled,
+                onToggle = { viewModel.setAutoLockEnabled(!uiState.isAutoLockEnabled) },
+                gradientStart = TranzoColors.PrimaryPurple,
+                gradientEnd = TranzoColors.PinkLight
             )
 
             Spacer(modifier = Modifier.height(24.dp))
@@ -167,7 +182,7 @@ fun SecurityScreenClay(
 
                             Column {
                                 Text(
-                                    "iPhone 15",
+                                    "Current Device",
                                     style = MaterialTheme.typography.bodySmall,
                                     fontWeight = FontWeight.SemiBold,
                                     color = TranzoColors.TextPrimary
@@ -181,7 +196,7 @@ fun SecurityScreenClay(
                         }
 
                         Text(
-                            "This device",
+                            "Active",
                             style = MaterialTheme.typography.labelSmall,
                             color = TranzoColors.PrimaryGreen,
                             fontWeight = FontWeight.SemiBold
@@ -201,6 +216,7 @@ private fun SecurityItemClay(
     title: String,
     description: String,
     isEnabled: Boolean,
+    onToggle: (Boolean) -> Unit = {},
     gradientStart: Color = TranzoColors.PrimaryBlue,
     gradientEnd: Color = TranzoColors.BlueLight
 ) {
@@ -257,7 +273,7 @@ private fun SecurityItemClay(
 
             Switch(
                 checked = isEnabled,
-                onCheckedChange = {},
+                onCheckedChange = onToggle,
                 colors = SwitchDefaults.colors(
                     checkedThumbColor = TranzoColors.Success,
                     checkedTrackColor = TranzoColors.Success.copy(alpha = 0.3f)

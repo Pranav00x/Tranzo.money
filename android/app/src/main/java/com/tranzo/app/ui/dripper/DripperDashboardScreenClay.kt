@@ -17,6 +17,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -34,6 +35,8 @@ fun DripperDashboardScreenClay(
     viewModel: DripperViewModel = hiltViewModel(),
     onCreateStream: () -> Unit = {},
 ) {
+    val uiState by viewModel.state.collectAsState()
+
     Box(
         modifier = Modifier
             .fillMaxSize()
@@ -46,102 +49,167 @@ fun DripperDashboardScreenClay(
                 )
             )
     ) {
-        Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-        ) {
-            // Header
+        if (uiState.isLoading && uiState.streams.isEmpty()) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = TranzoColors.PrimaryBlue)
+            }
+        } else if (uiState.error != null && uiState.streams.isEmpty()) {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
+                    .fillMaxSize()
                     .padding(24.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp)
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
             ) {
                 Text(
-                    "Streams",
+                    "Error loading streams",
                     style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary,
-                    fontSize = 28.sp
+                    color = TranzoColors.Error
                 )
+                Spacer(modifier = Modifier.height(16.dp))
                 Text(
-                    "Manage your payment streams",
+                    uiState.error ?: "Unknown error",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary
+                    color = TranzoColors.TextSecondary,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
                 )
             }
-
+        } else {
             Column(
                 modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = 24.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp)
+                    .fillMaxSize()
+                    .verticalScroll(rememberScrollState())
             ) {
-                // Stats
-                Text(
-                    "Overview",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TranzoColors.TextTertiary
-                )
-
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp)
+                // Header
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(24.dp),
+                    verticalArrangement = Arrangement.spacedBy(8.dp)
                 ) {
-                    ClayStatCard(
-                        label = "Active Streams",
-                        value = "3",
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(100.dp),
-                        gradientStart = TranzoColors.PrimaryBlue,
-                        gradientEnd = TranzoColors.BlueLight,
+                    Text(
+                        "Streams",
+                        style = MaterialTheme.typography.headlineSmall,
+                        fontWeight = FontWeight.Bold,
+                        color = TranzoColors.TextPrimary,
+                        fontSize = 28.sp
                     )
-
-                    ClayStatCard(
-                        label = "Monthly Flow",
-                        value = "$5,400",
-                        modifier = Modifier
-                            .weight(1f)
-                            .height(100.dp),
-                        gradientStart = TranzoColors.PrimaryGreen,
-                        gradientEnd = TranzoColors.AccentEmerald,
+                    Text(
+                        "Manage your payment streams",
+                        style = MaterialTheme.typography.bodyMedium,
+                        color = TranzoColors.TextSecondary
                     )
                 }
 
-                Spacer(modifier = Modifier.height(8.dp))
-
-                // Active streams
-                Text(
-                    "Active Streams",
-                    style = MaterialTheme.typography.labelMedium,
-                    fontWeight = FontWeight.SemiBold,
-                    color = TranzoColors.TextTertiary
-                )
-
-                repeat(3) { index ->
-                    StreamItemClay(
-                        recipient = listOf("Alice", "Bob", "Charlie")[index],
-                        amount = listOf("$1,800/mo", "$2,100/mo", "$1,500/mo")[index],
-                        status = "Active"
+                Column(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(horizontal = 24.dp),
+                    verticalArrangement = Arrangement.spacedBy(20.dp)
+                ) {
+                    // Stats
+                    Text(
+                        "Overview",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.TextTertiary
                     )
+
+                    Row(
+                        modifier = Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp)
+                    ) {
+                        ClayStatCard(
+                            label = "Active Streams",
+                            value = uiState.activeCount.toString(),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(100.dp),
+                            gradientStart = TranzoColors.PrimaryBlue,
+                            gradientEnd = TranzoColors.BlueLight,
+                        )
+
+                        ClayStatCard(
+                            label = "Monthly Flow",
+                            value = calculateMonthlyFlow(uiState.streams),
+                            modifier = Modifier
+                                .weight(1f)
+                                .height(100.dp),
+                            gradientStart = TranzoColors.PrimaryGreen,
+                            gradientEnd = TranzoColors.AccentEmerald,
+                        )
+                    }
+
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    // Active streams
+                    Text(
+                        "Active Streams",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.TextTertiary
+                    )
+
+                    if (uiState.streams.isEmpty()) {
+                        Text(
+                            "No active streams",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TranzoColors.TextSecondary,
+                            modifier = Modifier.padding(vertical = 16.dp)
+                        )
+                    } else {
+                        LazyColumn(
+                            verticalArrangement = Arrangement.spacedBy(12.dp)
+                        ) {
+                            items(uiState.streams) { stream ->
+                                StreamItemClay(
+                                    recipient = stream.employeeAddress.take(10) + "...",
+                                    amount = formatStreamAmount(stream.amountPerSecond),
+                                    status = stream.status
+                                )
+                            }
+                        }
+                    }
+
+                    Spacer(modifier = Modifier.height(24.dp))
+
+                    // Create stream button
+                    ClayButton(
+                        text = "Create New Stream",
+                        onClick = onCreateStream,
+                        gradientStart = TranzoColors.PrimaryPurple,
+                        gradientEnd = TranzoColors.PinkLight,
+                    )
+
+                    Spacer(modifier = Modifier.height(32.dp))
                 }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // Create stream button
-                ClayButton(
-                    text = "Create New Stream",
-                    onClick = onCreateStream,
-                    gradientStart = TranzoColors.PrimaryPurple,
-                    gradientEnd = TranzoColors.PinkLight,
-                )
-
-                Spacer(modifier = Modifier.height(32.dp))
             }
         }
+    }
+}
+
+private fun calculateMonthlyFlow(streams: List<com.tranzo.app.data.model.StreamDetail>): String {
+    val activeStreams = streams.filter { it.status.equals("ACTIVE", true) }
+    val monthlyTotal = activeStreams.map { stream ->
+        try {
+            stream.amountPerSecond.toBigDecimal() * 86400.toBigDecimal() * 30.toBigDecimal()
+        } catch (e: Exception) {
+            java.math.BigDecimal.ZERO
+        }
+    }.fold(java.math.BigDecimal.ZERO) { acc, value -> acc + value }
+
+    return "$" + String.format("%.0f", monthlyTotal)
+}
+
+private fun formatStreamAmount(amountPerSecond: String): String {
+    return try {
+        val monthlyAmount = amountPerSecond.toBigDecimal() * 86400.toBigDecimal() * 30.toBigDecimal()
+        "$" + String.format("%.0f", monthlyAmount) + "/mo"
+    } catch (e: Exception) {
+        "$0/mo"
     }
 }
 

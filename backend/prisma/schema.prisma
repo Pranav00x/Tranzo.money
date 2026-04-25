@@ -150,7 +150,8 @@ model UserOpLog {
   id              String       @id @default(cuid())
   userId          String
   user            User         @relation(fields: [userId], references: [id])
-  openfortIntentId String      @unique  // Openfort transaction intent ID
+  opHash          String?      @unique  // ZeroDev UserOp hash
+  openfortIntentId String?     @unique  // [DEPRECATED] Openfort transaction intent ID
   type            String       // 'transfer', 'swap', 'dripper_withdraw', 'recovery'
   status          UserOpStatus @default(PENDING)
   txHash          String?
@@ -159,6 +160,7 @@ model UserOpLog {
   confirmedAt     DateTime?
 
   @@index([userId])
+  @@index([opHash])
   @@index([openfortIntentId])
 }
 
