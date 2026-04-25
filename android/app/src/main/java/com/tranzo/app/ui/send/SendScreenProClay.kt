@@ -38,10 +38,19 @@ fun SendScreenProClay(
     var recipient by remember { mutableStateOf("") }
     var amount by remember { mutableStateOf("") }
     var selectedToken by remember { mutableStateOf("USDC") }
+    val uiState by viewModel.state.collectAsState()
 
     var showContent by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         showContent = true
+    }
+
+    // Handle success - navigate to confirmation
+    LaunchedEffect(uiState.isSent) {
+        if (uiState.isSent) {
+            onConfirm()
+            viewModel.reset()
+        }
     }
 
     val contentAlpha by animateFloatAsState(
@@ -62,7 +71,43 @@ fun SendScreenProClay(
                 )
             )
     ) {
-        Column(
+        if (uiState.isLoading) {
+            Box(
+                modifier = Modifier.fillMaxSize(),
+                contentAlignment = Alignment.Center
+            ) {
+                CircularProgressIndicator(color = TranzoColors.PrimaryBlue)
+            }
+        } else if (uiState.error != null) {
+            Column(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .padding(24.dp),
+                verticalArrangement = Arrangement.Center,
+                horizontalAlignment = Alignment.CenterHorizontally
+            ) {
+                Text(
+                    "Transfer Failed",
+                    style = MaterialTheme.typography.headlineSmall,
+                    color = TranzoColors.Error
+                )
+                Spacer(modifier = Modifier.height(16.dp))
+                Text(
+                    uiState.error ?: "Unknown error",
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = TranzoColors.TextSecondary,
+                    textAlign = androidx.compose.ui.text.style.TextAlign.Center
+                )
+                Spacer(modifier = Modifier.height(24.dp))
+                ClayButton(
+                    text = "Go Back",
+                    onClick = { viewModel.reset() },
+                    gradientStart = TranzoColors.PrimaryBlue,
+                    gradientEnd = TranzoColors.BlueLight
+                )
+            }
+        } else {
+            Column(
             modifier = Modifier
                 .fillMaxSize()
                 .verticalScroll(rememberScrollState())
@@ -236,10 +281,13 @@ fun SendScreenProClay(
             ClayButton(
                 text = "Review Transfer",
                 onClick = {
-                    viewModel.initiateSend(recipient, amount, selectedToken)
-                    onConfirm()
+                    viewModel.sendToken(
+                        to = recipient,
+                        tokenSymbol = selectedToken,
+                        amount = amount
+                    )
                 },
-                enabled = recipient.isNotBlank() && amount.isNotBlank(),
+                enabled = recipient.isNotBlank() && amount.isNotBlank() && !uiState.isLoading,
                 gradientStart = TranzoColors.PrimaryBlue,
                 gradientEnd = TranzoColors.PrimaryPurple,
             )

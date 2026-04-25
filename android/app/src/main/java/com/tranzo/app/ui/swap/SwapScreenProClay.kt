@@ -34,14 +34,22 @@ fun SwapScreenProClay(
     viewModel: SwapViewModel = hiltViewModel(),
     onSwapInitiated: () -> Unit = {},
 ) {
-    var fromToken by remember { mutableStateOf("USDC") }
-    var toToken by remember { mutableStateOf("ETH") }
-    var fromAmount by remember { mutableStateOf("") }
-    var toAmount by remember { mutableStateOf("") }
+    val uiState by viewModel.state.collectAsState()
+    val fromToken = uiState.fromToken
+    val toToken = uiState.toToken
+    val fromAmount = uiState.fromAmount
+    val quote = uiState.quote
 
     var showContent by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         showContent = true
+    }
+
+    // Handle swap completion
+    LaunchedEffect(uiState.isSwapped) {
+        if (uiState.isSwapped) {
+            onSwapInitiated()
+        }
     }
 
     val contentAlpha by animateFloatAsState(
@@ -124,7 +132,9 @@ fun SwapScreenProClay(
 
                     TextField(
                         value = fromAmount,
-                        onValueChange = { fromAmount = it },
+                        onValueChange = { amount ->
+                            viewModel.onFromAmountChanged(amount)
+                        },
                         modifier = Modifier.fillMaxWidth(),
                         placeholder = { Text("0.00") },
                         textStyle = MaterialTheme.typography.headlineSmall.copy(
