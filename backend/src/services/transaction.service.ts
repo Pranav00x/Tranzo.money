@@ -4,9 +4,10 @@ import { privateKeyToAccount } from "viem/accounts";
 import { SmartAccountService } from "./smart-account.service.js";
 import { ENV } from "../config/env.js";
 import prisma from "./prisma.service.js";
+import { UserOpStatus } from "@prisma/client";
 
 // ZeroDev SDK
-import { createKernelAccountClient } from "@zerodev/sdk";
+import { createKernelAccount, createKernelAccountClient } from "@zerodev/sdk";
 // @ts-ignore
 import { signerToEcdsaValidator } from "@zerodev/ecdsa-validator";
 import { getEntryPoint, KERNEL_V3_1 } from "@zerodev/sdk/constants";
@@ -50,21 +51,31 @@ export class TransactionService {
         transport: http(ENV.ZERODEV_RPC_URL || ""),
       });
 
+      const entryPoint = getEntryPoint("0.7");
+
       // Create ECDSA validator
       // @ts-ignore
       const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
         signer,
-        entryPoint: getEntryPoint("0.7"),
+        entryPoint,
         kernelVersion: KERNEL_V3_1,
       });
 
-      // Create account client
-      const accountClient = await createKernelAccountClient(publicClient, {
-        account: user.smartAccount as `0x${string}`,
+      // Re-create the kernel account object from the stored address
+      // @ts-ignore
+      const account = await createKernelAccount(publicClient, {
         plugins: { sudo: ecdsaValidator },
-        entryPoint: getEntryPoint("0.7"),
+        entryPoint,
         kernelVersion: KERNEL_V3_1,
-        bundlerRpc: ENV.ZERODEV_RPC_URL || "",
+        accountAddress: user.smartAccount as `0x${string}`,
+      });
+
+      // Create account client
+      const accountClient = createKernelAccountClient({
+        account,
+        chain: this.CHAIN,
+        bundlerTransport: http(ENV.ZERODEV_RPC_URL || ""),
+        entryPoint,
       });
 
       // ERC-20 transfer ABI
@@ -89,16 +100,20 @@ export class TransactionService {
 
       // Send UserOp
       const opHash = await accountClient.sendUserOperation({
-        target: params.tokenAddress as `0x${string}`,
-        data: callData,
-        value: BigInt(0),
+        calls: [
+          {
+            to: params.tokenAddress as `0x${string}`,
+            data: callData,
+            value: BigInt(0),
+          }
+        ]
       });
 
       console.log(`[Transaction] ✅ UserOp submitted: ${opHash}`);
 
       return {
         opHash,
-        status: "SUBMITTED",
+        status: UserOpStatus.SUBMITTED,
         chainId: params.chainId || ENV.DEFAULT_CHAIN_ID,
       };
     } catch (error: any) {

@@ -36,7 +36,6 @@ import com.tranzo.app.ui.theme.TranzoColors
 @Composable
 fun HomeScreenProClay(
     viewModel: HomeViewModel = hiltViewModel(),
-    themeManager: com.tranzo.app.util.ThemeManager = hiltViewModel(),
     onNavigateToTransfer: () -> Unit = {},
     onNavigateToSwap: () -> Unit = {},
     onNavigateToCard: () -> Unit = {},

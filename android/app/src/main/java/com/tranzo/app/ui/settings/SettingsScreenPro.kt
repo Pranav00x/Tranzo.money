@@ -23,21 +23,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.theme.TranzoColors
-import com.tranzo.app.util.ThemeManager
+import com.tranzo.app.util.ThemeViewModel
 
 /**
  * Professional Settings Screen - Clean, organized layout
  */
 @Composable
 fun SettingsScreenPro(
-    themeManager: ThemeManager = hiltViewModel(),
+    themeViewModel: ThemeViewModel = hiltViewModel(),
     onLogout: () -> Unit = {},
     onSecurity: () -> Unit = {},
     onTheme: () -> Unit = {},
 ) {
-    val currentThemeId by themeManager.currentThemeId.collectAsState()
+    val currentThemeId by themeViewModel.currentThemeId.collectAsState()
     var showThemeSelector by remember { mutableStateOf(false) }
-    val availableThemes = themeManager.getAvailableThemes()
+    val availableThemes = themeViewModel.getAvailableThemes()
 
     Box(
         modifier = Modifier
@@ -88,7 +88,7 @@ fun SettingsScreenPro(
                             currentThemeId = currentThemeId,
                             availableThemes = availableThemes,
                             onThemeSelected = { themeId ->
-                                themeManager.setTheme(themeId)
+                                themeViewModel.setTheme(themeId)
                             },
                             modifier = Modifier
                                 .fillMaxWidth()
