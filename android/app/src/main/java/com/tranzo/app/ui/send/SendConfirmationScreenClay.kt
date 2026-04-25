@@ -170,7 +170,7 @@ fun SendConfirmationScreenClay(
                 text = "Confirm & Send",
                 onClick = {
                     isConfirmed = true
-                    viewModel.confirmSend()
+                    viewModel.sendToken(recipient, token, amount)
                     onConfirm()
                 },
                 gradientStart = TranzoColors.PrimaryBlue,
