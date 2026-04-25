@@ -106,7 +106,7 @@ fun OtpScreenProClay(
             ClayButton(
                 text = "Verify Code",
                 onClick = {
-                    viewModel.verifyOtp(otp)
+                    viewModel.verifyOtp(email, otp)
                     onOtpVerified()
                 },
                 gradientStart = TranzoColors.PrimaryBlue,
@@ -116,7 +116,7 @@ fun OtpScreenProClay(
             // Resend
             if (showResend) {
                 Button(
-                    onClick = { viewModel.requestOtp(email) },
+                    onClick = { viewModel.sendOtp(email) },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),

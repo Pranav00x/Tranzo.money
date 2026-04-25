@@ -141,7 +141,15 @@ fun ProfileSetupScreenProClay(
             ClayButton(
                 text = "Continue",
                 onClick = {
-                    viewModel.setupProfile(fullName, username)
+                    val names = fullName.trim().split(" ")
+                    val firstName = names.firstOrNull() ?: ""
+                    val lastName = if (names.size > 1) names.drop(1).joinToString(" ") else ""
+                    
+                    viewModel.saveProfile(
+                        firstName = firstName,
+                        lastName = lastName,
+                        email = state.lastEmail ?: ""
+                    )
                     onProfileCreated()
                 },
                 enabled = fullName.isNotBlank() && username.isNotBlank(),

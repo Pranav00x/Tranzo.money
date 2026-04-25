@@ -23,6 +23,7 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.tranzo.app.ui.components.TranzoButton
 import com.tranzo.app.ui.theme.TranzoColors
+import com.tranzo.app.util.ThemeManager
 import com.tranzo.app.util.ThemeViewModel
 
 /**

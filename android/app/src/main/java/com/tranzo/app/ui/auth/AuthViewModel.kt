@@ -25,6 +25,10 @@ enum class AuthMethod {
     EMAIL_OTP, GOOGLE, BIOMETRIC, PASSKEY, TWITTER
 }
 
+enum class WalletStage {
+    IDLE, GENERATING, DEPLOYING, ACTIVATING, COMPLETE
+}
+
 data class AuthUiState(
     val isLoading: Boolean = false,
     val isAuthenticated: Boolean = false,
@@ -35,6 +39,7 @@ data class AuthUiState(
     val authMethod: AuthMethod? = null,
     val lastEmail: String? = null,
     val biometricEnabled: Boolean = false,
+    val walletStage: WalletStage = WalletStage.IDLE,
 )
 
 @HiltViewModel
@@ -344,6 +349,18 @@ class AuthViewModel @Inject constructor(
         _state.value = _state.value.copy(biometricEnabled = true)
         // Biometric preference is stored in system keystore
         // This is handled by BiometricHelper, not SharedPreferences
+    }
+
+    fun createWallet() {
+        viewModelScope.launch {
+            _state.value = _state.value.copy(walletStage = WalletStage.GENERATING)
+            kotlinx.coroutines.delay(1500)
+            _state.value = _state.value.copy(walletStage = WalletStage.DEPLOYING)
+            kotlinx.coroutines.delay(2000)
+            _state.value = _state.value.copy(walletStage = WalletStage.ACTIVATING)
+            kotlinx.coroutines.delay(1500)
+            _state.value = _state.value.copy(walletStage = WalletStage.COMPLETE)
+        }
     }
 
     fun clearError() {
