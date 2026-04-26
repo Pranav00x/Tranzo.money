@@ -2,8 +2,12 @@
 # Build script for Tranzo Android App
 # Works around gradle wrapper issues on Unix-like systems
 
-# Set Java home if not already set
-if [ -z "$JAVA_HOME" ]; then
+# Set Java home - prefer Java 19
+if [ -d "C:\Program Files\Java\jdk-19" ]; then
+    export JAVA_HOME="C:\Program Files\Java\jdk-19"
+elif [ -d "/c/Program Files/Java/jdk-19" ]; then
+    export JAVA_HOME="/c/Program Files/Java/jdk-19"
+elif [ -z "$JAVA_HOME" ]; then
     export JAVA_HOME="$(dirname $(dirname $(which java)))"
 fi
 
