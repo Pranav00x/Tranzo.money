@@ -5,6 +5,7 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
@@ -43,26 +44,15 @@ fun HomeScreenProClay(
         label = "content fade in"
     )
 
+    // True minimal uses pure white backgrounds
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.ClayBackground)
+            .background(Color.White)
     ) {
         if (uiState.isLoading && uiState.user == null) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = TranzoColors.ClayBlue)
-            }
-        } else if (uiState.error != null && uiState.user == null) {
-            Column(
-                modifier = Modifier.fillMaxSize().padding(32.dp),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Text("Error", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.Bold, color = TranzoColors.TextPrimary)
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(uiState.error ?: "Unknown error", style = MaterialTheme.typography.bodyMedium, color = TranzoColors.TextSecondary)
-                Spacer(modifier = Modifier.height(24.dp))
-                ClayButton(text = "Try Again", onClick = { viewModel.refresh() }, modifier = Modifier.width(200.dp))
+                CircularProgressIndicator(color = TranzoColors.TextPrimary)
             }
         } else {
             Column(
@@ -73,184 +63,147 @@ fun HomeScreenProClay(
             ) {
                 Spacer(modifier = Modifier.height(24.dp))
 
-                // ── Header ──
+                // ── Header (Clean, minimal typography) ──
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Column {
-                        val userName = uiState.user?.firstName?.takeIf { it.isNotBlank() } ?: "User"
-                        Text(
-                            "Hello, $userName",
-                            style = MaterialTheme.typography.headlineMedium,
-                            fontWeight = FontWeight.ExtraBold,
-                            color = TranzoColors.TextPrimary,
-                        )
-                        Text(
-                            "Welcome back",
-                            style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextSecondary,
-                        )
-                    }
+                    val userName = uiState.user?.firstName?.takeIf { it.isNotBlank() } ?: "User"
+                    Text(
+                        "Good morning, $userName.",
+                        style = MaterialTheme.typography.titleMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = TranzoColors.TextSecondary,
+                    )
 
-                    ClayIconPill(color = TranzoColors.ClayBlue, size = 48.dp, cornerRadius = 16.dp) {
-                        Icon(Icons.Outlined.Notifications, contentDescription = null, tint = Color.White, modifier = Modifier.size(24.dp))
-                    }
-                }
-
-                Spacer(modifier = Modifier.height(24.dp))
-
-                // ── Balance Card (Clean White Style like Settings) ──
-                ClayCard(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
-                    cornerRadius = 22.dp
-                ) {
-                    Column(
-                        modifier = Modifier.fillMaxWidth().padding(24.dp),
+                    Box(
+                        modifier = Modifier
+                            .size(40.dp)
+                            .minimalEffect(cornerRadius = 20.dp, borderColor = TranzoColors.DividerGray)
+                            .clickable { onNavigateToSettings() },
+                        contentAlignment = Alignment.Center
                     ) {
-                        Row(
-                            modifier = Modifier.fillMaxWidth(),
-                            horizontalArrangement = Arrangement.SpaceBetween,
-                            verticalAlignment = Alignment.CenterVertically
-                        ) {
-                            Row(verticalAlignment = Alignment.CenterVertically, horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-                                ClayIconPill(color = TranzoColors.ClayPurple, size = 32.dp, cornerRadius = 10.dp) {
-                                    Icon(Icons.Outlined.AccountBalanceWallet, null, tint = Color.White, modifier = Modifier.size(16.dp))
-                                }
-                                Text(
-                                    "Total Balance",
-                                    style = MaterialTheme.typography.labelMedium,
-                                    color = TranzoColors.TextSecondary,
-                                    fontWeight = FontWeight.SemiBold
-                                )
-                            }
-                            Box(
-                                modifier = Modifier
-                                    .clip(RoundedCornerShape(8.dp))
-                                    .background(TranzoColors.ClayGreenSoft)
-                                    .padding(horizontal = 10.dp, vertical = 4.dp),
-                            ) {
-                                Text("Smart Wallet", style = MaterialTheme.typography.labelSmall, color = TranzoColors.ClayGreen, fontWeight = FontWeight.Bold, fontSize = 10.sp)
-                            }
-                        }
-                        
-                        Spacer(modifier = Modifier.height(16.dp))
-                        
-                        Row(verticalAlignment = Alignment.Bottom, horizontalArrangement = Arrangement.spacedBy(4.dp)) {
-                            Text("$", style = MaterialTheme.typography.headlineMedium, color = TranzoColors.TextSecondary, fontWeight = FontWeight.Bold, modifier = Modifier.padding(bottom = 4.dp))
-                            Text(
-                                String.format("%.2f", uiState.totalUsdBalance),
-                                style = MaterialTheme.typography.displayMedium,
-                                color = TranzoColors.TextPrimary,
-                                fontWeight = FontWeight.ExtraBold,
-                            )
-                            Text("USD", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary, fontWeight = FontWeight.SemiBold, modifier = Modifier.padding(bottom = 8.dp))
-                        }
+                        Icon(Icons.Outlined.Person, contentDescription = null, tint = TranzoColors.TextPrimary, modifier = Modifier.size(20.dp))
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(40.dp))
 
-                // ── Quick Actions (Structured like Settings Items) ──
-                Text(
-                    "QUICK ACTIONS",
-                    style = MaterialTheme.typography.labelSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextTertiary,
-                    letterSpacing = 1.5.sp,
-                    modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp)
-                )
-                
-                ClayCard(
+                // ── Balance (Huge, striking minimal typography without card containers) ──
+                Column(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
-                    cornerRadius = 22.dp
+                    horizontalAlignment = Alignment.CenterHorizontally
                 ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        ActionItemClay(Icons.Outlined.ArrowUpward, "Send Crypto", "Transfer to any wallet", onNavigateToTransfer, TranzoColors.ClayBlue)
-                        HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(horizontal = 16.dp))
-                        ActionItemClay(Icons.Outlined.SwapVert, "Swap Tokens", "Exchange assets instantly", onNavigateToSwap, TranzoColors.ClayPurple)
-                        HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(horizontal = 16.dp))
-                        ActionItemClay(Icons.Outlined.CreditCard, "Virtual Card", "Manage your debit card", onNavigateToCard, TranzoColors.ClayGreen, showDivider = false)
+                    Text(
+                        "Total Balance",
+                        style = MaterialTheme.typography.labelMedium,
+                        color = TranzoColors.TextSecondary,
+                        fontWeight = FontWeight.Medium,
+                        letterSpacing = 1.sp
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Row(verticalAlignment = Alignment.CenterVertically) {
+                        Text("$", style = MaterialTheme.typography.headlineMedium, color = TranzoColors.TextTertiary, fontWeight = FontWeight.Medium)
+                        Text(
+                            String.format("%.2f", uiState.totalUsdBalance),
+                            style = MaterialTheme.typography.displayLarge.copy(fontSize = 56.sp),
+                            color = TranzoColors.TextPrimary,
+                            fontWeight = FontWeight.SemiBold,
+                            letterSpacing = (-1.5).sp
+                        )
+                    }
+                    Spacer(modifier = Modifier.height(12.dp))
+                    Box(
+                        modifier = Modifier
+                            .clip(RoundedCornerShape(20.dp))
+                            .background(TranzoColors.ClayBackgroundAlt)
+                            .padding(horizontal = 12.dp, vertical = 6.dp),
+                    ) {
+                        Text("Base Smart Account", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextSecondary, fontWeight = FontWeight.Medium)
                     }
                 }
 
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(48.dp))
 
-                // ── Recent Activity (Clean List like Settings) ──
+                // ── Quick Actions (Minimal Grid without borders) ──
+                Row(
+                    modifier = Modifier.fillMaxWidth().padding(horizontal = 32.dp),
+                    horizontalArrangement = Arrangement.SpaceBetween
+                ) {
+                    MinimalAction(Icons.Outlined.ArrowUpward, "Send", onNavigateToTransfer)
+                    MinimalAction(Icons.Outlined.ArrowDownward, "Receive", {})
+                    MinimalAction(Icons.Outlined.SwapVert, "Swap", onNavigateToSwap)
+                    MinimalAction(Icons.Outlined.CreditCard, "Card", onNavigateToCard)
+                }
+
+                Spacer(modifier = Modifier.height(48.dp))
+
+                // ── Recent Activity (Direct lists, no cards) ──
                 Row(
                     modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
                     horizontalArrangement = Arrangement.SpaceBetween,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
                     Text(
-                        "RECENT ACTIVITY",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = TranzoColors.TextTertiary,
-                        letterSpacing = 1.5.sp,
+                        "Recent",
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.SemiBold,
+                        color = TranzoColors.TextPrimary,
                     )
                     Text(
-                        "View All",
-                        style = MaterialTheme.typography.labelSmall,
-                        fontWeight = FontWeight.Bold,
-                        color = TranzoColors.ClayBlue,
+                        "See all",
+                        style = MaterialTheme.typography.labelMedium,
+                        fontWeight = FontWeight.Medium,
+                        color = TranzoColors.TextSecondary,
                     )
                 }
                 
-                Spacer(modifier = Modifier.height(8.dp))
+                Spacer(modifier = Modifier.height(16.dp))
 
-                ClayCard(
-                    modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp),
-                    cornerRadius = 22.dp
-                ) {
-                    Column(modifier = Modifier.fillMaxWidth()) {
-                        val txData = listOf(
-                            Triple("Sent USDC", "-$500", "2 hours ago"),
-                            Triple("Received ETH", "+$1,200", "5 hours ago"),
-                            Triple("Swapped to Base", "Completed", "Yesterday"),
-                        )
-                        
-                        txData.forEachIndexed { index, (type, amount, time) ->
-                            val isSent = type.startsWith("Sent")
-                            val isSwap = type.startsWith("Swap")
-                            val iconColor = when {
-                                isSent -> TranzoColors.ClayCoral
-                                isSwap -> TranzoColors.ClayPurple
-                                else -> TranzoColors.ClayGreen
-                            }
-                            val icon = when {
-                                isSent -> Icons.Outlined.ArrowUpward
-                                isSwap -> Icons.Outlined.SwapVert
-                                else -> Icons.Outlined.ArrowDownward
-                            }
-                            
-                            Row(
-                                modifier = Modifier.fillMaxWidth().padding(16.dp),
-                                horizontalArrangement = Arrangement.SpaceBetween,
-                                verticalAlignment = Alignment.CenterVertically
+                val txData = listOf(
+                    Triple("Sent USDC", "-$500", "Today, 10:24 AM"),
+                    Triple("Received ETH", "+$1,200", "Yesterday"),
+                    Triple("Swapped to Base", "Completed", "Oct 12"),
+                )
+                
+                txData.forEachIndexed { index, (type, amount, time) ->
+                    val isSent = type.startsWith("Sent")
+                    val isSwap = type.startsWith("Swap")
+                    
+                    val icon = when {
+                        isSent -> Icons.Outlined.ArrowUpward
+                        isSwap -> Icons.Outlined.SwapVert
+                        else -> Icons.Outlined.ArrowDownward
+                    }
+                    
+                    Row(
+                        modifier = Modifier.fillMaxWidth().clickable {}.padding(horizontal = 24.dp, vertical = 16.dp),
+                        horizontalArrangement = Arrangement.SpaceBetween,
+                        verticalAlignment = Alignment.CenterVertically
+                    ) {
+                        Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically) {
+                            Box(
+                                modifier = Modifier.size(48.dp).clip(CircleShape).background(TranzoColors.ClayBackgroundAlt),
+                                contentAlignment = Alignment.Center
                             ) {
-                                Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    ClayIconPill(color = iconColor, size = 40.dp, cornerRadius = 12.dp) {
-                                        Icon(icon, null, tint = Color.White, modifier = Modifier.size(18.dp))
-                                    }
-                                    Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                        Text(type, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = TranzoColors.TextPrimary)
-                                        Text(time, style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                                    }
-                                }
-                                Text(
-                                    amount,
-                                    style = MaterialTheme.typography.titleSmall,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isSent) TranzoColors.TextPrimary else TranzoColors.ClayGreen
-                                )
+                                Icon(icon, null, tint = TranzoColors.TextPrimary, modifier = Modifier.size(20.dp))
                             }
-                            
-                            if (index < txData.size - 1) {
-                                HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(horizontal = 16.dp))
+                            Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                Text(type, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium, color = TranzoColors.TextPrimary)
+                                Text(time, style = MaterialTheme.typography.bodySmall, color = TranzoColors.TextSecondary)
                             }
                         }
+                        Text(
+                            amount,
+                            style = MaterialTheme.typography.bodyLarge,
+                            fontWeight = FontWeight.Medium,
+                            color = if (isSent) TranzoColors.TextPrimary else TranzoColors.ClayGreen
+                        )
+                    }
+                    
+                    if (index < txData.size - 1) {
+                        HorizontalDivider(color = TranzoColors.ClayBackgroundAlt, modifier = Modifier.padding(horizontal = 24.dp))
                     }
                 }
 
@@ -261,28 +214,18 @@ fun HomeScreenProClay(
 }
 
 @Composable
-private fun ActionItemClay(
-    icon: androidx.compose.ui.graphics.vector.ImageVector,
-    title: String,
-    subtitle: String,
-    onClick: () -> Unit,
-    iconColor: Color,
-    showDivider: Boolean = true
-) {
-    Row(
-        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick).padding(16.dp),
-        horizontalArrangement = Arrangement.SpaceBetween,
-        verticalAlignment = Alignment.CenterVertically
-    ) {
-        Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically) {
-            ClayIconPill(color = iconColor, size = 44.dp, cornerRadius = 15.dp) {
-                Icon(icon, null, tint = Color.White, modifier = Modifier.size(20.dp))
-            }
-            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                Text(title, style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = TranzoColors.TextPrimary)
-                Text(subtitle, style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-            }
+private fun MinimalAction(icon: androidx.compose.ui.graphics.vector.ImageVector, label: String, onClick: () -> Unit) {
+    Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(8.dp)) {
+        Box(
+            modifier = Modifier
+                .size(64.dp)
+                .clip(CircleShape)
+                .background(TranzoColors.ClayBackgroundAlt)
+                .clickable(onClick = onClick),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, null, tint = TranzoColors.TextPrimary, modifier = Modifier.size(24.dp))
         }
-        Icon(Icons.AutoMirrored.Outlined.ArrowForward, null, tint = TranzoColors.TextTertiary, modifier = Modifier.size(18.dp))
+        Text(label, style = MaterialTheme.typography.labelMedium, color = TranzoColors.TextSecondary, fontWeight = FontWeight.Medium)
     }
 }

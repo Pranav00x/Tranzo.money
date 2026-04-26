@@ -5,8 +5,10 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.outlined.ArrowBack
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -26,10 +28,10 @@ import com.tranzo.app.ui.theme.TranzoColors
 fun TransactionHistoryScreenClay(viewModel: HistoryViewModel = hiltViewModel()) {
     val uiState by viewModel.state.collectAsState()
 
-    Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
+    Box(Modifier.fillMaxSize().background(Color.White)) {
         if (uiState.isLoading && uiState.transactions.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = TranzoColors.ClayBlue)
+                CircularProgressIndicator(color = TranzoColors.TextPrimary)
             }
         } else if (uiState.error != null && uiState.transactions.isEmpty()) {
             Column(Modifier.fillMaxSize().padding(32.dp), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
@@ -41,70 +43,67 @@ fun TransactionHistoryScreenClay(viewModel: HistoryViewModel = hiltViewModel()) 
             Column(Modifier.fillMaxSize()) {
                 Spacer(Modifier.height(24.dp))
 
-                // ── Header ──
+                // ── Header (Minimal) ──
                 Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                    Column {
-                        Text("Activity", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold, color = TranzoColors.TextPrimary)
-                        Text("Your transaction history", style = MaterialTheme.typography.bodyMedium, color = TranzoColors.TextSecondary)
+                    Box(modifier = Modifier.size(40.dp).clip(CircleShape).clickable {}.background(TranzoColors.ClayBackgroundAlt), contentAlignment = Alignment.Center) {
+                        Icon(Icons.AutoMirrored.Outlined.ArrowBack, contentDescription = null, tint = TranzoColors.TextPrimary, modifier = Modifier.size(20.dp))
                     }
-                    ClayIconPill(color = TranzoColors.ClayBlue, size = 48.dp, cornerRadius = 16.dp) {
-                        Icon(Icons.Outlined.Receipt, null, tint = Color.White, modifier = Modifier.size(24.dp))
-                    }
+                    Text("Activity", style = MaterialTheme.typography.titleLarge, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
+                    Box(modifier = Modifier.size(40.dp))
                 }
 
                 Spacer(Modifier.height(32.dp))
 
-                Text("ALL TRANSACTIONS", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, color = TranzoColors.TextTertiary, letterSpacing = 1.5.sp, modifier = Modifier.padding(horizontal = 24.dp, vertical = 8.dp))
-
                 if (uiState.transactions.isEmpty()) {
-                    ClayCard(Modifier.fillMaxWidth().padding(horizontal = 24.dp), cornerRadius = 22.dp) {
-                        Column(Modifier.fillMaxWidth().padding(32.dp), horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
-                            ClayIconPill(color = TranzoColors.ClayBackgroundAlt, size = 56.dp, cornerRadius = 18.dp) {
-                                Icon(Icons.Outlined.ReceiptLong, null, tint = TranzoColors.TextSecondary, modifier = Modifier.size(28.dp))
+                    Box(Modifier.fillMaxSize().padding(32.dp), contentAlignment = Alignment.Center) {
+                        Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(12.dp)) {
+                            Box(Modifier.size(64.dp).clip(CircleShape).background(TranzoColors.ClayBackgroundAlt), contentAlignment = Alignment.Center) {
+                                Icon(Icons.Outlined.ReceiptLong, null, tint = TranzoColors.TextSecondary, modifier = Modifier.size(32.dp))
                             }
-                            Text("No transactions yet", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
-                            Text("Your activity will appear here", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextSecondary)
+                            Text("No activity yet", style = MaterialTheme.typography.titleMedium, fontWeight = FontWeight.Medium, color = TranzoColors.TextPrimary)
+                            Text("Your transactions will appear here", style = MaterialTheme.typography.bodyMedium, color = TranzoColors.TextSecondary)
                         }
                     }
                 } else {
-                    ClayCard(Modifier.fillMaxWidth().padding(horizontal = 24.dp), cornerRadius = 22.dp) {
-                        LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(bottom = 8.dp)) {
-                            itemsIndexed(uiState.transactions) { index, tx ->
-                                val isSent = "Sent" in (tx.type ?: "")
-                                val iconColor = if (isSent) TranzoColors.ClayCoral else TranzoColors.ClayGreen
-                                val icon = if (isSent) Icons.Outlined.ArrowUpward else Icons.Outlined.ArrowDownward
+                    LazyColumn(modifier = Modifier.fillMaxWidth(), contentPadding = PaddingValues(bottom = 100.dp)) {
+                        itemsIndexed(uiState.transactions) { index, tx ->
+                            val isSent = "Sent" in (tx.type ?: "")
+                            val isSwap = "Swap" in (tx.type ?: "")
+                            val icon = when {
+                                isSent -> Icons.Outlined.ArrowUpward
+                                isSwap -> Icons.Outlined.SwapVert
+                                else -> Icons.Outlined.ArrowDownward
+                            }
 
-                                Column {
-                                    Row(Modifier.fillMaxWidth().clickable {}.padding(16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
-                                        Row(horizontalArrangement = Arrangement.spacedBy(14.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
-                                            ClayIconPill(color = iconColor, size = 44.dp, cornerRadius = 15.dp) {
-                                                Icon(icon, null, tint = Color.White, modifier = Modifier.size(20.dp))
-                                            }
-                                            Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
-                                                Text(tx.type ?: "Transaction", style = MaterialTheme.typography.bodyMedium, fontWeight = FontWeight.Bold, color = TranzoColors.TextPrimary)
-                                                Text(
-                                                    java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.US).format(java.util.Date(tx.createdAt * 1000)),
-                                                    style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary
-                                                )
-                                            }
+                            Column {
+                                Row(Modifier.fillMaxWidth().clickable {}.padding(horizontal = 24.dp, vertical = 16.dp), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {
+                                    Row(horizontalArrangement = Arrangement.spacedBy(16.dp), verticalAlignment = Alignment.CenterVertically, modifier = Modifier.weight(1f)) {
+                                        Box(Modifier.size(48.dp).clip(CircleShape).background(TranzoColors.ClayBackgroundAlt), contentAlignment = Alignment.Center) {
+                                            Icon(icon, null, tint = TranzoColors.TextPrimary, modifier = Modifier.size(20.dp))
                                         }
-                                        Column(horizontalAlignment = Alignment.End) {
-                                            Text(if (isSent) "-" else "+", style = MaterialTheme.typography.titleSmall, fontWeight = FontWeight.Bold, color = if (isSent) TranzoColors.TextPrimary else TranzoColors.ClayGreen)
-                                            Spacer(Modifier.height(4.dp))
-                                            Box(Modifier.clip(RoundedCornerShape(6.dp)).background(if (isSent) TranzoColors.ClayBackgroundAlt else TranzoColors.ClayGreenSoft).padding(horizontal = 6.dp, vertical = 2.dp)) {
-                                                Text(if (isSent) "Completed" else "Received", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Bold, fontSize = 9.sp, color = if (isSent) TranzoColors.TextSecondary else TranzoColors.ClayGreen)
-                                            }
+                                        Column(verticalArrangement = Arrangement.spacedBy(4.dp)) {
+                                            Text(tx.type ?: "Transaction", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium, color = TranzoColors.TextPrimary)
+                                            Text(
+                                                java.text.SimpleDateFormat("MMM dd, yyyy", java.util.Locale.US).format(java.util.Date(tx.createdAt * 1000)),
+                                                style = MaterialTheme.typography.bodySmall, color = TranzoColors.TextSecondary
+                                            )
                                         }
                                     }
-                                    if (index < uiState.transactions.size - 1) {
-                                        HorizontalDivider(color = TranzoColors.DividerGray, modifier = Modifier.padding(horizontal = 16.dp))
+                                    Column(horizontalAlignment = Alignment.End) {
+                                        Text(if (isSent) "-" else "+", style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.Medium, color = if (isSent) TranzoColors.TextPrimary else TranzoColors.ClayGreen)
+                                        Spacer(Modifier.height(4.dp))
+                                        Box(Modifier.clip(RoundedCornerShape(4.dp)).background(if (isSent) TranzoColors.ClayBackgroundAlt else TranzoColors.ClayGreenSoft).padding(horizontal = 6.dp, vertical = 2.dp)) {
+                                            Text(if (isSent) "Completed" else "Received", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.Medium, fontSize = 10.sp, color = if (isSent) TranzoColors.TextSecondary else TranzoColors.ClayGreen)
+                                        }
                                     }
+                                }
+                                if (index < uiState.transactions.size - 1) {
+                                    HorizontalDivider(color = TranzoColors.ClayBackgroundAlt, modifier = Modifier.padding(horizontal = 24.dp))
                                 }
                             }
                         }
                     }
                 }
-                Spacer(Modifier.height(100.dp))
             }
         }
     }
