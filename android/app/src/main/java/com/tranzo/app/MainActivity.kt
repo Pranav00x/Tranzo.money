@@ -8,11 +8,12 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Scaffold
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import kotlinx.coroutines.delay
 import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tranzo.app.ui.card.CardScreenProClay
+import com.tranzo.app.ui.card.CardScreenModern
 import com.tranzo.app.ui.card.OrderCardScreen
 import com.tranzo.app.ui.auth.OtpScreenPro
 import com.tranzo.app.ui.auth.ProfileSetupScreenPro
@@ -22,7 +23,7 @@ import com.tranzo.app.ui.dripper.CreateStreamScreen
 import com.tranzo.app.ui.dripper.DripperDashboardScreen
 import com.tranzo.app.ui.dripper.StreamDetailScreen
 import com.tranzo.app.ui.history.TransactionHistoryScreenClay
-import com.tranzo.app.ui.home.HomeScreenProClay
+import com.tranzo.app.ui.home.HomeScreenModern
 import com.tranzo.app.ui.security.BiometricSetupScreen
 import com.tranzo.app.ui.security.PinMode
 import com.tranzo.app.ui.security.PinScreen
@@ -30,12 +31,12 @@ import com.tranzo.app.ui.navigation.Screen
 import com.tranzo.app.ui.navigation.TranzoBottomBar
 import com.tranzo.app.ui.onboarding.OnboardingScreen
 import com.tranzo.app.ui.profile.ProfileScreen
-import com.tranzo.app.ui.receive.ReceiveScreen
+import com.tranzo.app.ui.receive.ReceiveScreenModern
 import com.tranzo.app.ui.send.SendConfirmationScreen
-import com.tranzo.app.ui.send.SendScreenProClay
+import com.tranzo.app.ui.send.SendScreenModern
 import com.tranzo.app.ui.settings.SettingsScreenProClay
 import com.tranzo.app.ui.settings.ThemeSelectorScreen
-import com.tranzo.app.ui.splash.SplashScreen
+import com.tranzo.app.ui.splash.SplashScreenModern
 import com.tranzo.app.ui.swap.SwapScreenProClay
 import com.tranzo.app.ui.theme.TranzoTheme
 import com.tranzo.app.ui.auth.AuthViewModel
@@ -74,19 +75,19 @@ class MainActivity : FragmentActivity() {
                     ) {
                         // ── Auth Flow (Non-Custodial) ───────────────
                         composable(Screen.Splash.route) {
-                            SplashScreen(
-                                isLoggedIn = sessionManager.isLoggedIn(),
-                                onNavigateToOnboarding = {
-                                    navController.navigate(Screen.Onboarding.route) {
-                                        popUpTo(Screen.Splash.route) { inclusive = true }
-                                    }
-                                },
-                                onNavigateToHome = {
+                            SplashScreenModern()
+                            LaunchedEffect(Unit) {
+                                kotlinx.coroutines.delay(2500) // Let animation play
+                                if (sessionManager.isLoggedIn()) {
                                     navController.navigate(Screen.Home.route) {
                                         popUpTo(Screen.Splash.route) { inclusive = true }
                                     }
-                                },
-                            )
+                                } else {
+                                    navController.navigate(Screen.Onboarding.route) {
+                                        popUpTo(Screen.Splash.route) { inclusive = true }
+                                    }
+                                }
+                            }
                         }
 
                         composable(Screen.Onboarding.route) {
@@ -255,7 +256,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Main Screens ─────────────────────────────
                         composable(Screen.Home.route) {
-                            HomeScreenProClay(
+                            HomeScreenModern(
                                 onNavigateToTransfer = { navController.navigate(Screen.Send.route) },
                                 onNavigateToSwap = { navController.navigate(Screen.Swap.route) },
                                 onNavigateToCard = { navController.navigate(Screen.Card.route) },
@@ -265,9 +266,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Send Flow ────────────────────────────────
                         composable(Screen.Send.route) {
-                            SendScreenProClay(
-                                onConfirm = { navController.popBackStack() },
-                            )
+                            SendScreenModern()
                         }
 
                         composable("send_confirm/{to}/{token}/{amount}") { backStackEntry ->
@@ -288,9 +287,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Receive ──────────────────────────────────
                         composable(Screen.Receive.route) {
-                            ReceiveScreen(
-                                onBack = { navController.popBackStack() },
-                            )
+                            ReceiveScreenModern()
                         }
 
                         // ── Swap ─────────────────────────────────────
@@ -376,9 +373,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Card Flow ────────────────────────────────
                         composable(Screen.Card.route) {
-                            CardScreenProClay(
-                                onOrderCard = { navController.navigate(Screen.OrderCard.route) },
-                            )
+                            CardScreenModern()
                         }
 
                         composable(Screen.OrderCard.route) {
