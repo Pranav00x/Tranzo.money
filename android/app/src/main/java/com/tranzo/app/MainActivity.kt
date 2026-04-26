@@ -12,7 +12,7 @@ import androidx.core.splashscreen.SplashScreen.Companion.installSplashScreen
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
-import com.tranzo.app.ui.card.CardScreenPro
+import com.tranzo.app.ui.card.CardScreenProClay
 import com.tranzo.app.ui.card.OrderCardScreen
 import com.tranzo.app.ui.auth.OtpScreenPro
 import com.tranzo.app.ui.auth.ProfileSetupScreenPro
@@ -21,8 +21,8 @@ import com.tranzo.app.ui.auth.WelcomeScreenPro
 import com.tranzo.app.ui.dripper.CreateStreamScreen
 import com.tranzo.app.ui.dripper.DripperDashboardScreen
 import com.tranzo.app.ui.dripper.StreamDetailScreen
-import com.tranzo.app.ui.history.TransactionHistoryScreen
-import com.tranzo.app.ui.home.HomeScreenProMax
+import com.tranzo.app.ui.history.TransactionHistoryScreenClay
+import com.tranzo.app.ui.home.HomeScreenProClay
 import com.tranzo.app.ui.security.BiometricSetupScreen
 import com.tranzo.app.ui.security.PinMode
 import com.tranzo.app.ui.security.PinScreen
@@ -32,11 +32,11 @@ import com.tranzo.app.ui.onboarding.OnboardingScreen
 import com.tranzo.app.ui.profile.ProfileScreen
 import com.tranzo.app.ui.receive.ReceiveScreen
 import com.tranzo.app.ui.send.SendConfirmationScreen
-import com.tranzo.app.ui.send.SendScreenPro
-import com.tranzo.app.ui.settings.SettingsScreenProMax
+import com.tranzo.app.ui.send.SendScreenProClay
+import com.tranzo.app.ui.settings.SettingsScreenProClay
 import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreen
-import com.tranzo.app.ui.swap.SwapScreenPro
+import com.tranzo.app.ui.swap.SwapScreenProClay
 import com.tranzo.app.ui.theme.TranzoTheme
 import com.tranzo.app.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -255,23 +255,18 @@ class MainActivity : FragmentActivity() {
 
                         // ── Main Screens ─────────────────────────────
                         composable(Screen.Home.route) {
-                            HomeScreenProMax(
-                                onSend = { navController.navigate(Screen.Send.route) },
-                                onReceive = { navController.navigate(Screen.Receive.route) },
-                                onSwap = { navController.navigate(Screen.Swap.route) },
-                                onDripper = { navController.navigate(Screen.DripperDashboard.route) },
-                                onCard = { navController.navigate(Screen.Card.route) },
-                                onSettings = { navController.navigate(Screen.Settings.route) },
+                            HomeScreenProClay(
+                                onNavigateToTransfer = { navController.navigate(Screen.Send.route) },
+                                onNavigateToSwap = { navController.navigate(Screen.Swap.route) },
+                                onNavigateToCard = { navController.navigate(Screen.Card.route) },
+                                onNavigateToSettings = { navController.navigate(Screen.Settings.route) },
                             )
                         }
 
                         // ── Send Flow ────────────────────────────────
                         composable(Screen.Send.route) {
-                            SendScreenPro(
-                                onBack = { navController.popBackStack() },
-                                onReview = { to, token, amount ->
-                                    navController.navigate("send_confirm/$to/$token/$amount")
-                                },
+                            SendScreenProClay(
+                                onConfirm = { navController.popBackStack() },
                             )
                         }
 
@@ -300,9 +295,8 @@ class MainActivity : FragmentActivity() {
 
                         // ── Swap ─────────────────────────────────────
                         composable(Screen.Swap.route) {
-                            SwapScreenPro(
-                                onBack = { navController.popBackStack() },
-                                onSwapComplete = { navController.popBackStack() },
+                            SwapScreenProClay(
+                                onSwapInitiated = { navController.popBackStack() },
                             )
                         }
 
@@ -337,9 +331,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Transaction History ──────────────────────
                         composable(Screen.TransactionHistory.route) {
-                            TransactionHistoryScreen(
-                                onBack = { navController.popBackStack() },
-                            )
+                            TransactionHistoryScreenClay()
                         }
 
                         // ── Profile ──────────────────────────────────
@@ -352,7 +344,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
-                            SettingsScreenProMax(
+                            SettingsScreenProClay(
                                 onLogout = {
                                     navController.navigate(Screen.Welcome.route) {
                                         popUpTo(0) { inclusive = true }
@@ -384,8 +376,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Card Flow ────────────────────────────────
                         composable(Screen.Card.route) {
-                            CardScreenPro(
-                                onBack = { navController.popBackStack() },
+                            CardScreenProClay(
                                 onOrderCard = { navController.navigate(Screen.OrderCard.route) },
                             )
                         }

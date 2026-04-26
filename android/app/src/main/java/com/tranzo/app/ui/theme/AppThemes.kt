@@ -13,27 +13,27 @@ import androidx.compose.ui.graphics.Color
 // ═════════════════════════════════════════════════════════════
 // THEME 0: Monochrome Light (CheQ-inspired)
 // ═════════════════════════════════════════════════════════════
-val MonoLightColors = lightColorScheme(
-    primary = Color(0xFF1A1A1A),
-    onPrimary = Color(0xFFFFFFFF),
-    primaryContainer = Color(0xFFF5F5F5),
-    onPrimaryContainer = Color(0xFF1A1A1A),
-    secondary = Color(0xFF666666),
+val MonoLightColors = darkColorScheme(
+    primary = Color(0xFFFFFFFF),
+    onPrimary = Color(0xFF1C1C1E),
+    primaryContainer = Color(0xFF2C2C2E),
+    onPrimaryContainer = Color(0xFFFFFFFF),
+    secondary = Color(0xFF888888),
     onSecondary = Color(0xFFFFFFFF),
-    secondaryContainer = Color(0xFFF0F0F0),
-    onSecondaryContainer = Color(0xFF1A1A1A),
-    tertiary = Color(0xFF999999),
-    onTertiary = Color(0xFFFFFFFF),
-    background = Color(0xFFFFFFFF),
-    onBackground = Color(0xFF1A1A1A),
-    surface = Color(0xFFFFFFFF),
-    onSurface = Color(0xFF1A1A1A),
-    surfaceVariant = Color(0xFFF5F5F5),
-    onSurfaceVariant = Color(0xFF666666),
-    error = Color(0xFFCC0000),
+    secondaryContainer = Color(0xFF232325),
+    onSecondaryContainer = Color(0xFFFFFFFF),
+    tertiary = Color(0xFF69F0AE),
+    onTertiary = Color(0xFF001F1A),
+    background = Color(0xFF1C1C1E),
+    onBackground = Color(0xFFFFFFFF),
+    surface = Color(0xFF1C1C1E),
+    onSurface = Color(0xFFFFFFFF),
+    surfaceVariant = Color(0xFF232325),
+    onSurfaceVariant = Color(0xFFA0A0A5),
+    error = Color(0xFFFF5252),
     onError = Color(0xFFFFFFFF),
-    outline = Color(0xFFE0E0E0),
-    outlineVariant = Color(0xFFF0F0F0),
+    outline = Color(0xFF38383A),
+    outlineVariant = Color(0xFF2C2C2E),
 )
 
 // ═════════════════════════════════════════════════════════════
