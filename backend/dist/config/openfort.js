@@ -1,4 +1,8 @@
 import Openfort from "@openfort/openfort-node";
 import { ENV } from "./env.js";
-export const openfort = new Openfort(ENV.OPENFORT_API_KEY);
+// Initialize Openfort if API key is provided, otherwise null
+// Migration to ZeroDev in progress
+export const openfort = ENV.OPENFORT_API_KEY
+    ? new Openfort(ENV.OPENFORT_API_KEY)
+    : null;
 //# sourceMappingURL=openfort.js.map

@@ -1,11 +1,14 @@
 /**
  * Wrapper around the Openfort SDK.
+ * DEPRECATED: Migration to ZeroDev Kernel SDK in progress.
  * Handles player creation, smart account management, and transaction intents.
  */
 export declare class OpenfortService {
+    private static checkInitialized;
     /**
      * Create a new Openfort player and their smart account.
      * Returns the player ID and counterfactual smart account address.
+     * DEPRECATED: Use ZeroDev Kernel SDK instead.
      */
     static createPlayer(email: string): Promise<{
         playerId: string;
@@ -13,6 +16,7 @@ export declare class OpenfortService {
     }>;
     /**
      * Get a player's smart account address for a specific chain.
+     * DEPRECATED: Use ZeroDev Kernel SDK instead.
      */
     static getAccount(playerId: string, chainId?: number): Promise<any>;
     /**

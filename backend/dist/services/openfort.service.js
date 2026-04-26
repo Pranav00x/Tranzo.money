@@ -2,15 +2,23 @@ import { openfort } from "../config/openfort.js";
 import { ENV } from "../config/env.js";
 /**
  * Wrapper around the Openfort SDK.
+ * DEPRECATED: Migration to ZeroDev Kernel SDK in progress.
  * Handles player creation, smart account management, and transaction intents.
  */
 export class OpenfortService {
+    static checkInitialized() {
+        if (!openfort) {
+            throw new Error("Openfort not initialized. OPENFORT_API_KEY is required. Migration to ZeroDev Kernel SDK in progress.");
+        }
+    }
     // ─── Player / Account Management ──────────────────────────────
     /**
      * Create a new Openfort player and their smart account.
      * Returns the player ID and counterfactual smart account address.
+     * DEPRECATED: Use ZeroDev Kernel SDK instead.
      */
     static async createPlayer(email) {
+        this.checkInitialized();
         const player = await openfort.players.create({
             name: email,
         });
@@ -26,8 +34,10 @@ export class OpenfortService {
     }
     /**
      * Get a player's smart account address for a specific chain.
+     * DEPRECATED: Use ZeroDev Kernel SDK instead.
      */
     static async getAccount(playerId, chainId = ENV.DEFAULT_CHAIN_ID) {
+        this.checkInitialized();
         const accounts = await openfort.accounts.list({
             player: playerId,
         });

@@ -18,10 +18,10 @@ contract KernelSessionValidator {
     }
 
     event SessionKeyCreated(address indexed account, address indexed sessionKey, uint256 expiryTime);
-    event SessionKeyRevoked(address indexed account, address indexed sessionKey);
+    event SessionKeyRevokedEvent(address indexed account, address indexed sessionKey);
 
     error SessionKeyExpired();
-    error SessionKeyRevoked();
+    error SessionKeyRevokedError();
     error UnauthorizedCall();
 
     function registerSessionKey(
@@ -40,7 +40,7 @@ contract KernelSessionValidator {
 
     function revokeSessionKey(address sessionKey) external {
         sessionKeys[msg.sender][sessionKey].revoked = true;
-        emit SessionKeyRevoked(msg.sender, sessionKey);
+        emit SessionKeyRevokedEvent(msg.sender, sessionKey);
     }
 
     function validateUserOp(
@@ -53,26 +53,12 @@ contract KernelSessionValidator {
 
         if (keyData.expiryTime == 0) revert UnauthorizedCall();
         if (block.timestamp > keyData.expiryTime) revert SessionKeyExpired();
-        if (keyData.revoked) revert SessionKeyRevoked();
+        if (keyData.revoked) revert SessionKeyRevokedError();
 
         bytes32 digest = userOpHash.toEthSignedMessageHash();
         address recovered = digest.recover(signature);
         require(recovered == sessionKey, "Invalid signature");
 
         return 0;
-    }
-
-    function canExecute(
-        address account,
-        address sessionKey,
-        address,
-        bytes4,
-        uint256
-    ) external view returns (bool) {
-        SessionKeyData memory keyData = sessionKeys[account][sessionKey];
-        if (keyData.expiryTime == 0) return false;
-        if (block.timestamp > keyData.expiryTime) return false;
-        if (keyData.revoked) return false;
-        return true;
     }
 }

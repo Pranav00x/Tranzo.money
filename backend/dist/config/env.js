@@ -10,8 +10,8 @@ const envSchema = z.object({
     // JWT
     JWT_SECRET: z.string().min(16),
     JWT_REFRESH_SECRET: z.string().min(16),
-    // Openfort
-    OPENFORT_API_KEY: z.string(),
+    // Openfort (deprecated - migration to ZeroDev in progress)
+    OPENFORT_API_KEY: z.string().optional(),
     OPENFORT_POLICY_ID: z.string().optional(),
     OPENFORT_CONTRACT_ID: z.string().optional(),
     // Email

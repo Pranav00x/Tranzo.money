@@ -110,4 +110,10 @@ contract TranzoAccountFactory {
 
         return Create2.computeAddress(create2Salt, keccak256(proxyBytecode), address(this));
     }
+    /**
+     * @notice Alias for getAddress to match conventional naming.
+     */
+    function counterfactualAddress(address owner) external view returns (address) {
+        return getAddress(owner, 0);
+    }
 }

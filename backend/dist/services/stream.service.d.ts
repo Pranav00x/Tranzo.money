@@ -14,8 +14,8 @@ export declare class StreamService {
             status: import("@prisma/client").$Enums.StreamStatus;
             id: string;
             createdAt: Date;
-            tokenAddress: string;
             txHash: string | null;
+            tokenAddress: string;
             onChainStreamId: number | null;
             employeeAddress: string;
             amountPerSecond: string;
@@ -46,8 +46,8 @@ export declare class StreamService {
         status: import("@prisma/client").$Enums.StreamStatus;
         id: string;
         createdAt: Date;
-        tokenAddress: string;
         txHash: string | null;
+        tokenAddress: string;
         onChainStreamId: number | null;
         employeeAddress: string;
         amountPerSecond: string;
@@ -64,8 +64,8 @@ export declare class StreamService {
         status: import("@prisma/client").$Enums.StreamStatus;
         id: string;
         createdAt: Date;
-        tokenAddress: string;
         txHash: string | null;
+        tokenAddress: string;
         onChainStreamId: number | null;
         employeeAddress: string;
         amountPerSecond: string;

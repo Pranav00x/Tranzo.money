@@ -18,7 +18,7 @@ contract TranzoAccountIntegrationTest is Test {
     TranzoPaymaster paymaster;
     TranzoDripper dripper;
 
-    address entryPoint = 0x0000000071727De22E8e0f8050385f8db87Df640; // ERC-4337 v0.7 Base Sepolia
+    address entryPoint = 0x0000000071727DE22e8e0f8050385F8Db87DF640; // ERC-4337 v0.7 Base Sepolia
     address backendSigner = address(0xBEEF);
     address usdcToken = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913; // Base USDC
     address owner = address(0xAAAA);
@@ -69,7 +69,7 @@ contract TranzoAccountIntegrationTest is Test {
      */
     function test_spendingLimits() public {
         // Deploy account
-        bytes memory initCode = abi.encodeCall(factory.createAccount, (owner, 0));
+        bytes memory initCode = abi.encodeCall(factory.createAccount, (owner, 0, 0, 0, new address[](0), 0));
         
         // This would be executed by EntryPoint in production
         // For now, verify contract structure supports limits

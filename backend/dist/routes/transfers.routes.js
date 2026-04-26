@@ -1,7 +1,7 @@
 import { Router } from "express";
 import { z } from "zod";
 import { requireAuth } from "../middleware/auth.js";
-import { OpenfortService } from "../services/openfort.service.js";
+import { TransactionService } from "../services/transaction.service.js";
 import prisma from "../services/prisma.service.js";
 const router = Router();
 // ─── Send Token ────────────────────────────────────────────────
@@ -17,12 +17,13 @@ router.post("/send", requireAuth, async (req, res) => {
         const user = await prisma.user.findUniqueOrThrow({
             where: { id: req.user.sub },
         });
-        if (!user.openfortPlayer) {
-            res.status(400).json({ error: "No Openfort player linked" });
+        if (!user.smartAccount) {
+            res.status(400).json({ error: "No smart account created" });
             return;
         }
-        const intent = await OpenfortService.sendToken({
-            playerId: user.openfortPlayer,
+        // Submit transfer via ZeroDev
+        const result = await TransactionService.sendToken({
+            userId: user.id,
             to: params.to,
             tokenAddress: params.tokenAddress,
             amount: params.amount,
@@ -32,17 +33,15 @@ router.post("/send", requireAuth, async (req, res) => {
         await prisma.userOpLog.create({
             data: {
                 userId: user.id,
-                openfortIntentId: intent.id,
+                opHash: result.opHash,
                 type: "transfer",
-                status: "SUBMITTED",
-                txHash: intent.response?.transactionHash,
-                chainId: params.chainId ?? 137,
+                status: result.status,
+                chainId: result.chainId,
             },
         });
         res.json({
-            intentId: intent.id,
-            txHash: intent.response?.transactionHash,
-            status: intent.response?.status,
+            opHash: result.opHash,
+            status: result.status,
         });
     }
     catch (err) {
@@ -55,11 +54,11 @@ router.get("/history", requireAuth, async (req, res) => {
         const user = await prisma.user.findUniqueOrThrow({
             where: { id: req.user.sub },
         });
-        if (!user.openfortPlayer) {
+        if (!user.smartAccount) {
             res.json({ transactions: [] });
             return;
         }
-        const history = await OpenfortService.getTransactionHistory(user.openfortPlayer, parseInt(req.query.limit) || 20);
+        const history = await TransactionService.getTransactionHistory(user.id, parseInt(req.query.limit) || 20);
         res.json({ transactions: history.data });
     }
     catch (err) {
@@ -67,9 +66,9 @@ router.get("/history", requireAuth, async (req, res) => {
     }
 });
 // ─── UserOp Status ─────────────────────────────────────────────
-router.get("/status/:intentId", requireAuth, async (req, res) => {
+router.get("/status/:opHash", requireAuth, async (req, res) => {
     try {
-        const status = await OpenfortService.getTransactionStatus(req.params.intentId);
+        const status = await TransactionService.getTransactionStatus(req.params.opHash);
         res.json(status);
     }
     catch (err) {
