@@ -3,6 +3,7 @@ package com.tranzo.app.ui.auth
 import android.app.Activity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -17,16 +18,19 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.ClayAuthMethodCard
-import com.tranzo.app.ui.components.ClayButton
-import com.tranzo.app.ui.components.ClayTextField
+import com.tranzo.app.ui.components.*
 import com.tranzo.app.ui.theme.TranzoColors
 import com.tranzo.app.util.GoogleSignInHelper
 import dagger.hilt.EntryPoint
@@ -41,10 +45,6 @@ interface GoogleSignInEntryPointProClay {
     fun googleSignInHelper(): GoogleSignInHelper
 }
 
-/**
- * Claymorphism Welcome Screen — Baby blue background, white cards,
- * solid blue CTA. Matches reference image login screen (right panel).
- */
 @Composable
 fun WelcomeScreenProClay(
     viewModel: AuthViewModel = hiltViewModel(),
@@ -58,201 +58,109 @@ fun WelcomeScreenProClay(
     val coroutineScope = rememberCoroutineScope()
 
     val googleSignInHelper = remember {
-        EntryPointAccessors.fromApplication(
-            context,
-            GoogleSignInEntryPointProClay::class.java
-        ).googleSignInHelper()
+        EntryPointAccessors.fromApplication(context, GoogleSignInEntryPointProClay::class.java).googleSignInHelper()
     }
 
     var showContent by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) { showContent = true }
 
     val contentAlpha by animateFloatAsState(
-        targetValue = if (showContent) 1f else 0f,
-        animationSpec = tween(800),
-        label = "content fade in"
+        targetValue = if (showContent) 1f else 0f, animationSpec = tween(800), label = "fade"
     )
 
-    Box(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(TranzoColors.ClayBackground)
-    ) {
+    Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
+        // Decorative blobs
+        Canvas(Modifier.fillMaxSize()) {
+            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.07f), 260f, Offset(size.width * 0.85f, size.height * 0.1f))
+            drawCircle(TranzoColors.ClayPurple.copy(alpha = 0.06f), 200f, Offset(size.width * 0.1f, size.height * 0.35f))
+            drawCircle(TranzoColors.ClayGreen.copy(alpha = 0.04f), 150f, Offset(size.width * 0.7f, size.height * 0.8f))
+            drawCircle(TranzoColors.ClayCoral.copy(alpha = 0.03f), 120f, Offset(size.width * 0.2f, size.height * 0.9f))
+        }
+
         Column(
-            modifier = Modifier
-                .fillMaxSize()
-                .verticalScroll(rememberScrollState())
-                .alpha(contentAlpha)
-                .padding(horizontal = 24.dp),
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).alpha(contentAlpha).padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            Spacer(modifier = Modifier.height(60.dp))
+            Spacer(Modifier.height(60.dp))
 
-            // ── Logo ────────────────────────────────────────
-            Column(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                // Clay-style logo
+            // Logo + Welcome
+            Column(Modifier.fillMaxWidth(), horizontalAlignment = Alignment.CenterHorizontally) {
                 Box(
-                    modifier = Modifier
-                        .size(72.dp)
-                        .shadow(
-                            elevation = 16.dp,
-                            shape = RoundedCornerShape(24.dp),
-                            ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.3f),
-                        )
-                        .clip(RoundedCornerShape(24.dp))
-                        .background(TranzoColors.ClayBlue),
+                    Modifier.size(80.dp)
+                        .shadow(20.dp, RoundedCornerShape(26.dp), ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.4f))
+                        .clip(RoundedCornerShape(26.dp))
+                        .background(Brush.linearGradient(listOf(TranzoColors.ClayBlue, Color(0xFF7B5CE8))))
+                        .drawBehind {
+                            drawRoundRect(
+                                Brush.verticalGradient(listOf(Color.White.copy(alpha = 0.3f), Color.Transparent), startY = 0f, endY = size.height * 0.4f),
+                                cornerRadius = CornerRadius(26.dp.toPx()), size = Size(size.width, size.height * 0.4f)
+                            )
+                        },
                     contentAlignment = Alignment.Center,
                 ) {
-                    Text(
-                        "T",
-                        style = MaterialTheme.typography.displayMedium,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold,
-                        fontSize = 36.sp,
-                    )
+                    Text("T", style = MaterialTheme.typography.displayMedium, color = Color.White, fontWeight = FontWeight.ExtraBold, fontSize = 40.sp)
                 }
 
-                Spacer(modifier = Modifier.height(24.dp))
-
-                Text(
-                    "Hello, Stranger!",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary,
-                )
-
-                Spacer(modifier = Modifier.height(4.dp))
-
-                Text(
-                    "Let's sign you in",
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = TranzoColors.TextSecondary,
-                )
+                Spacer(Modifier.height(28.dp))
+                Text("Welcome to Tranzo", style = MaterialTheme.typography.headlineMedium, fontWeight = FontWeight.ExtraBold, color = TranzoColors.TextPrimary)
+                Spacer(Modifier.height(6.dp))
+                Text("Your smart crypto wallet", style = MaterialTheme.typography.bodyLarge, color = TranzoColors.TextSecondary)
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(32.dp))
 
             if (!showEmailInput) {
-                // ── Auth Methods ─────────────────────────────
+                // Auth method cards
                 ClayAuthMethodCard(
-                    icon = Icons.Outlined.Email,
-                    title = "Email",
-                    description = "Sign in with OTP code",
-                    onClick = { showEmailInput = true },
-                    iconColor = TranzoColors.ClayBlue,
+                    icon = Icons.Outlined.Email, title = "Email", description = "Sign in with OTP code",
+                    onClick = { showEmailInput = true }, iconColor = TranzoColors.ClayBlue,
                 )
-
                 ClayAuthMethodCard(
-                    icon = Icons.Outlined.Lock,
-                    title = "Google",
-                    description = "Quick sign in",
+                    icon = Icons.Outlined.Lock, title = "Google", description = "Quick sign in",
                     onClick = {
                         coroutineScope.launch {
-                            val idToken = googleSignInHelper.signIn(
-                                context as? Activity ?: return@launch
-                            )
-                            if (idToken != null) {
-                                viewModel.loginWithGoogle(idToken)
-                            }
+                            val idToken = googleSignInHelper.signIn(context as? Activity ?: return@launch)
+                            if (idToken != null) viewModel.loginWithGoogle(idToken)
                         }
                     },
-                    iconColor = TranzoColors.PrimaryPurple,
+                    iconColor = TranzoColors.ClayPurple,
                 )
 
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(Modifier.height(24.dp))
 
                 // Trust badge
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(Color.White.copy(alpha = 0.7f))
-                        .padding(16.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Icon(
-                        Icons.Outlined.Lock,
-                        contentDescription = "Secure",
-                        tint = TranzoColors.ClayGreen,
-                        modifier = Modifier.size(20.dp),
-                    )
-                    Text(
-                        "Protected by account abstraction & Kernel validators",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.TextSecondary,
-                        fontWeight = FontWeight.Medium,
-                    )
+                ClayCard(Modifier.fillMaxWidth(), cornerRadius = 18.dp, shadowElevation = 4.dp) {
+                    Row(Modifier.fillMaxWidth().padding(16.dp), horizontalArrangement = Arrangement.spacedBy(12.dp), verticalAlignment = Alignment.CenterVertically) {
+                        ClayIconPill(color = TranzoColors.ClayGreen, size = 36.dp, cornerRadius = 12.dp) {
+                            Icon(Icons.Outlined.Lock, null, tint = Color.White, modifier = Modifier.size(18.dp))
+                        }
+                        Text("Protected by account abstraction & Kernel validators", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextSecondary, fontWeight = FontWeight.Medium)
+                    }
                 }
             } else {
-                // ── Email Input ──────────────────────────────
-                Text(
-                    "Enter your email",
-                    style = MaterialTheme.typography.headlineSmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                ClayTextField(
-                    value = email,
-                    onValueChange = { email = it },
-                    placeholder = "Username or email",
-                    leadingIcon = {
-                        Icon(
-                            Icons.Outlined.Email,
-                            contentDescription = null,
-                            tint = TranzoColors.ClayBlue,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    },
-                )
+                // Email input
+                Text("Enter your email", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.ExtraBold, color = TranzoColors.TextPrimary)
+                Spacer(Modifier.height(8.dp))
+                ClayTextField(value = email, onValueChange = { email = it }, placeholder = "Username or email",
+                    leadingIcon = { Icon(Icons.Outlined.Email, null, tint = TranzoColors.ClayBlue, modifier = Modifier.size(20.dp)) })
 
                 if (state.error != null) {
-                    Text(
-                        state.error!!,
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.Error,
-                        modifier = Modifier.padding(vertical = 4.dp),
-                    )
+                    Box(Modifier.fillMaxWidth().clip(RoundedCornerShape(12.dp)).background(TranzoColors.ClayCoralSoft).padding(12.dp)) {
+                        Text(state.error!!, style = MaterialTheme.typography.bodySmall, color = TranzoColors.ClayCoral, fontWeight = FontWeight.SemiBold)
+                    }
                 }
 
-                Spacer(modifier = Modifier.height(16.dp))
+                Spacer(Modifier.height(16.dp))
+                ClayButton(text = "Sign In", onClick = { coroutineScope.launch { viewModel.sendOtp(email); onNavigateToOtp(email) } },
+                    enabled = email.contains("@") && !state.isLoading, isLoading = state.isLoading)
 
-                ClayButton(
-                    text = "Sign In",
-                    onClick = {
-                        coroutineScope.launch {
-                            viewModel.sendOtp(email)
-                            onNavigateToOtp(email)
-                        }
-                    },
-                    enabled = email.contains("@") && !state.isLoading,
-                    isLoading = state.isLoading,
-                )
-
-                Spacer(modifier = Modifier.height(8.dp))
-
-                TextButton(
-                    onClick = { showEmailInput = false },
-                    modifier = Modifier.fillMaxWidth(),
-                ) {
-                    Text(
-                        "Back",
-                        style = MaterialTheme.typography.labelLarge,
-                        fontWeight = FontWeight.SemiBold,
-                        color = TranzoColors.ClayBlue,
-                    )
+                Spacer(Modifier.height(8.dp))
+                TextButton(onClick = { showEmailInput = false }, modifier = Modifier.fillMaxWidth()) {
+                    Text("Back", style = MaterialTheme.typography.labelLarge, fontWeight = FontWeight.SemiBold, color = TranzoColors.ClayBlue)
                 }
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(Modifier.height(32.dp))
         }
     }
 }
-
-

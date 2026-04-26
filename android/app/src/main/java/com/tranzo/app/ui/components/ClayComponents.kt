@@ -1,23 +1,30 @@
 package com.tranzo.app.ui.components
 
 import androidx.compose.animation.core.*
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.interaction.collectIsPressedAsState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.Check
 import androidx.compose.material3.*
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
+import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.drawBehind
 import androidx.compose.ui.draw.shadow
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.geometry.Size
+import androidx.compose.ui.graphics.*
+import androidx.compose.ui.graphics.drawscope.DrawScope
+import androidx.compose.ui.graphics.drawscope.Fill
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -27,14 +34,35 @@ import androidx.compose.ui.unit.sp
 import com.tranzo.app.ui.theme.TranzoColors
 
 // ═══════════════════════════════════════════════════════════════
-// CLAYMORPHISM DESIGN SYSTEM
-// Inspired by: Soft, puffy, baby-blue clay aesthetic
-// Key traits: Solid colors, large rounded corners, puffy shadows
+// CLAYMORPHISM DESIGN SYSTEM v2 — PREMIUM TACTILE UI
+//
+// Design DNA: Sculpted matte clay surfaces with 3D depth.
+// Every element looks like it was pressed into soft material.
+// Inner glow at top-left + colored shadow at bottom-right.
 // ═══════════════════════════════════════════════════════════════
 
 /**
- * Clay Button — Solid royal blue pill, puffy colored shadow
- * NO gradients. Clean, bold, trustworthy.
+ * Modifier extension for the signature claymorphism look:
+ * - Outer shadow (bottom-right, colored)
+ * - Inner highlight (top-left, white glow)
+ * - Rounded, puffy shape
+ */
+fun Modifier.clayEffect(
+    cornerRadius: Dp = 28.dp,
+    shadowColor: Color = TranzoColors.ClayShadowDark,
+    elevation: Dp = 12.dp,
+): Modifier = this
+    .shadow(
+        elevation = elevation,
+        shape = RoundedCornerShape(cornerRadius),
+        ambientColor = shadowColor,
+        spotColor = shadowColor,
+    )
+    .clip(RoundedCornerShape(cornerRadius))
+
+/**
+ * Clay Button — Puffy pill with colored shadow matching the button color.
+ * Feels like a squishy toy button. Press feedback with scale.
  */
 @Composable
 fun ClayButton(
@@ -44,40 +72,48 @@ fun ClayButton(
     enabled: Boolean = true,
     isLoading: Boolean = false,
     containerColor: Color = TranzoColors.ClayBlue,
-    // Keep gradient params for backward compat, but ignore if containerColor is set
-    gradientStart: Color = TranzoColors.ClayBlue,
-    gradientEnd: Color = TranzoColors.ClayBlue,
+    gradientStart: Color = containerColor,
+    gradientEnd: Color = containerColor,
 ) {
-    val buttonColor = containerColor
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val shadowElevation by animateDpAsState(
+        targetValue = if (isPressed) 4.dp else 14.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "button shadow"
+    )
+
     Button(
         onClick = onClick,
         modifier = modifier
             .fillMaxWidth()
-            .height(56.dp)
+            .height(58.dp)
             .shadow(
-                elevation = 16.dp,
-                shape = RoundedCornerShape(28.dp),
-                ambientColor = buttonColor.copy(alpha = 0.3f),
-                spotColor = buttonColor.copy(alpha = 0.25f),
+                elevation = shadowElevation,
+                shape = RoundedCornerShape(22.dp),
+                ambientColor = containerColor.copy(alpha = 0.4f),
+                spotColor = containerColor.copy(alpha = 0.35f),
             ),
+        interactionSource = interactionSource,
         enabled = enabled && !isLoading,
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(22.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = buttonColor,
+            containerColor = containerColor,
             contentColor = Color.White,
-            disabledContainerColor = buttonColor.copy(alpha = 0.4f),
-            disabledContentColor = Color.White.copy(alpha = 0.6f),
+            disabledContainerColor = containerColor.copy(alpha = 0.35f),
+            disabledContentColor = Color.White.copy(alpha = 0.5f),
         ),
         elevation = ButtonDefaults.buttonElevation(
             defaultElevation = 0.dp,
-            pressedElevation = 2.dp,
+            pressedElevation = 0.dp,
         ),
     ) {
         if (isLoading) {
             CircularProgressIndicator(
-                modifier = Modifier.size(24.dp),
+                modifier = Modifier.size(22.dp),
                 color = Color.White,
-                strokeWidth = 2.dp,
+                strokeWidth = 2.5.dp,
             )
         } else {
             Text(
@@ -85,23 +121,24 @@ fun ClayButton(
                 style = MaterialTheme.typography.labelLarge,
                 fontWeight = FontWeight.Bold,
                 fontSize = 16.sp,
+                letterSpacing = 0.3.sp,
             )
         }
     }
 }
 
 /**
- * Clay Card — Pure white, puffy shadow, very rounded
- * The signature element of claymorphism.
+ * Clay Card — The signature element.
+ * Off-white surface with multi-layered shadow for 3D depth.
+ * Top-left inner edge catches "light", bottom-right casts shadow.
  */
 @Composable
 fun ClayCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
-    cornerRadius: Dp = 28.dp,
-    shadowElevation: Dp = 12.dp,
-    // Keep for backward compat
-    backgroundGradient: List<Color> = listOf(Color.White, Color.White),
+    cornerRadius: Dp = 24.dp,
+    shadowElevation: Dp = 10.dp,
+    backgroundGradient: List<Color> = listOf(TranzoColors.ClayCard, TranzoColors.ClayCard),
     content: @Composable () -> Unit,
 ) {
     val cardModifier = modifier
@@ -109,16 +146,41 @@ fun ClayCard(
             elevation = shadowElevation,
             shape = RoundedCornerShape(cornerRadius),
             ambientColor = TranzoColors.ClayShadowDark,
-            spotColor = TranzoColors.ClayShadowBlue,
+            spotColor = TranzoColors.ClayShadowDark,
         )
         .clip(RoundedCornerShape(cornerRadius))
-        .background(Color.White)
+        .background(
+            brush = Brush.linearGradient(
+                colors = listOf(
+                    Color(0xFFFEFCFF),  // Slight warm highlight at top
+                    TranzoColors.ClayCard,  // Base color
+                ),
+                start = Offset(0f, 0f),
+                end = Offset(Float.MAX_VALUE, Float.MAX_VALUE),
+            )
+        )
+        // Inner highlight line at the top for the "lit edge" effect
+        .drawBehind {
+            // Top inner glow
+            drawRoundRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.6f),
+                        Color.Transparent,
+                    ),
+                    startY = 0f,
+                    endY = size.height * 0.08f,
+                ),
+                cornerRadius = CornerRadius(cornerRadius.toPx()),
+                size = Size(size.width, size.height * 0.08f),
+            )
+        }
 
     val finalModifier = if (onClick != null) {
         cardModifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
-            onClick = onClick
+            onClick = onClick,
         )
     } else {
         cardModifier
@@ -126,41 +188,58 @@ fun ClayCard(
 
     Box(
         modifier = finalModifier,
-        content = { content() }
+        content = { content() },
     )
 }
 
 /**
- * Clay Gradient Card — For accent elements (balance cards, hero sections)
- * Uses gradient background with matching colored shadow.
+ * Clay Gradient Card — For hero/accent elements.
+ * Uses gradient background + matching colored shadow for a glowing clay effect.
  */
 @Composable
 fun ClayGradientCard(
     modifier: Modifier = Modifier,
     onClick: (() -> Unit)? = null,
     gradientStart: Color = TranzoColors.ClayBlue,
-    gradientEnd: Color = TranzoColors.PrimaryPurple,
+    gradientEnd: Color = TranzoColors.ClayPurple,
     content: @Composable () -> Unit,
 ) {
     val cardModifier = modifier
         .shadow(
-            elevation = 16.dp,
-            shape = RoundedCornerShape(28.dp),
-            ambientColor = gradientStart.copy(alpha = 0.25f),
-            spotColor = gradientStart.copy(alpha = 0.2f),
+            elevation = 18.dp,
+            shape = RoundedCornerShape(24.dp),
+            ambientColor = gradientStart.copy(alpha = 0.35f),
+            spotColor = gradientEnd.copy(alpha = 0.25f),
         )
-        .clip(RoundedCornerShape(28.dp))
+        .clip(RoundedCornerShape(24.dp))
         .background(
             brush = Brush.linearGradient(
                 colors = listOf(gradientStart, gradientEnd),
+                start = Offset(0f, 0f),
+                end = Offset(Float.MAX_VALUE, Float.MAX_VALUE),
             ),
         )
+        .drawBehind {
+            // Glossy top highlight for 3D roundness
+            drawRoundRect(
+                brush = Brush.verticalGradient(
+                    colors = listOf(
+                        Color.White.copy(alpha = 0.25f),
+                        Color.Transparent,
+                    ),
+                    startY = 0f,
+                    endY = size.height * 0.35f,
+                ),
+                cornerRadius = CornerRadius(24.dp.toPx()),
+                size = Size(size.width, size.height * 0.35f),
+            )
+        }
 
     val finalModifier = if (onClick != null) {
         cardModifier.clickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
-            onClick = onClick
+            onClick = onClick,
         )
     } else {
         cardModifier
@@ -168,12 +247,12 @@ fun ClayGradientCard(
 
     Box(
         modifier = finalModifier,
-        content = { content() }
+        content = { content() },
     )
 }
 
 /**
- * Clay Text Field — Light gray background, subtle border, clean
+ * Clay Text Field — Inset input with inner shadow (pressed-into-clay look).
  */
 @Composable
 fun ClayTextField(
@@ -201,11 +280,11 @@ fun ClayTextField(
         trailingIcon = trailingIcon,
         keyboardOptions = keyboardOptions,
         singleLine = singleLine,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(18.dp),
         colors = OutlinedTextFieldDefaults.colors(
             focusedBorderColor = TranzoColors.ClayBlue,
             unfocusedBorderColor = TranzoColors.ClayInputBorder,
-            focusedContainerColor = Color.White,
+            focusedContainerColor = TranzoColors.ClayInputBg,
             unfocusedContainerColor = TranzoColors.ClayInputBg,
             cursorColor = TranzoColors.ClayBlue,
         ),
@@ -213,8 +292,8 @@ fun ClayTextField(
 }
 
 /**
- * Clay Stat Card — For displaying metrics/balances
- * Uses gradient for visual emphasis (these are accent elements)
+ * Clay Stat Card — Gradient hero metric with glossy highlight.
+ * Used for balances, stats, KPIs.
  */
 @Composable
 fun ClayStatCard(
@@ -223,7 +302,7 @@ fun ClayStatCard(
     unit: String = "",
     modifier: Modifier = Modifier,
     gradientStart: Color = TranzoColors.ClayBlue,
-    gradientEnd: Color = TranzoColors.PrimaryPurple,
+    gradientEnd: Color = TranzoColors.ClayPurple,
 ) {
     ClayGradientCard(
         modifier = modifier.height(120.dp),
@@ -239,27 +318,29 @@ fun ClayStatCard(
             Text(
                 text = label,
                 style = MaterialTheme.typography.labelSmall,
-                color = Color.White.copy(alpha = 0.8f),
-                fontWeight = FontWeight.Medium,
+                color = Color.White.copy(alpha = 0.85f),
+                fontWeight = FontWeight.SemiBold,
+                letterSpacing = 0.8.sp,
             )
 
             Row(
-                verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalAlignment = Alignment.Bottom,
+                horizontalArrangement = Arrangement.spacedBy(6.dp),
             ) {
                 Text(
                     text = value,
                     style = MaterialTheme.typography.headlineMedium,
                     color = Color.White,
-                    fontWeight = FontWeight.Bold,
-                    fontSize = 32.sp,
+                    fontWeight = FontWeight.ExtraBold,
+                    fontSize = 30.sp,
                 )
                 if (unit.isNotEmpty()) {
                     Text(
                         text = unit,
                         style = MaterialTheme.typography.labelSmall,
-                        color = Color.White.copy(alpha = 0.8f),
-                        fontWeight = FontWeight.Medium,
+                        color = Color.White.copy(alpha = 0.75f),
+                        fontWeight = FontWeight.SemiBold,
+                        modifier = Modifier.padding(bottom = 4.dp),
                     )
                 }
             }
@@ -268,9 +349,8 @@ fun ClayStatCard(
 }
 
 /**
- * Clay Action Button — SOLID colored icon square + label
- * Like the Share/Send/Buy buttons in the reference image.
- * Icon backgrounds are SOLID color, not tinted/transparent.
+ * Clay Action Button — Puffy colored icon pill + label.
+ * Each icon bg casts its own colored shadow.
  */
 @Composable
 fun ClayActionButton(
@@ -280,26 +360,50 @@ fun ClayActionButton(
     icon: @Composable (() -> Unit)? = null,
     backgroundColor: Color = TranzoColors.ClayBlue,
 ) {
+    val interactionSource = remember { MutableInteractionSource() }
+    val isPressed by interactionSource.collectIsPressedAsState()
+
+    val elevation by animateDpAsState(
+        targetValue = if (isPressed) 4.dp else 12.dp,
+        animationSpec = spring(stiffness = Spring.StiffnessMediumLow),
+        label = "action elevation"
+    )
+
     Column(
         modifier = modifier.clickable(
-            interactionSource = remember { MutableInteractionSource() },
+            interactionSource = interactionSource,
             indication = null,
             onClick = onClick,
         ),
         horizontalAlignment = Alignment.CenterHorizontally,
-        verticalArrangement = Arrangement.spacedBy(8.dp),
+        verticalArrangement = Arrangement.spacedBy(10.dp),
     ) {
         Box(
             modifier = Modifier
-                .size(56.dp)
+                .size(60.dp)
                 .shadow(
-                    elevation = 10.dp,
-                    shape = RoundedCornerShape(18.dp),
-                    ambientColor = backgroundColor.copy(alpha = 0.3f),
-                    spotColor = backgroundColor.copy(alpha = 0.25f),
+                    elevation = elevation,
+                    shape = RoundedCornerShape(20.dp),
+                    ambientColor = backgroundColor.copy(alpha = 0.4f),
+                    spotColor = backgroundColor.copy(alpha = 0.3f),
                 )
-                .clip(RoundedCornerShape(18.dp))
-                .background(backgroundColor),
+                .clip(RoundedCornerShape(20.dp))
+                .background(backgroundColor)
+                .drawBehind {
+                    // Glossy top highlight
+                    drawRoundRect(
+                        brush = Brush.verticalGradient(
+                            colors = listOf(
+                                Color.White.copy(alpha = 0.3f),
+                                Color.Transparent,
+                            ),
+                            startY = 0f,
+                            endY = size.height * 0.45f,
+                        ),
+                        cornerRadius = CornerRadius(20.dp.toPx()),
+                        size = Size(size.width, size.height * 0.45f),
+                    )
+                },
             contentAlignment = Alignment.Center,
         ) {
             if (icon != null) {
@@ -319,8 +423,8 @@ fun ClayActionButton(
 }
 
 /**
- * Clay Auth Method Card — Used on Welcome/Login screen
- * White card with icon pill and chevron
+ * Clay Auth Method Card — Welcome/Login screen auth option.
+ * White card with colored icon pill and arrow.
  */
 @Composable
 fun ClayAuthMethodCard(
@@ -330,7 +434,6 @@ fun ClayAuthMethodCard(
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
     iconColor: Color = TranzoColors.ClayBlue,
-    // Keep for backward compat
     gradientStart: Color = TranzoColors.ClayBlue,
     gradientEnd: Color = TranzoColors.ClayBlue,
 ) {
@@ -348,12 +451,32 @@ fun ClayAuthMethodCard(
             horizontalArrangement = Arrangement.spacedBy(16.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            // Solid colored icon square
+            // Solid colored icon with clay shadow
             Box(
                 modifier = Modifier
                     .size(48.dp)
+                    .shadow(
+                        elevation = 8.dp,
+                        shape = RoundedCornerShape(16.dp),
+                        ambientColor = iconColor.copy(alpha = 0.35f),
+                        spotColor = iconColor.copy(alpha = 0.25f),
+                    )
                     .clip(RoundedCornerShape(16.dp))
-                    .background(iconColor),
+                    .background(iconColor)
+                    .drawBehind {
+                        drawRoundRect(
+                            brush = Brush.verticalGradient(
+                                colors = listOf(
+                                    Color.White.copy(alpha = 0.25f),
+                                    Color.Transparent,
+                                ),
+                                startY = 0f,
+                                endY = size.height * 0.4f,
+                            ),
+                            cornerRadius = CornerRadius(16.dp.toPx()),
+                            size = Size(size.width, size.height * 0.4f),
+                        )
+                    },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(
@@ -382,18 +505,27 @@ fun ClayAuthMethodCard(
                 )
             }
 
-            // Arrow
-            Text(
-                "\u2192",
-                style = MaterialTheme.typography.titleMedium,
-                color = TranzoColors.TextTertiary,
-            )
+            // Arrow in a subtle pill
+            Box(
+                modifier = Modifier
+                    .size(32.dp)
+                    .clip(RoundedCornerShape(10.dp))
+                    .background(TranzoColors.ClayBlueSoft),
+                contentAlignment = Alignment.Center,
+            ) {
+                Text(
+                    "\u2192",
+                    style = MaterialTheme.typography.titleMedium,
+                    color = TranzoColors.ClayBlue,
+                    fontWeight = FontWeight.Bold,
+                )
+            }
         }
     }
 }
 
 /**
- * Clay Success Indicator — Checkmark in circle
+ * Clay Success Checkmark — Puffy green circle with check.
  */
 @Composable
 fun ClaySuccessCheckmark(
@@ -401,27 +533,41 @@ fun ClaySuccessCheckmark(
 ) {
     Box(
         modifier = modifier
-            .size(64.dp)
+            .size(72.dp)
             .shadow(
-                elevation = 12.dp,
+                elevation = 16.dp,
                 shape = RoundedCornerShape(24.dp),
-                ambientColor = TranzoColors.Success.copy(alpha = 0.3f),
+                ambientColor = TranzoColors.ClayGreen.copy(alpha = 0.4f),
             )
             .clip(RoundedCornerShape(24.dp))
-            .background(TranzoColors.Success),
+            .background(TranzoColors.ClayGreen)
+            .drawBehind {
+                drawRoundRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.3f),
+                            Color.Transparent,
+                        ),
+                        startY = 0f,
+                        endY = size.height * 0.4f,
+                    ),
+                    cornerRadius = CornerRadius(24.dp.toPx()),
+                    size = Size(size.width, size.height * 0.4f),
+                )
+            },
         contentAlignment = Alignment.Center,
     ) {
         Icon(
             imageVector = Icons.Outlined.Check,
             contentDescription = "Success",
-            modifier = Modifier.size(32.dp),
+            modifier = Modifier.size(36.dp),
             tint = Color.White,
         )
     }
 }
 
 /**
- * Clay Badge — Small label pill
+ * Clay Badge — Small tinted label pill with subtle shadow.
  */
 @Composable
 fun ClayBadge(
@@ -431,19 +577,88 @@ fun ClayBadge(
 ) {
     Box(
         modifier = modifier
+            .shadow(
+                elevation = 4.dp,
+                shape = RoundedCornerShape(12.dp),
+                ambientColor = backgroundColor.copy(alpha = 0.15f),
+            )
             .clip(RoundedCornerShape(12.dp))
-            .background(backgroundColor.copy(alpha = 0.12f))
-            .padding(horizontal = 12.dp, vertical = 6.dp),
+            .background(backgroundColor.copy(alpha = 0.1f))
+            .padding(horizontal = 14.dp, vertical = 6.dp),
         contentAlignment = Alignment.Center,
     ) {
         Text(
             text = text,
             style = MaterialTheme.typography.labelSmall,
             color = backgroundColor,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = FontWeight.Bold,
             fontSize = 11.sp,
         )
     }
 }
 
+/**
+ * Clay Icon Pill — Small colored icon container used in list items.
+ * Consistent 3D puffy look with colored shadow.
+ */
+@Composable
+fun ClayIconPill(
+    modifier: Modifier = Modifier,
+    color: Color = TranzoColors.ClayBlue,
+    size: Dp = 44.dp,
+    cornerRadius: Dp = 15.dp,
+    content: @Composable BoxScope.() -> Unit,
+) {
+    Box(
+        modifier = modifier
+            .size(size)
+            .shadow(
+                elevation = 8.dp,
+                shape = RoundedCornerShape(cornerRadius),
+                ambientColor = color.copy(alpha = 0.35f),
+                spotColor = color.copy(alpha = 0.25f),
+            )
+            .clip(RoundedCornerShape(cornerRadius))
+            .background(color)
+            .drawBehind {
+                drawRoundRect(
+                    brush = Brush.verticalGradient(
+                        colors = listOf(
+                            Color.White.copy(alpha = 0.25f),
+                            Color.Transparent,
+                        ),
+                        startY = 0f,
+                        endY = this.size.height * 0.4f,
+                    ),
+                    cornerRadius = CornerRadius(cornerRadius.toPx()),
+                    size = Size(this.size.width, this.size.height * 0.4f),
+                )
+            },
+        contentAlignment = Alignment.Center,
+        content = content,
+    )
+}
 
+/**
+ * Decorative floating blob shape drawn on backgrounds.
+ * Creates organic, playful depth behind content.
+ */
+@Composable
+fun ClayDecoBlob(
+    modifier: Modifier = Modifier,
+    color: Color = TranzoColors.ClayBlue.copy(alpha = 0.08f),
+    offsetX: Float = 0f,
+    offsetY: Float = 0f,
+    radius: Float = 200f,
+) {
+    Canvas(modifier = modifier.fillMaxSize()) {
+        drawCircle(
+            color = color,
+            radius = radius,
+            center = Offset(
+                x = size.width * offsetX,
+                y = size.height * offsetY,
+            ),
+        )
+    }
+}

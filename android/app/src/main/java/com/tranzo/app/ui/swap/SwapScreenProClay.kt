@@ -2,6 +2,7 @@ package com.tranzo.app.ui.swap
 
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
+import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
@@ -16,17 +17,18 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.ClayButton
-import com.tranzo.app.ui.components.ClayCard
+import com.tranzo.app.ui.components.*
 import com.tranzo.app.ui.theme.TranzoColors
 
 /**
- * Claymorphism Swap Screen — Baby blue bg, white token cards, swap arrow, solid blue CTA.
+ * Claymorphism Swap Screen — Rich token swap interface with 3D puffy elements.
+ * Features token selector cards, animated swap button, rate info card.
  */
 @Composable
 fun SwapScreenProClay(
@@ -56,6 +58,25 @@ fun SwapScreenProClay(
             .fillMaxSize()
             .background(TranzoColors.ClayBackground)
     ) {
+        // Background blobs
+        Canvas(modifier = Modifier.fillMaxSize()) {
+            drawCircle(
+                color = TranzoColors.ClayPurple.copy(alpha = 0.06f),
+                radius = 240f,
+                center = Offset(size.width * 0.85f, size.height * 0.12f),
+            )
+            drawCircle(
+                color = TranzoColors.ClayBlue.copy(alpha = 0.05f),
+                radius = 200f,
+                center = Offset(size.width * 0.15f, size.height * 0.5f),
+            )
+            drawCircle(
+                color = TranzoColors.ClayGreen.copy(alpha = 0.04f),
+                radius = 150f,
+                center = Offset(size.width * 0.7f, size.height * 0.75f),
+            )
+        }
+
         Column(
             modifier = Modifier
                 .fillMaxSize()
@@ -69,51 +90,52 @@ fun SwapScreenProClay(
             // Header
             Row(
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(12.dp),
+                horizontalArrangement = Arrangement.spacedBy(14.dp),
             ) {
-                Box(
-                    modifier = Modifier
-                        .size(48.dp)
-                        .shadow(
-                            elevation = 12.dp,
-                            shape = RoundedCornerShape(16.dp),
-                            ambientColor = TranzoColors.PrimaryPurple.copy(alpha = 0.3f),
-                        )
-                        .clip(RoundedCornerShape(16.dp))
-                        .background(TranzoColors.PrimaryPurple),
-                    contentAlignment = Alignment.Center,
+                ClayIconPill(
+                    color = TranzoColors.ClayPurple,
+                    size = 52.dp,
+                    cornerRadius = 18.dp,
                 ) {
                     Icon(
                         Icons.Outlined.SwapVert,
                         contentDescription = null,
                         tint = Color.White,
-                        modifier = Modifier.size(24.dp),
+                        modifier = Modifier.size(26.dp),
                     )
                 }
-                Text(
-                    "Swap Tokens",
-                    style = MaterialTheme.typography.headlineMedium,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary,
-                )
+                Column {
+                    Text(
+                        "Swap Tokens",
+                        style = MaterialTheme.typography.headlineMedium,
+                        fontWeight = FontWeight.ExtraBold,
+                        color = TranzoColors.TextPrimary,
+                    )
+                    Text(
+                        "Instant token exchange",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TranzoColors.TextSecondary,
+                    )
+                }
             }
 
             Spacer(modifier = Modifier.height(8.dp))
 
-            // From card
+            // ── FROM Card ────────────────────────────────
             Text(
-                "From",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextSecondary,
+                "FROM",
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                color = TranzoColors.TextTertiary,
+                letterSpacing = 1.5.sp,
             )
 
-            ClayCard(modifier = Modifier.fillMaxWidth()) {
+            ClayCard(modifier = Modifier.fillMaxWidth(), cornerRadius = 22.dp) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -121,20 +143,19 @@ fun SwapScreenProClay(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(TranzoColors.ClayBlue),
-                                contentAlignment = Alignment.Center,
+                            ClayIconPill(
+                                color = TranzoColors.ClayBlue,
+                                size = 40.dp,
+                                cornerRadius = 13.dp,
                             ) {
                                 Text(
                                     fromToken.first().toString(),
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
                                 )
                             }
                             Text(
@@ -144,21 +165,31 @@ fun SwapScreenProClay(
                                 color = TranzoColors.TextPrimary,
                             )
                         }
-                        Text(
-                            "Bal: $8,950",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TranzoColors.TextTertiary,
-                        )
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(TranzoColors.ClayBlueSoft)
+                                .padding(horizontal = 10.dp, vertical = 4.dp),
+                        ) {
+                            Text(
+                                "Bal: $8,950",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = TranzoColors.ClayBlue,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 10.sp,
+                            )
+                        }
                     }
 
                     TextField(
                         value = fromAmount,
                         onValueChange = { viewModel.onFromAmountChanged(it) },
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("0.00") },
+                        placeholder = { Text("0.00", color = TranzoColors.TextDisabled) },
                         textStyle = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 32.sp,
+                            color = TranzoColors.TextPrimary,
                         ),
                         colors = TextFieldDefaults.colors(
                             focusedContainerColor = Color.Transparent,
@@ -170,42 +201,39 @@ fun SwapScreenProClay(
                 }
             }
 
-            // Swap direction button
+            // ── Swap Direction Button ────────────────────
             Box(
-                modifier = Modifier
-                    .align(Alignment.CenterHorizontally)
-                    .size(44.dp)
-                    .shadow(
-                        elevation = 10.dp,
-                        shape = RoundedCornerShape(14.dp),
-                        ambientColor = TranzoColors.ClayBlue.copy(alpha = 0.3f),
-                    )
-                    .clip(RoundedCornerShape(14.dp))
-                    .background(TranzoColors.ClayBlue),
-                contentAlignment = Alignment.Center,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             ) {
-                Icon(
-                    Icons.Outlined.SwapVert,
-                    contentDescription = "Swap direction",
-                    tint = Color.White,
-                    modifier = Modifier.size(24.dp),
-                )
+                ClayIconPill(
+                    color = TranzoColors.ClayBlue,
+                    size = 48.dp,
+                    cornerRadius = 16.dp,
+                ) {
+                    Icon(
+                        Icons.Outlined.SwapVert,
+                        contentDescription = "Swap direction",
+                        tint = Color.White,
+                        modifier = Modifier.size(26.dp),
+                    )
+                }
             }
 
-            // To card
+            // ── TO Card ──────────────────────────────────
             Text(
-                "To",
-                style = MaterialTheme.typography.labelMedium,
-                fontWeight = FontWeight.SemiBold,
-                color = TranzoColors.TextSecondary,
+                "TO",
+                style = MaterialTheme.typography.labelSmall,
+                fontWeight = FontWeight.Bold,
+                color = TranzoColors.TextTertiary,
+                letterSpacing = 1.5.sp,
             )
 
-            ClayCard(modifier = Modifier.fillMaxWidth()) {
+            ClayCard(modifier = Modifier.fillMaxWidth(), cornerRadius = 22.dp) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
                         .padding(20.dp),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(14.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -213,20 +241,19 @@ fun SwapScreenProClay(
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Row(
-                            horizontalArrangement = Arrangement.spacedBy(10.dp),
+                            horizontalArrangement = Arrangement.spacedBy(12.dp),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
-                            Box(
-                                modifier = Modifier
-                                    .size(36.dp)
-                                    .clip(RoundedCornerShape(12.dp))
-                                    .background(TranzoColors.ClayGreen),
-                                contentAlignment = Alignment.Center,
+                            ClayIconPill(
+                                color = TranzoColors.ClayGreen,
+                                size = 40.dp,
+                                cornerRadius = 13.dp,
                             ) {
                                 Text(
                                     toToken.first().toString(),
                                     color = Color.White,
                                     fontWeight = FontWeight.Bold,
+                                    fontSize = 16.sp,
                                 )
                             }
                             Text(
@@ -236,52 +263,90 @@ fun SwapScreenProClay(
                                 color = TranzoColors.TextPrimary,
                             )
                         }
-                        Text(
-                            "Bal: 1.2",
-                            style = MaterialTheme.typography.labelSmall,
-                            color = TranzoColors.TextTertiary,
-                        )
+                        Box(
+                            modifier = Modifier
+                                .clip(RoundedCornerShape(10.dp))
+                                .background(TranzoColors.ClayGreenSoft)
+                                .padding(horizontal = 10.dp, vertical = 4.dp),
+                        ) {
+                            Text(
+                                "Bal: 1.2",
+                                style = MaterialTheme.typography.labelSmall,
+                                color = TranzoColors.ClayGreen,
+                                fontWeight = FontWeight.SemiBold,
+                                fontSize = 10.sp,
+                            )
+                        }
                     }
 
                     TextField(
                         value = uiState.quote?.toAmount ?: "",
                         onValueChange = {},
                         modifier = Modifier.fillMaxWidth(),
-                        placeholder = { Text("0.00") },
+                        placeholder = { Text("0.00", color = TranzoColors.TextDisabled) },
                         enabled = false,
                         textStyle = MaterialTheme.typography.headlineSmall.copy(
-                            fontWeight = FontWeight.Bold,
-                            fontSize = 28.sp,
+                            fontWeight = FontWeight.ExtraBold,
+                            fontSize = 32.sp,
+                            color = TranzoColors.TextPrimary,
                         ),
                         colors = TextFieldDefaults.colors(
                             disabledContainerColor = Color.Transparent,
                             disabledIndicatorColor = Color.Transparent,
+                            disabledTextColor = TranzoColors.TextPrimary,
                         ),
                     )
                 }
             }
 
-            // Rate info
-            ClayCard(modifier = Modifier.fillMaxWidth()) {
+            // ── Rate Info ────────────────────────────────
+            ClayCard(modifier = Modifier.fillMaxWidth(), cornerRadius = 18.dp, shadowElevation = 6.dp) {
                 Column(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                        .padding(18.dp),
+                    verticalArrangement = Arrangement.spacedBy(10.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text("Rate", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                        Text("1 USDC = 0.00062 ETH", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
+                        Text(
+                            "1 USDC = 0.00062 ETH",
+                            style = MaterialTheme.typography.labelSmall,
+                            fontWeight = FontWeight.Bold,
+                            color = TranzoColors.TextPrimary,
+                        )
                     }
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
                         Text("Fee", style = MaterialTheme.typography.labelSmall, color = TranzoColors.TextTertiary)
-                        Text("~$0.10 (gasless)", style = MaterialTheme.typography.labelSmall, fontWeight = FontWeight.SemiBold, color = TranzoColors.ClayGreen)
+                        Row(horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            Box(
+                                modifier = Modifier
+                                    .clip(RoundedCornerShape(6.dp))
+                                    .background(TranzoColors.ClayGreenSoft)
+                                    .padding(horizontal = 6.dp, vertical = 2.dp),
+                            ) {
+                                Text(
+                                    "GASLESS",
+                                    style = MaterialTheme.typography.labelSmall,
+                                    fontWeight = FontWeight.Bold,
+                                    color = TranzoColors.ClayGreen,
+                                    fontSize = 8.sp,
+                                    letterSpacing = 0.5.sp,
+                                )
+                            }
+                            Text(
+                                "~$0.10",
+                                style = MaterialTheme.typography.labelSmall,
+                                fontWeight = FontWeight.Bold,
+                                color = TranzoColors.ClayGreen,
+                            )
+                        }
                     }
                 }
             }
@@ -295,6 +360,7 @@ fun SwapScreenProClay(
                     onSwapInitiated()
                 },
                 enabled = fromAmount.isNotBlank(),
+                containerColor = TranzoColors.ClayPurple,
             )
 
             Spacer(modifier = Modifier.height(32.dp))

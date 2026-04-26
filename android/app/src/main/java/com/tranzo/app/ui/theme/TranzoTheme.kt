@@ -4,63 +4,108 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.graphics.Color
 
-// Claymorphism premium crypto palette for Gen Z
-// Trust-focused with vibrant, playful surfaces
+// ═══════════════════════════════════════════════════════════════
+// CLAYMORPHISM DESIGN SYSTEM — PREMIUM CRYPTO WALLET
+// 
+// Design DNA: Soft, tactile, 3D toy-like surfaces with warm depth.
+// Think: Sculpted matte clay with gentle lighting from top-left.
+// Palette: Warm neutrals + saturated pastel accents.
+// ═══════════════════════════════════════════════════════════════
 object TranzoColors {
-    // ─── CLAYMORPHISM CORE ────────────────────────────
-    // Derived from reference image: baby-blue bg, white cards, solid blue CTA
-    val ClayBlue = Color(0xFF3B6BF6)           // Royal blue (buttons & accents)
-    val ClayBackground = Color(0xFFDBE9FE)     // Soft baby blue background
-    val ClayCard = Color(0xFFFFFFFF)            // Pure white for cards
-    val ClayShadowBlue = Color(0x263B6BF6)     // 15% blue-tinted shadow
-    val ClayShadowDark = Color(0x1A000020)     // 10% dark shadow for cards
-    val ClayInputBg = Color(0xFFF5F7FA)        // Light gray for text fields
-    val ClayInputBorder = Color(0xFFE8E8F0)    // Subtle border
-    val ClayGreen = Color(0xFF2BD98E)          // Vibrant green for Buy/Receive
+    // ─── CLAYMORPHISM CORE SURFACES ──────────────────────
+    // The background is a warm off-white with a peach/lavender tint — NOT generic blue
+    val ClayBackground = Color(0xFFF0EBF4)       // Warm lavender-tinted background
+    val ClayBackgroundAlt = Color(0xFFE8E2EE)    // Slightly darker for depth
+    val ClayCard = Color(0xFFFCFAFE)             // Off-white card (warm tint)
+    val ClayCardPressed = Color(0xFFF5F2FA)      // Pressed state
 
-    // Primary gradient colors - vibrant, sophisticated
-    val PrimaryBlue = Color(0xFF5B8DEF)        // Warm blue (primary)
-    val PrimaryPurple = Color(0xFF9D6BD5)      // Soft purple
-    val PrimaryPink = Color(0xFFFF6B9D)        // Vibrant pink (accent)
-    val PrimaryGreen = Color(0xFF4ECCA3)       // Mint green
-    val PrimaryYellow = Color(0xFFFFD166)      // Soft gold
-    val PrimaryOrange = Color(0xFFFF9F66)      // Vibrant orange
+    // 3D Shadow colors — the magic of claymorphism
+    val ClayShadowDark = Color(0x33B8AECC)       // Bottom-right shadow (purple-tinted)
+    val ClayShadowLight = Color(0x66FFFFFF)       // Top-left highlight
+    val ClayShadowBlue = Color(0x264A5AE8)       // Accent shadow for blue elements
+    val ClayShadowGreen = Color(0x2622C97A)      // Accent shadow for green elements
+    val ClayShadowPurple = Color(0x268E5DD5)     // Accent shadow for purple elements
 
-    // Secondary gradient stops for smooth transitions
-    val BlueLight = Color(0xFF7BA8F7)          // Light blue
-    val PurpleLight = Color(0xFFB89FE0)        // Light purple
-    val PinkLight = Color(0xFFFF8FB3)          // Light pink
-    val AccentEmerald = Color(0xFF34D399)      // Emerald accent
-    val AccentCyan = Color(0xFF22D3EE)         // Cyan accent
+    // ─── PRIMARY ACCENT PALETTE ──────────────────────────
+    // Royal indigo — premium, trustworthy, not generic
+    val ClayBlue = Color(0xFF4A5AE8)             // Deep indigo-blue (primary CTA)
+    val ClayBlueMuted = Color(0xFF7B88F0)        // Lighter indigo
+    val ClayBlueSoft = Color(0xFFDDD9F7)         // Tinted surface
 
-    // Neutral palette - refined, warm-tinted
-    val TextPrimary = Color(0xFF1A1A2E)        // Deep navy
-    val TextSecondary = Color(0xFF5A5F7F)      // Slate
-    val TextTertiary = Color(0xFF9BA3B8)       // Light slate
-    val TextDisabled = Color(0xFFD0D4E8)       // Lighter slate
+    // Vibrant green — success, receives, growth
+    val ClayGreen = Color(0xFF22C97A)            // Rich emerald green
+    val ClayGreenMuted = Color(0xFF5EDDA0)       // Lighter green
+    val ClayGreenSoft = Color(0xFFD4F5E4)        // Tinted surface
 
+    // Warm coral — alerts, sends, warmth
+    val ClayCoral = Color(0xFFFF6B7A)            // Warm coral-red
+    val ClayCoralMuted = Color(0xFFFF9EA8)        // Lighter coral
+    val ClayCoralSoft = Color(0xFFFFE5E8)        // Tinted surface
+
+    // Soft purple — secondary accent, premium
+    val ClayPurple = Color(0xFF8E5DD5)           // Rich lavender-purple
+    val ClayPurpleMuted = Color(0xFFB08BE8)      // Lighter purple
+    val ClayPurpleSoft = Color(0xFFEDE4F9)       // Tinted surface
+
+    // Warm amber — warnings, highlights
+    val ClayAmber = Color(0xFFF5A623)            // Rich amber-gold
+    val ClayAmberMuted = Color(0xFFFFC86B)       // Lighter amber
+    val ClayAmberSoft = Color(0xFFFFF3DB)        // Tinted surface
+
+    // Teal accent — info, links
+    val ClayTeal = Color(0xFF2ABFBF)             // Vibrant teal
+    val ClayTealSoft = Color(0xFFD4F4F4)         // Tinted surface
+
+    // ─── INPUT FIELD COLORS ──────────────────────────────
+    val ClayInputBg = Color(0xFFF7F5FA)          // Warm input background
+    val ClayInputBorder = Color(0xFFE4DFF0)      // Subtle purple-tinted border
+    val ClayInputFocusBorder = Color(0xFF4A5AE8) // Focused = primary
+
+    // ─── TEXT HIERARCHY ──────────────────────────────────
+    val TextPrimary = Color(0xFF1E1B2E)          // Deep dark indigo (not pure black)
+    val TextSecondary = Color(0xFF6B6580)         // Warm slate
+    val TextTertiary = Color(0xFF9E97B0)          // Light warm slate
+    val TextDisabled = Color(0xFFC8C2D6)          // Very light slate
+    val TextOnAccent = Color(0xFFFEFEFE)         // White text on colored surfaces
+
+    // ─── LEGACY COMPAT (referenced across codebase) ──────
     val White = Color(0xFFFEFEFE)
-    val BackgroundLight = Color(0xFFDBE9FE)    // Baby blue (= ClayBackground)
-    val SurfaceLight = Color(0xFFEBF2FF)       // Lighter baby blue
-    val SurfaceAlt = Color(0xFFE0EBFF)         // Secondary surface
-    val DividerGray = Color(0xFFE8E8F0)        // Divider
+    val BackgroundLight = ClayBackground
+    val SurfaceLight = Color(0xFFF7F5FA)
+    val SurfaceAlt = Color(0xFFEDE8F5)
+    val DividerGray = Color(0xFFE8E2F0)
 
-    // Dark mode variants
+    // Legacy names used by some screens
+    val PrimaryBlue = ClayBlue
+    val PrimaryPurple = ClayPurple
+    val PrimaryPink = ClayCoral
+    val PrimaryGreen = ClayGreen
+    val PrimaryYellow = ClayAmber
+    val PrimaryOrange = Color(0xFFFF8F5C)
+    val BlueLight = ClayBlueMuted
+    val PurpleLight = ClayPurpleMuted
+    val PinkLight = ClayCoralMuted
+    val AccentEmerald = Color(0xFF34D399)
+    val AccentCyan = ClayTeal
+
+    // Dark mode (not currently used in clay, but kept for compat)
     val BackgroundDark = Color(0xFF0F0F1E)
     val SurfaceDark = Color(0xFF1A1A2E)
     val TextDarkPrimary = Color(0xFFF5F3FF)
     val TextDarkSecondary = Color(0xFFB8BFDB)
 
-    // Status colors with claymorphism tint
-    val Success = Color(0xFF2BD98E)
-    val Error = Color(0xFFFF6B6B)
-    val ErrorLight = Color(0xFFFFF0F0)
-    val Warning = Color(0xFFFFB84D)
-    val Info = Color(0xFF3B6BF6)
+    // Status colors
+    val Success = ClayGreen
+    val Error = ClayCoral
+    val ErrorLight = ClayCoralSoft
+    val Warning = ClayAmber
+    val Info = ClayBlue
 
-    // Navigation colors
-    val NavActive = Color(0xFF3B6BF6)
-    val NavInactive = Color(0xFFB8BFDB)
+    // Navigation colors — clay-styled
+    val NavActive = ClayBlue
+    val NavInactive = Color(0xFFB5AEC5)
+    val NavBackground = Color(0xFFFCFAFE)
+    val NavIndicator = ClayBlueSoft
 }
 
 @Composable
