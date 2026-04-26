@@ -217,10 +217,12 @@ fun ClayDecoBlob(
 
 @Composable
 fun ClayAuthMethodCard(
-    icon: @Composable () -> Unit,
+    icon: ImageVector,
     title: String,
+    description: String,
     onClick: () -> Unit,
-    modifier: Modifier = Modifier
+    modifier: Modifier = Modifier,
+    iconColor: Color = TranzoColors.TextPrimary
 ) {
     Row(
         modifier = modifier
@@ -230,10 +232,17 @@ fun ClayAuthMethodCard(
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.Center
+        horizontalArrangement = Arrangement.spacedBy(16.dp)
     ) {
-        icon()
-        Spacer(Modifier.width(12.dp))
-        Text(title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
+        Box(
+            modifier = Modifier.size(40.dp).clip(CircleShape).background(TranzoColors.ClayBackgroundAlt),
+            contentAlignment = Alignment.Center
+        ) {
+            Icon(icon, contentDescription = null, tint = TranzoColors.TextPrimary, modifier = Modifier.size(20.dp))
+        }
+        Column(verticalArrangement = Arrangement.spacedBy(2.dp)) {
+            Text(title, style = MaterialTheme.typography.bodyLarge, fontWeight = FontWeight.SemiBold, color = TranzoColors.TextPrimary)
+            Text(description, style = MaterialTheme.typography.bodySmall, color = TranzoColors.TextSecondary)
+        }
     }
 }

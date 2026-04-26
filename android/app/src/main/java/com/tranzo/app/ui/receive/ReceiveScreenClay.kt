@@ -75,14 +75,7 @@ fun ReceiveScreenClay() {
             // Action buttons
             Row(Modifier.fillMaxWidth().padding(horizontal = 24.dp), horizontalArrangement = Arrangement.spacedBy(12.dp)) {
                 ClayButton(text = "Copy Address", onClick = {}, modifier = Modifier.weight(1f), containerColor = TranzoColors.ClayBlue)
-                Button(
-                    onClick = {}, modifier = Modifier.weight(1f).height(58.dp),
-                    shape = RoundedCornerShape(22.dp),
-                    colors = ButtonDefaults.buttonColors(containerColor = TranzoColors.ClayCard, contentColor = TranzoColors.ClayBlue),
-                    elevation = ButtonDefaults.buttonElevation(0.dp),
-                ) {
-                    Text("Share", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-                }
+                ClayButton(text = "Share", onClick = {}, modifier = Modifier.weight(1f), containerColor = TranzoColors.ClayBackgroundAlt)
             }
 
             Spacer(Modifier.height(100.dp))

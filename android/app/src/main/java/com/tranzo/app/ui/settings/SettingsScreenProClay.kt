@@ -110,16 +110,12 @@ fun SettingsScreenProClay(
             Spacer(Modifier.height(32.dp))
 
             // Logout
-            Button(
+            ClayButton(
+                text = "Logout",
                 onClick = onLogout,
-                modifier = Modifier.fillMaxWidth().padding(horizontal = 24.dp).height(54.dp)
-                    .shadow(12.dp, RoundedCornerShape(20.dp), ambientColor = TranzoColors.ClayCoral.copy(alpha = 0.35f)),
-                shape = RoundedCornerShape(20.dp),
-                colors = ButtonDefaults.buttonColors(containerColor = TranzoColors.ClayCoral, contentColor = Color.White),
-                elevation = ButtonDefaults.buttonElevation(0.dp),
-            ) {
-                Text("Logout", fontWeight = FontWeight.Bold, fontSize = 16.sp)
-            }
+                containerColor = TranzoColors.ClayCoral,
+                modifier = Modifier.padding(horizontal = 24.dp)
+            )
 
             Spacer(Modifier.height(100.dp))
         }

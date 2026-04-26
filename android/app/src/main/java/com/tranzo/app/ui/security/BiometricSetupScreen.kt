@@ -16,11 +16,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import com.tranzo.app.ui.components.ClayButton
+import com.tranzo.app.ui.theme.TranzoColors
 
-/**
- * CheQ-style biometric setup screen — shown after PIN creation.
- * Offers fingerprint/face enrollment for quick unlock.
- */
 @Composable
 fun BiometricSetupScreen(
     onEnable: () -> Unit = {},
@@ -41,13 +39,13 @@ fun BiometricSetupScreen(
             modifier = Modifier
                 .size(80.dp)
                 .clip(CircleShape)
-                .background(Color(0xFF1A1A1A)),
+                .background(TranzoColors.ClayBackgroundAlt),
             contentAlignment = Alignment.Center
         ) {
             Icon(
                 Icons.Outlined.Fingerprint,
                 contentDescription = null,
-                tint = Color.White,
+                tint = TranzoColors.TextPrimary,
                 modifier = Modifier.size(40.dp)
             )
         }
@@ -58,14 +56,14 @@ fun BiometricSetupScreen(
             "Enable Biometric",
             style = MaterialTheme.typography.headlineMedium,
             fontWeight = FontWeight.Bold,
-            color = Color(0xFF1A1A1A),
+            color = TranzoColors.TextPrimary,
             textAlign = TextAlign.Center
         )
         Spacer(modifier = Modifier.height(8.dp))
         Text(
             "Use fingerprint or face ID to quickly\nunlock your wallet",
             style = MaterialTheme.typography.bodyMedium,
-            color = Color(0xFF999999),
+            color = TranzoColors.TextSecondary,
             textAlign = TextAlign.Center
         )
 
@@ -88,21 +86,11 @@ fun BiometricSetupScreen(
 
         Spacer(modifier = Modifier.weight(1f))
 
-        // Enable button
-        Button(
+        // Enable button using minimal system
+        ClayButton(
+            text = "Enable Biometric",
             onClick = onEnable,
-            modifier = Modifier
-                .fillMaxWidth()
-                .height(56.dp),
-            shape = RoundedCornerShape(14.dp),
-            colors = ButtonDefaults.buttonColors(
-                containerColor = Color(0xFF1A1A1A),
-                contentColor = Color.White
-            ),
-            elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
-        ) {
-            Text("Enable Biometric", fontWeight = FontWeight.SemiBold)
-        }
+        )
 
         Spacer(modifier = Modifier.height(12.dp))
 
@@ -110,7 +98,7 @@ fun BiometricSetupScreen(
             Text(
                 "Maybe later",
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF999999)
+                color = TranzoColors.TextSecondary
             )
         }
     }
@@ -124,7 +112,7 @@ private fun BenefitRow(
     Surface(
         modifier = Modifier.fillMaxWidth(),
         shape = RoundedCornerShape(14.dp),
-        color = Color(0xFFF5F5F5)
+        color = TranzoColors.ClayBackgroundAlt
     ) {
         Row(
             modifier = Modifier
@@ -137,20 +125,20 @@ private fun BenefitRow(
                 modifier = Modifier
                     .size(36.dp)
                     .clip(CircleShape)
-                    .background(Color(0xFF1A1A1A)),
+                    .background(Color.White),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
                     icon,
                     contentDescription = null,
-                    tint = Color.White,
+                    tint = TranzoColors.TextPrimary,
                     modifier = Modifier.size(18.dp)
                 )
             }
             Text(
                 text,
                 style = MaterialTheme.typography.bodyMedium,
-                color = Color(0xFF1A1A1A),
+                color = TranzoColors.TextPrimary,
                 fontWeight = FontWeight.Medium
             )
         }
