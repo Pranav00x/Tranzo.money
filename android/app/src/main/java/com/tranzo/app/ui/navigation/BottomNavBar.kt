@@ -49,13 +49,6 @@ fun TranzoBottomBar(navController: NavHostController) {
             containerColor = TranzoColors.NavBackground,
             tonalElevation = 0.dp,
             modifier = Modifier
-                .shadow(
-                    elevation = 16.dp,
-                    shape = RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp),
-                    ambientColor = TranzoColors.ClayShadowDark,
-                    spotColor = TranzoColors.ClayShadowDark,
-                )
-                .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
                 .background(TranzoColors.NavBackground),
         ) {
             bottomNavItems.forEach { item ->
@@ -86,11 +79,11 @@ fun TranzoBottomBar(navController: NavHostController) {
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = TranzoColors.ClayBlue,
-                        selectedTextColor = TranzoColors.ClayBlue,
+                        selectedIconColor = Color.White,
+                        selectedTextColor = Color.White,
                         unselectedIconColor = TranzoColors.NavInactive,
                         unselectedTextColor = TranzoColors.NavInactive,
-                        indicatorColor = TranzoColors.NavIndicator,
+                        indicatorColor = Color.Transparent,
                     ),
                 )
             }

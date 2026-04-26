@@ -52,7 +52,7 @@ fun SwapScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier

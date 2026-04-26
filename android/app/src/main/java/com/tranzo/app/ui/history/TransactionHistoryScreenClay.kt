@@ -28,7 +28,7 @@ import com.tranzo.app.ui.theme.TranzoColors
 fun TransactionHistoryScreenClay(viewModel: HistoryViewModel = hiltViewModel()) {
     val uiState by viewModel.state.collectAsState()
 
-    Box(Modifier.fillMaxSize().background(Color.White)) {
+    Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
         if (uiState.isLoading && uiState.transactions.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                 CircularProgressIndicator(color = TranzoColors.TextPrimary)

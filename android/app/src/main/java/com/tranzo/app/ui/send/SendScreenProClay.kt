@@ -50,7 +50,7 @@ fun SendScreenProClay(
         animationSpec = tween(800), label = "fade"
     )
 
-    Box(Modifier.fillMaxSize().background(Color.White)) {
+    Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).alpha(contentAlpha),
         ) {

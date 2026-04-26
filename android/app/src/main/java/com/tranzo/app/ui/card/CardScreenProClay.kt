@@ -33,7 +33,7 @@ fun CardScreenProClay(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color.White)
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier
@@ -73,7 +73,7 @@ fun CardScreenProClay(
                     .padding(horizontal = 24.dp)
                     .height(220.dp)
                     .clip(RoundedCornerShape(24.dp))
-                    .background(TranzoColors.TextPrimary) // Pure black/dark gray card
+                    .background(TranzoColors.ClayCard) // Zerion Dark Card
             ) {
                 Column(
                     modifier = Modifier

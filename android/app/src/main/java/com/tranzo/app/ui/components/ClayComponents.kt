@@ -97,12 +97,12 @@ fun ClayCard(
     onClick: (() -> Unit)? = null,
     cornerRadius: Dp = 16.dp,
     shadowElevation: Dp = 0.dp, // No shadow in minimal
-    backgroundGradient: List<Color> = listOf(Color.White, Color.White),
+    backgroundGradient: List<Color> = listOf(TranzoColors.ClayCard, TranzoColors.ClayCard),
     content: @Composable () -> Unit,
 ) {
     val cardModifier = modifier
         .minimalEffect(cornerRadius = cornerRadius, borderColor = TranzoColors.DividerGray)
-        .background(Color.White)
+        .background(TranzoColors.ClayCard)
         .let { if (onClick != null) it.clickable(onClick = onClick) else it }
 
     Box(modifier = cardModifier) {
@@ -195,8 +195,8 @@ fun ClayTextField(
         singleLine = true,
         shape = RoundedCornerShape(12.dp),
         colors = OutlinedTextFieldDefaults.colors(
-            focusedContainerColor = Color.White,
-            unfocusedContainerColor = Color.White,
+            focusedContainerColor = TranzoColors.ClayBackgroundAlt,
+            unfocusedContainerColor = TranzoColors.ClayBackgroundAlt,
             focusedBorderColor = TranzoColors.TextPrimary,
             unfocusedBorderColor = TranzoColors.DividerGray,
             errorBorderColor = TranzoColors.ClayCoral,
@@ -228,7 +228,7 @@ fun ClayAuthMethodCard(
         modifier = modifier
             .fillMaxWidth()
             .minimalEffect(cornerRadius = 14.dp)
-            .background(Color.White)
+            .background(TranzoColors.ClayCard)
             .clickable(onClick = onClick)
             .padding(16.dp),
         verticalAlignment = Alignment.CenterVertically,

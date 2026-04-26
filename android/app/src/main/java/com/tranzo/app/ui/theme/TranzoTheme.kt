@@ -12,23 +12,22 @@ import androidx.compose.ui.graphics.Color
 // Palette: Warm neutrals + saturated pastel accents.
 // ═══════════════════════════════════════════════════════════════
 object TranzoColors {
-    // ─── MINIMAL CORE SURFACES ───────────────────────────
-    val ClayBackground = Color(0xFFF9F9F9)       // Pure light gray/white background
-    val ClayBackgroundAlt = Color(0xFFF3F3F3)    // Slightly darker background
-    val ClayCard = Color(0xFFFFFFFF)             // Pure white cards
-    val ClayCardPressed = Color(0xFFF5F5F5)      // Pressed state
+    // ─── ZERION DARK SURFACES ───────────────────────────
+    val ClayBackground = Color(0xFF1C1C1E)       // Zerion Main Background
+    val ClayBackgroundAlt = Color(0xFF2C2C2E)    // Zerion Secondary Surface
+    val ClayCard = Color(0xFF232325)             // Zerion Card Background
+    val ClayCardPressed = Color(0xFF333335)      // Pressed state
 
-    val ClayShadowDark = Color(0x08000000)       // Barely visible shadow
-    val ClayShadowLight = Color(0x00FFFFFF)       // No highlight
-    val ClayShadowBlue = Color(0x08000000)       
-    val ClayShadowGreen = Color(0x08000000)      
-    val ClayShadowPurple = Color(0x08000000)     
+    val ClayShadowDark = Color(0x00000000)       // No shadows for minimal Zerion
+    val ClayShadowLight = Color(0x00000000)       
+    val ClayShadowBlue = Color(0x00000000)       
+    val ClayShadowGreen = Color(0x00000000)      
+    val ClayShadowPurple = Color(0x00000000)     
 
-    // ─── PRIMARY ACCENT PALETTE ──────────────────────────
-    // Minimalist means black is the primary accent
-    val ClayBlue = Color(0xFF111111)             // Near Black
-    val ClayBlueMuted = Color(0xFF333333)        // Dark Gray
-    val ClayBlueSoft = Color(0xFFF0F0F0)         // Light Gray Tint
+    // Zerion Primary Accent (White for black buttons)
+    val ClayBlue = Color(0xFFFFFFFF)             
+    val ClayBlueMuted = Color(0xFF888888)        
+    val ClayBlueSoft = Color(0xFF38383A)         
 
     // Vibrant green — keep for success/receives but cleaner
     val ClayGreen = Color(0xFF00C853)            
@@ -58,12 +57,12 @@ object TranzoColors {
     val ClayInputBorder = Color(0xFFE0E0E0)      
     val ClayInputFocusBorder = Color(0xFF111111) 
 
-    // ─── TEXT HIERARCHY ──────────────────────────────────
-    val TextPrimary = Color(0xFF111111)          // Near Black
-    val TextSecondary = Color(0xFF757575)         // Medium Gray
-    val TextTertiary = Color(0xFFBDBDBD)          // Light Gray
-    val TextDisabled = Color(0xFFE0E0E0)          
-    val TextOnAccent = Color(0xFFFFFFFF)         
+    // ─── ZERION TEXT HIERARCHY ──────────────────────────
+    val TextPrimary = Color(0xFFFFFFFF)          // Pure White
+    val TextSecondary = Color(0xFFA0A0A5)         // Zerion Gray
+    val TextTertiary = Color(0xFF666666)          
+    val TextDisabled = Color(0xFF444444)          
+    val TextOnAccent = Color(0xFF000000)         
 
     // ─── LEGACY COMPAT ───────────────────────────────────
     val White = Color(0xFFFFFFFF)
@@ -95,10 +94,10 @@ object TranzoColors {
     val Warning = ClayAmber
     val Info = ClayBlue
 
-    val NavActive = Color(0xFF111111)
-    val NavInactive = Color(0xFF9E9E9E)
-    val NavBackground = Color(0xFFFFFFFF)
-    val NavIndicator = Color(0xFFF5F5F5)
+    val NavActive = Color(0xFFFFFFFF)
+    val NavInactive = Color(0xFF888888)
+    val NavBackground = Color(0xFF1C1C1E)
+    val NavIndicator = Color(0x00FFFFFF) // Transparent indicator for Zerion look
 }
 
 @Composable

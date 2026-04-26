@@ -77,7 +77,7 @@ fun DripperDashboardScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(TranzoColors.BackgroundLight),
+                .background(TranzoColors.ClayBackground),
         ) {
             item {
                 Box(
@@ -171,7 +171,7 @@ fun DripperDashboardScreen(
                         .fillMaxWidth()
                         .offset(y = (-20).dp)
                         .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                        .background(TranzoColors.BackgroundLight)
+                        .background(TranzoColors.ClayBackground)
                         .padding(horizontal = 20.dp),
                 ) {
                     Column {
@@ -259,9 +259,10 @@ private fun StreamCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 6.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = TranzoColors.SurfaceLight),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = TranzoColors.ClayCard),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, TranzoColors.DividerGray)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -293,7 +294,7 @@ private fun StreamCard(
                     .fillMaxWidth()
                     .height(6.dp),
                 shape = RoundedCornerShape(3.dp),
-                color = TranzoColors.BackgroundLight,
+                color = TranzoColors.ClayBackgroundAlt,
             ) {
                 Box(
                     modifier = Modifier
