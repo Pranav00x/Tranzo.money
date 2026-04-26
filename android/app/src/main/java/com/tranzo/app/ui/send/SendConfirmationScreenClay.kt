@@ -33,11 +33,6 @@ fun SendConfirmationScreenClay(
     onCancel: () -> Unit = {},
 ) {
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.06f), 200f, Offset(size.width * 0.8f, size.height * 0.15f))
-            drawCircle(TranzoColors.ClayGreen.copy(alpha = 0.04f), 160f, Offset(size.width * 0.2f, size.height * 0.7f))
-        }
-
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)

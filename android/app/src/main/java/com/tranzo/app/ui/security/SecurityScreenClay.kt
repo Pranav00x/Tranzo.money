@@ -29,12 +29,9 @@ fun SecurityScreenClay(viewModel: SecurityViewModel = hiltViewModel()) {
     val uiState by viewModel.state.collectAsState()
 
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayGreen.copy(alpha = 0.06f), 230f, Offset(size.width * 0.85f, size.height * 0.12f))
-            drawCircle(TranzoColors.ClayPurple.copy(alpha = 0.04f), 180f, Offset(size.width * 0.15f, size.height * 0.5f))
-        }
-
-        Column(Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp)) {
+        Column(
+            Modifier.fillMaxSize().verticalScroll(rememberScrollState()).padding(horizontal = 24.dp)
+        ) {
             Spacer(Modifier.height(24.dp))
 
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween, verticalAlignment = Alignment.CenterVertically) {

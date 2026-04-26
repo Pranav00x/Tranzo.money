@@ -44,11 +44,6 @@ fun ProfileSetupScreenProClay(
     val contentAlpha by animateFloatAsState(targetValue = if (showContent) 1f else 0f, animationSpec = tween(800), label = "fade")
 
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayPurple.copy(alpha = 0.06f), 240f, Offset(size.width * 0.85f, size.height * 0.1f))
-            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.05f), 180f, Offset(size.width * 0.1f, size.height * 0.5f))
-        }
-
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).alpha(contentAlpha).padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)

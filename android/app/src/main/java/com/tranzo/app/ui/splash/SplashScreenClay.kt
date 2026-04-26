@@ -42,13 +42,6 @@ fun SplashScreenClay(onSplashComplete: () -> Unit = {}) {
     )
 
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground), contentAlignment = Alignment.Center) {
-        // Background decorative blobs
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.07f), 280f, Offset(size.width * 0.8f, size.height * 0.2f))
-            drawCircle(TranzoColors.ClayPurple.copy(alpha = 0.06f), 220f, Offset(size.width * 0.15f, size.height * 0.7f))
-            drawCircle(TranzoColors.ClayGreen.copy(alpha = 0.04f), 160f, Offset(size.width * 0.6f, size.height * 0.85f))
-        }
-
         Column(horizontalAlignment = Alignment.CenterHorizontally, verticalArrangement = Arrangement.spacedBy(24.dp)) {
             // Clay logo — puffy indigo square with T
             Box(

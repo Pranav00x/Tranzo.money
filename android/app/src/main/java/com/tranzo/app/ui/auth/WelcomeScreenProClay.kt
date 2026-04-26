@@ -69,14 +69,6 @@ fun WelcomeScreenProClay(
     )
 
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
-        // Decorative blobs
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.07f), 260f, Offset(size.width * 0.85f, size.height * 0.1f))
-            drawCircle(TranzoColors.ClayPurple.copy(alpha = 0.06f), 200f, Offset(size.width * 0.1f, size.height * 0.35f))
-            drawCircle(TranzoColors.ClayGreen.copy(alpha = 0.04f), 150f, Offset(size.width * 0.7f, size.height * 0.8f))
-            drawCircle(TranzoColors.ClayCoral.copy(alpha = 0.03f), 120f, Offset(size.width * 0.2f, size.height * 0.9f))
-        }
-
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).alpha(contentAlpha).padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp)

@@ -42,11 +42,6 @@ fun WalletCreationScreenProClay(
     val contentAlpha by animateFloatAsState(targetValue = if (showContent) 1f else 0f, animationSpec = tween(800), label = "fade")
 
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.07f), 250f, Offset(size.width * 0.8f, size.height * 0.15f))
-            drawCircle(TranzoColors.ClayGreen.copy(alpha = 0.05f), 200f, Offset(size.width * 0.15f, size.height * 0.6f))
-        }
-
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).alpha(contentAlpha).padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(20.dp), horizontalAlignment = Alignment.CenterHorizontally,

@@ -41,11 +41,6 @@ fun OtpScreenProClay(
     val contentAlpha by animateFloatAsState(targetValue = if (showContent) 1f else 0f, animationSpec = tween(800), label = "fade")
 
     Box(Modifier.fillMaxSize().background(TranzoColors.ClayBackground)) {
-        Canvas(Modifier.fillMaxSize()) {
-            drawCircle(TranzoColors.ClayBlue.copy(alpha = 0.06f), 220f, Offset(size.width * 0.8f, size.height * 0.15f))
-            drawCircle(TranzoColors.ClayPurple.copy(alpha = 0.05f), 180f, Offset(size.width * 0.15f, size.height * 0.6f))
-        }
-
         Column(
             Modifier.fillMaxSize().verticalScroll(rememberScrollState()).alpha(contentAlpha).padding(horizontal = 24.dp),
             verticalArrangement = Arrangement.spacedBy(16.dp)
