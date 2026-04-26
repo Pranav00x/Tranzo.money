@@ -25,10 +25,13 @@ const verifyOtpSchema = z.object({
 router.post("/verify-otp", async (req, res) => {
     try {
         const { email, otp } = verifyOtpSchema.parse(req.body);
+        console.log(`[Auth] Verifying OTP for ${email}: ${otp}`);
         const result = await AuthService.verifyOtp(email, otp);
+        console.log(`[Auth] OTP verified successfully for ${email}`);
         res.json(result);
     }
     catch (err) {
+        console.error(`[Auth] OTP verification failed:`, err.message);
         res.status(400).json({ error: err.message });
     }
 });
@@ -40,6 +43,22 @@ router.post("/google", async (req, res) => {
     try {
         const { idToken } = googleSchema.parse(req.body);
         const result = await AuthService.loginWithGoogle(idToken);
+        res.json(result);
+    }
+    catch (err) {
+        res.status(400).json({ error: err.message });
+    }
+});
+// ─── Twitter Auth ──────────────────────────────────────────────
+const twitterSchema = z.object({
+    twitterId: z.string(),
+    email: z.string().email().optional(),
+    name: z.string().optional(),
+});
+router.post("/twitter", async (req, res) => {
+    try {
+        const { twitterId, email, name } = twitterSchema.parse(req.body);
+        const result = await AuthService.loginWithTwitter(twitterId, email, name);
         res.json(result);
     }
     catch (err) {

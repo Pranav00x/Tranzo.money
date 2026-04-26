@@ -48,7 +48,7 @@ fun OrderCardScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         // ── Top Bar ──────────────────────────────────────────────
@@ -136,7 +136,7 @@ fun OrderCardScreen(
 
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = TranzoColors.PaleTeal,
+                color = TranzoColors.BackgroundLight,
             ) {
                 Column(
                     modifier = Modifier
@@ -171,7 +171,7 @@ fun OrderCardScreen(
             // ── KYC Requirement Badge ────────────────────────────
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.WarningLight,
+                color = TranzoColors.Warning,
             ) {
                 Row(
                     modifier = Modifier
@@ -233,12 +233,12 @@ private fun CardTypeOption(
     isSelected: Boolean,
     onClick: () -> Unit,
 ) {
-    val borderColor = if (isSelected) TranzoColors.PrimaryBlack else TranzoColors.BorderGray
+    val borderColor = if (isSelected) TranzoColors.TextPrimary else TranzoColors.DividerGray
 
     Surface(
         onClick = onClick,
         shape = RoundedCornerShape(16.dp),
-        color = TranzoColors.CardSurface,
+        color = TranzoColors.SurfaceLight,
         border = ButtonDefaults.outlinedButtonBorder(enabled = true).copy(
             width = if (isSelected) 2.dp else 1.dp,
             brush = androidx.compose.ui.graphics.SolidColor(borderColor),
@@ -257,15 +257,15 @@ private fun CardTypeOption(
                         .size(44.dp)
                         .clip(CircleShape)
                         .background(
-                            if (isSelected) TranzoColors.PaleTeal
-                            else TranzoColors.LightGray
+                            if (isSelected) TranzoColors.BackgroundLight
+                            else TranzoColors.SurfaceLight
                         ),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = icon,
                         contentDescription = null,
-                        tint = if (isSelected) TranzoColors.PrimaryBlack
+                        tint = if (isSelected) TranzoColors.TextPrimary
                         else TranzoColors.TextSecondary,
                     )
                 }
@@ -286,7 +286,7 @@ private fun CardTypeOption(
                     Icon(
                         imageVector = Icons.Outlined.CheckCircle,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryBlack,
+                        tint = TranzoColors.TextPrimary,
                     )
                 }
             }
@@ -299,7 +299,7 @@ private fun CardTypeOption(
                     Icon(
                         imageVector = Icons.Outlined.Check,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryBlack,
+                        tint = TranzoColors.TextPrimary,
                         modifier = Modifier.size(16.dp),
                     )
                     Spacer(modifier = Modifier.width(8.dp))
@@ -328,7 +328,7 @@ private fun SettlementStep(
             modifier = Modifier
                 .size(28.dp)
                 .clip(CircleShape)
-                .background(TranzoColors.PrimaryBlack),
+                .background(TranzoColors.TextPrimary),
             contentAlignment = Alignment.Center,
         ) {
             Text(

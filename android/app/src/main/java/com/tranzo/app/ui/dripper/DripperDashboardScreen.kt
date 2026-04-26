@@ -69,7 +69,7 @@ fun DripperDashboardScreen(
     Box(modifier = Modifier.fillMaxSize()) {
         if (state.isLoading && state.streams.isEmpty()) {
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                CircularProgressIndicator(color = TranzoColors.PrimaryBlack)
+                CircularProgressIndicator(color = TranzoColors.TextPrimary)
             }
             return@Box
         }
@@ -77,7 +77,7 @@ fun DripperDashboardScreen(
         LazyColumn(
             modifier = Modifier
                 .fillMaxSize()
-                .background(TranzoColors.Background),
+                .background(TranzoColors.ClayBackground),
         ) {
             item {
                 Box(
@@ -86,9 +86,9 @@ fun DripperDashboardScreen(
                         .background(
                             Brush.verticalGradient(
                                 colors = listOf(
-                                    TranzoColors.Navy,
-                                    TranzoColors.GradientMid,
-                                    TranzoColors.DarkTeal,
+                                    TranzoColors.PrimaryBlue,
+                                    TranzoColors.PrimaryPurple,
+                                    TranzoColors.AccentCyan,
                                 ),
                             ),
                         )
@@ -107,13 +107,13 @@ fun DripperDashboardScreen(
                             Text(
                                 text = "Dripper",
                                 style = MaterialTheme.typography.headlineMedium,
-                                color = TranzoColors.TextOnDark,
+                                color = TranzoColors.TextDarkPrimary,
                                 fontWeight = FontWeight.Bold,
                             )
                             Icon(
                                 imageVector = Icons.Outlined.WaterDrop,
                                 contentDescription = null,
-                                tint = TranzoColors.LightTeal,
+                                tint = TranzoColors.AccentEmerald,
                                 modifier = Modifier.size(28.dp),
                             )
                         }
@@ -123,7 +123,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "Total Withdrawn",
                             style = MaterialTheme.typography.bodyMedium,
-                            color = TranzoColors.TextOnDarkMuted,
+                            color = TranzoColors.TextDarkSecondary,
                         )
 
                         Spacer(modifier = Modifier.height(8.dp))
@@ -131,7 +131,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "$${totalEarned.formatMoney()}",
                             style = MaterialTheme.typography.displayLarge,
-                            color = TranzoColors.TextOnDark,
+                            color = TranzoColors.TextDarkPrimary,
                             fontWeight = FontWeight.Bold,
                         )
 
@@ -140,7 +140,7 @@ fun DripperDashboardScreen(
                         Text(
                             text = "${activeStreams.size} active stream(s)",
                             style = MaterialTheme.typography.bodySmall,
-                            color = TranzoColors.LightTeal,
+                            color = TranzoColors.AccentEmerald,
                         )
 
                         Spacer(modifier = Modifier.height(20.dp))
@@ -150,7 +150,7 @@ fun DripperDashboardScreen(
                             enabled = activeStreams.isNotEmpty(),
                             shape = RoundedCornerShape(28.dp),
                             colors = ButtonDefaults.buttonColors(
-                                containerColor = TranzoColors.PrimaryBlack,
+                                containerColor = TranzoColors.TextPrimary,
                             ),
                             modifier = Modifier.fillMaxWidth(0.6f),
                         ) {
@@ -171,7 +171,7 @@ fun DripperDashboardScreen(
                         .fillMaxWidth()
                         .offset(y = (-20).dp)
                         .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                        .background(TranzoColors.Background)
+                        .background(TranzoColors.ClayBackground)
                         .padding(horizontal = 20.dp),
                 ) {
                     Column {
@@ -229,7 +229,7 @@ fun DripperDashboardScreen(
             modifier = Modifier
                 .align(Alignment.BottomEnd)
                 .padding(end = 24.dp, bottom = 100.dp),
-            containerColor = TranzoColors.PrimaryBlack,
+            containerColor = TranzoColors.TextPrimary,
             contentColor = TranzoColors.White,
             shape = CircleShape,
         ) {
@@ -259,9 +259,10 @@ private fun StreamCard(
         modifier = Modifier
             .fillMaxWidth()
             .padding(horizontal = 20.dp, vertical = 6.dp),
-        shape = RoundedCornerShape(16.dp),
-        colors = CardDefaults.cardColors(containerColor = TranzoColors.CardSurface),
-        elevation = CardDefaults.cardElevation(defaultElevation = 1.dp),
+        shape = RoundedCornerShape(20.dp),
+        colors = CardDefaults.cardColors(containerColor = TranzoColors.ClayCard),
+        elevation = CardDefaults.cardElevation(defaultElevation = 0.dp),
+        border = androidx.compose.foundation.BorderStroke(1.dp, TranzoColors.DividerGray)
     ) {
         Column(modifier = Modifier.padding(16.dp)) {
             Row(
@@ -293,13 +294,13 @@ private fun StreamCard(
                     .fillMaxWidth()
                     .height(6.dp),
                 shape = RoundedCornerShape(3.dp),
-                color = TranzoColors.PaleTeal,
+                color = TranzoColors.ClayBackgroundAlt,
             ) {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth(progress)
                         .height(6.dp)
-                        .background(TranzoColors.PrimaryBlack),
+                        .background(TranzoColors.TextPrimary),
                 )
             }
             Spacer(modifier = Modifier.height(8.dp))

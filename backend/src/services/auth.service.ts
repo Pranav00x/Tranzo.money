@@ -25,13 +25,32 @@ export class AuthService {
    * Send an OTP to the given email. Creates user if not exists (lazy signup).
    */
   static async sendOtp(email: string) {
-    if (email.toLowerCase().trim() === "test@test.in") {
-      console.log(`[Auth] OTP Bypass for test account: 000000`);
-      return { success: true };
-    }
-    
-    const otp = crypto.randomBytes(3).toString("hex").toUpperCase();
-    await EmailService.sendOTP(email, otp);
+    const normalizedEmail = email.toLowerCase().trim();
+
+    // Generate 6-digit OTP (000000-999999)
+    const otp = Math.floor(Math.random() * 1000000).toString().padStart(6, "0");
+    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
+    const expiresAt = new Date(Date.now() + 10 * 60_000);
+
+    console.log(`[Auth] Generated OTP for ${normalizedEmail}: ${otp} (expires at ${expiresAt.toISOString()})`);
+
+    // Save OTP immediately
+    await prisma.otpToken.create({
+      data: {
+        target: normalizedEmail,
+        tokenHash,
+        type: "EMAIL_VERIFICATION",
+        expiresAt,
+      },
+    });
+
+    console.log(`[Auth] OTP saved to database for ${normalizedEmail}`);
+
+    // Send email asynchronously (don't block the response)
+    EmailService.sendOTP(email, otp).catch((err) => {
+      console.error(`[Auth] Failed to send OTP to ${email}:`, err.message);
+    });
+
     return { success: true };
   }
 
@@ -44,32 +63,31 @@ export class AuthService {
   ) {
     const normalizedEmail = email.toLowerCase().trim();
 
-    // Bypass for test account
-    if (normalizedEmail === "test@test.in" && otp === "000000") {
-      console.log(`[Auth] OTP Verified via Bypas for test account`);
-    } else {
-      const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
+    const tokenHash = crypto.createHash("sha256").update(otp).digest("hex");
+    console.log(`[Auth] Looking for OTP hash: ${tokenHash} for email: ${normalizedEmail}`);
 
-      const record = await prisma.otpToken.findFirst({
-        where: {
-          target: normalizedEmail,
-          tokenHash,
-          type: "EMAIL_VERIFICATION",
-          used: false,
-          expiresAt: { gt: new Date() },
-        },
-      });
+    const record = await prisma.otpToken.findFirst({
+      where: {
+        target: normalizedEmail,
+        tokenHash,
+        type: "EMAIL_VERIFICATION",
+        used: false,
+        expiresAt: { gt: new Date() },
+      },
+    });
 
-      if (!record) {
-        throw new Error("Invalid or expired OTP");
-      }
-
-      // Mark OTP as used
-      await prisma.otpToken.update({
-        where: { id: record.id },
-        data: { used: true },
-      });
+    if (!record) {
+      console.error(`[Auth] OTP not found or expired for ${normalizedEmail}`);
+      throw new Error("Invalid or expired OTP");
     }
+
+    console.log(`[Auth] OTP found and valid for ${normalizedEmail}`);
+
+    // Mark OTP as used
+    await prisma.otpToken.update({
+      where: { id: record.id },
+      data: { used: true },
+    });
 
     // Find or create user
     let user = await prisma.user.findUnique({
@@ -111,7 +129,12 @@ export class AuthService {
 
     const refreshToken = await this.createRefreshToken(user.id);
 
-    return { accessToken, refreshToken, isNewUser };
+    return { 
+      accessToken, 
+      refreshToken, 
+      isNewUser,
+      user: this.mapUserResponse(user)
+    };
   }
 
   // ─── Google OAuth ────────────────────────────────────────────
@@ -121,7 +144,7 @@ export class AuthService {
    */
   static async loginWithGoogle(
     idToken: string
-  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean }> {
+  ): Promise<{ accessToken: string; refreshToken: string; isNewUser: boolean; user: any }> {
     if (!ENV.GOOGLE_CLIENT_ID) {
       throw new Error("Google OAuth not configured");
     }
@@ -193,7 +216,82 @@ export class AuthService {
 
     const refreshToken = await this.createRefreshToken(user.id);
 
-    return { accessToken, refreshToken, isNewUser };
+    return { 
+      accessToken, 
+      refreshToken, 
+      isNewUser,
+      user: this.mapUserResponse(user)
+    };
+  }
+
+  // ─── Twitter (X) Auth ──────────────────────────────────────────
+
+  /**
+   * Login with Twitter OAuth2.
+   */
+  static async loginWithTwitter(
+    twitterId: string,
+    email?: string,
+    name?: string
+  ) {
+    let user = await prisma.user.findFirst({
+      where: {
+        OR: [
+          ...(email ? [{ email }] : []),
+          { socialAccounts: { some: { provider: "TWITTER", providerId: twitterId } } },
+        ],
+      },
+      include: { socialAccounts: true },
+    });
+
+    let isNewUser = false;
+
+    if (!user) {
+      if (!email) throw new Error("Email required for new Twitter account");
+      
+      const privateKey = generatePrivateKey();
+      const { address: smartAccountAddress } = await SmartAccountService.createAccount(privateKey);
+
+      user = await prisma.user.create({
+        data: {
+          email,
+          displayName: name,
+          smartAccount: smartAccountAddress,
+          signerPrivateKey: privateKey,
+          socialAccounts: {
+            create: { provider: "TWITTER", providerId: twitterId },
+          },
+        },
+        include: { socialAccounts: true },
+      });
+      isNewUser = true;
+    }
+
+    const accessToken = this.signAccessToken({
+      sub: user.id,
+      smartAccount: user.smartAccount,
+      chainId: ENV.DEFAULT_CHAIN_ID,
+    });
+
+    const refreshToken = await this.createRefreshToken(user.id);
+
+    return { 
+      accessToken, 
+      refreshToken, 
+      isNewUser,
+      user: this.mapUserResponse(user)
+    };
+  }
+
+  private static mapUserResponse(user: any) {
+    return {
+      id: user.id,
+      email: user.email,
+      displayName: user.displayName,
+      avatarUrl: user.avatarUrl,
+      smartAccount: user.smartAccount,
+      kycStatus: user.kycStatus,
+    };
   }
 
   // ─── JWT ─────────────────────────────────────────────────────

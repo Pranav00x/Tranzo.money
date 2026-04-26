@@ -4,7 +4,6 @@ plugins {
     alias(libs.plugins.kotlin.compose)
     alias(libs.plugins.hilt)
     alias(libs.plugins.ksp)
-    kotlin("kapt")
     id("kotlin-parcelize")
 }
 
@@ -16,10 +15,22 @@ android {
         applicationId = "com.tranzo.app"
         minSdk = 26
         targetSdk = 35
-        versionCode = 1
-        versionName = "1.0.0"
+        versionCode = 2
+        versionName = "1.0.1"
 
         buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
+        buildConfigField("String", "WEBAUTHN_RP_ID", "\"tranzo.app\"")
+        buildConfigField("String", "WEBAUTHN_ORIGIN", "\"https://tranzo.app\"")
+        buildConfigField("String", "GOOGLE_CLIENT_ID", "\"753093250645-mjghuinh2qrjfi5mrlqtjq3kei4ecqbn.apps.googleusercontent.com\"")
+    }
+
+    signingConfigs {
+        getByName("debug") {
+            storeFile = file("debug.keystore")
+            storePassword = "android"
+            keyAlias = "androiddebugkey"
+            keyPassword = "android"
+        }
     }
 
     buildTypes {
@@ -29,7 +40,10 @@ android {
             proguardFiles(getDefaultProguardFile("proguard-android-optimize.txt"), "proguard-rules.pro")
         }
         debug {
+            signingConfig = signingConfigs.getByName("debug")
             buildConfigField("String", "BASE_URL", "\"https://tranzomoney-production.up.railway.app\"")
+            buildConfigField("String", "WEBAUTHN_RP_ID", "\"tranzo.app\"")
+            buildConfigField("String", "WEBAUTHN_ORIGIN", "\"https://tranzo.app\"")
         }
     }
 
@@ -66,7 +80,7 @@ dependencies {
 
     // Hilt
     implementation(libs.hilt.android)
-    kapt(libs.hilt.compiler)
+    ksp(libs.hilt.compiler)
     implementation(libs.hilt.navigation)
 
     // Retrofit & OkHttp
@@ -94,9 +108,14 @@ dependencies {
     // Lottie
     implementation(libs.lottie)
 
-    // Google Auth
+    // Google Auth & Credential Management
     implementation(libs.google.auth)
     implementation(libs.credential.manager)
+    implementation(libs.credential.auth)
+    implementation("com.google.android.libraries.identity.googleid:googleid:1.0.0")
+
+    // WebAuthn / Passkey
+    implementation("com.google.android.gms:play-services-fido:20.1.0")
 
     // Testing
     testImplementation("junit:junit:4.13.2")

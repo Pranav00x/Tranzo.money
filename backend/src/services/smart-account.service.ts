@@ -1,46 +1,74 @@
 import { generatePrivateKey, privateKeyToAccount } from "viem/accounts";
-import {
-  createKernelAccountClient,
-  createKernelAccount,
-} from "@zerodev/sdk";
-import { http } from "viem";
+import { createPublicClient, createWalletClient, http } from "viem";
 import { baseSepolia } from "viem/chains";
 import prisma from "./prisma.service.js";
 import { ENV } from "../config/env.js";
 
+// ZeroDev SDK - kernel account creation
+import { createKernelAccount, createKernelAccountClient } from "@zerodev/sdk";
+// @ts-ignore
+import { signerToEcdsaValidator } from "@zerodev/ecdsa-validator";
+import { getEntryPoint, KERNEL_V3_1 } from "@zerodev/sdk/constants";
+
 export class SmartAccountService {
   /**
-   * Create a new ZeroDev smart account
+   * Create a new ZeroDev smart account (production-ready)
    */
   static async createAccount(signerPrivateKey?: string) {
-    if (!ENV.ZERODEV_PROJECT_ID) {
-      throw new Error("ZERODEV_PROJECT_ID not configured");
+    if (!ENV.ZERODEV_PROJECT_ID || !ENV.ZERODEV_RPC_URL) {
+      throw new Error("ZERODEV_PROJECT_ID and ZERODEV_RPC_URL must be configured for production");
     }
 
+    console.log(`[SmartAccount] Creating account with ProjectID: ${ENV.ZERODEV_PROJECT_ID.substring(0, 10)}...`);
+
     const key = signerPrivateKey || generatePrivateKey();
-    const signer = privateKeyToAccount(key);
+    const signer = privateKeyToAccount(key as `0x${string}`);
+    console.log(`[SmartAccount] Generated signer: ${signer.address}`);
 
     try {
-      // Create KernelAccount using ZeroDev
-      const account = await createKernelAccount(
-        {
-          client: createKernelAccountClient({
-            chain: baseSepolia,
-            projectId: ENV.ZERODEV_PROJECT_ID,
-            transport: http(ENV.ZERODEV_RPC_URL),
-          }),
-        },
-        {
-          signer,
-        }
-      );
+      // Step 1: Create public client
+      console.log(`[SmartAccount] Creating public client with RPC: ${ENV.ZERODEV_RPC_URL.substring(0, 50)}...`);
+      const publicClient = createPublicClient({
+        chain: baseSepolia,
+        transport: http(ENV.ZERODEV_RPC_URL),
+      });
+      console.log(`[SmartAccount] ✓ Public client created`);
+
+      // Step 2: Get correct entry point for v0.7
+      console.log(`[SmartAccount] Getting EntryPoint v0.7...`);
+      const entryPoint = getEntryPoint("0.7");
+
+      // Step 3: Create ECDSA validator
+      console.log(`[SmartAccount] Creating ECDSA validator...`);
+      // @ts-ignore - ZeroDev SDK types compatibility
+      const ecdsaValidator = await signerToEcdsaValidator(publicClient, {
+        signer,
+        entryPoint,
+        kernelVersion: KERNEL_V3_1,
+      });
+      console.log(`[SmartAccount] ✓ ECDSA validator created`);
+
+      // Step 4: Create kernel account
+      console.log(`[SmartAccount] Creating kernel account...`);
+      // @ts-ignore - ZeroDev SDK types compatibility
+      const account = await createKernelAccount(publicClient, {
+        plugins: { sudo: ecdsaValidator },
+        entryPoint,
+        kernelVersion: KERNEL_V3_1,
+      });
+      console.log(`[SmartAccount] ✓ Kernel account created`);
 
       const address = account.address;
-      console.log(`[SmartAccount] Created ZeroDev account: ${address}`);
+      console.log(`[SmartAccount] ✅ Smart Account Address: ${address}`);
+      console.log(`[SmartAccount] Chain: Base Sepolia (84532), Signer: ${signer.address}`);
+      console.log(`[SmartAccount] Private key: ${key.substring(0, 10)}...`);
 
       return { address, privateKey: key };
     } catch (err: any) {
-      console.error("[SmartAccount] Failed to create ZeroDev account:", err);
+      console.error("[SmartAccount] ❌ Failed to create ZeroDev account");
+      console.error("[SmartAccount] Error message:", err.message);
+      console.error("[SmartAccount] Error name:", err.name);
+      if (err.stack) console.error("[SmartAccount] Stack:", err.stack);
       throw new Error(`Failed to create smart account: ${err.message}`);
     }
   }
@@ -71,38 +99,51 @@ export class SmartAccountService {
   }
 
   /**
-   * Send a gasless transaction via ZeroDev
+   * Send a gasless transaction via ZeroDev (Unified Signature)
    */
-  static async sendGaslessTransaction(userId: string, tx: any) {
-    if (!ENV.ZERODEV_PROJECT_ID) {
-      throw new Error("ZERODEV_PROJECT_ID not configured");
-    }
-
-    const user = await prisma.user.findUnique({
-      where: { id: userId },
-    });
-
-    if (!user?.smartAccount || !user?.signerPrivateKey) {
-      throw new Error("User has no smart account");
-    }
-
+  static async sendGaslessTransaction(
+    signerPrivateKey: `0x${string}`,
+    to: `0x${string}`,
+    value: bigint,
+    data: `0x${string}`,
+    chainId: number = ENV.DEFAULT_CHAIN_ID
+  ) {
     try {
-      const signer = privateKeyToAccount(user.signerPrivateKey);
-
-      const client = createKernelAccountClient({
+      const signer = privateKeyToAccount(signerPrivateKey);
+      const publicClient = createPublicClient({
         chain: baseSepolia,
-        projectId: ENV.ZERODEV_PROJECT_ID,
         transport: http(ENV.ZERODEV_RPC_URL),
       });
+      const entryPoint = getEntryPoint("0.7");
 
-      const account = await createKernelAccount(client, { signer });
+      // @ts-ignore
+      const ecdsaValidator = await signerToEcdsaValidator(publicClient as any, {
+        signer,
+        entryPoint,
+        kernelVersion: KERNEL_V3_1,
+      });
 
-      // Send transaction (implementation depends on ZeroDev's transaction API)
-      console.log(
-        `[SmartAccount] Sending gasless tx from ${account.address}`
-      );
+      // @ts-ignore
+      const account = await createKernelAccount(publicClient as any, {
+        plugins: { sudo: ecdsaValidator },
+        entryPoint,
+        kernelVersion: KERNEL_V3_1,
+      });
 
-      return { hash: "0x" + "0".repeat(64), status: "pending" };
+      const walletClient = createKernelAccountClient({
+        account,
+        chain: baseSepolia,
+        bundlerTransport: http(ENV.ZERODEV_RPC_URL),
+      });
+
+      console.log(`[SmartAccount] Sending gasless tx to ${to}`);
+      const hash = await (walletClient as any).sendTransaction({
+        to,
+        value,
+        data,
+      });
+      
+      return hash;
     } catch (err: any) {
       console.error("[SmartAccount] Failed to send transaction:", err);
       throw new Error(`Failed to send transaction: ${err.message}`);

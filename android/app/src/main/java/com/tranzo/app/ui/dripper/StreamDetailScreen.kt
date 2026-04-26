@@ -77,7 +77,7 @@ fun StreamDetailScreen(
         Box(
             modifier = Modifier
                 .fillMaxSize()
-                .background(TranzoColors.Background),
+                .background(TranzoColors.BackgroundLight),
             contentAlignment = Alignment.Center,
         ) {
             Text(
@@ -104,7 +104,7 @@ fun StreamDetailScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Box(
@@ -113,8 +113,8 @@ fun StreamDetailScreen(
                 .background(
                     Brush.verticalGradient(
                         colors = listOf(
-                            TranzoColors.Navy,
-                            TranzoColors.DarkTeal,
+                            TranzoColors.PrimaryBlue,
+                            TranzoColors.AccentCyan,
                         ),
                     ),
                 )
@@ -130,13 +130,13 @@ fun StreamDetailScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Back",
-                            tint = TranzoColors.TextOnDark,
+                            tint = TranzoColors.TextDarkPrimary,
                         )
                     }
                     Text(
                         text = "Stream #${stream.id}",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = TranzoColors.TextOnDark,
+                        color = TranzoColors.TextDarkPrimary,
                         modifier = Modifier.weight(1f),
                     )
                 }
@@ -146,7 +146,7 @@ fun StreamDetailScreen(
                 Text(
                     text = "To ${stream.employeeAddress.shortAddress()}",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextOnDarkMuted,
+                    color = TranzoColors.TextDarkSecondary,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
@@ -156,7 +156,7 @@ fun StreamDetailScreen(
                 Text(
                     text = "$${earned.toMoney()}",
                     style = MaterialTheme.typography.displayLarge,
-                    color = TranzoColors.TextOnDark,
+                    color = TranzoColors.TextDarkPrimary,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -167,7 +167,7 @@ fun StreamDetailScreen(
                 Text(
                     text = "$${dailyRate.toMoney()} / day",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.LightTeal,
+                    color = TranzoColors.AccentEmerald,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
@@ -179,7 +179,7 @@ fun StreamDetailScreen(
                 .fillMaxWidth()
                 .offset(y = (-20).dp)
                 .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                .background(TranzoColors.Background)
+                .background(TranzoColors.BackgroundLight)
                 .padding(24.dp),
         ) {
             Row(
@@ -194,7 +194,7 @@ fun StreamDetailScreen(
                 Text(
                     text = "${(progress * 100).toInt()}%",
                     style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.PrimaryBlack,
+                    color = TranzoColors.TextPrimary,
                     fontWeight = FontWeight.SemiBold,
                 )
             }
@@ -207,15 +207,15 @@ fun StreamDetailScreen(
                     .fillMaxWidth()
                     .height(8.dp)
                     .clip(RoundedCornerShape(4.dp)),
-                color = TranzoColors.PrimaryBlack,
-                trackColor = TranzoColors.PaleTeal,
+                color = TranzoColors.TextPrimary,
+                trackColor = TranzoColors.BackgroundLight,
             )
 
             Spacer(modifier = Modifier.height(24.dp))
 
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = TranzoColors.CardSurface,
+                color = TranzoColors.SurfaceLight,
                 tonalElevation = 1.dp,
             ) {
                 Column(modifier = Modifier.padding(20.dp)) {

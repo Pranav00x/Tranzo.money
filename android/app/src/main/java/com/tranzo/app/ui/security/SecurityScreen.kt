@@ -40,7 +40,7 @@ fun SecurityScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         // ── Top Bar ──────────────────────────────────────────────
@@ -73,7 +73,7 @@ fun SecurityScreen(
             // ── Security Score Card ──────────────────────────────
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = TranzoColors.PaleTeal,
+                color = TranzoColors.BackgroundLight,
             ) {
                 Row(
                     modifier = Modifier
@@ -85,7 +85,7 @@ fun SecurityScreen(
                         modifier = Modifier
                             .size(56.dp)
                             .clip(CircleShape)
-                            .background(TranzoColors.PrimaryBlack),
+                            .background(TranzoColors.TextPrimary),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
@@ -204,7 +204,7 @@ private fun SecurityToggleRow(
     onCheckedChange: (Boolean) -> Unit,
 ) {
     Surface(
-        color = TranzoColors.Background,
+        color = TranzoColors.BackgroundLight,
         modifier = Modifier.padding(vertical = 4.dp),
     ) {
         Row(
@@ -236,7 +236,7 @@ private fun SecurityToggleRow(
                 checked = checked,
                 onCheckedChange = onCheckedChange,
                 colors = SwitchDefaults.colors(
-                    checkedTrackColor = TranzoColors.PrimaryBlack,
+                    checkedTrackColor = TranzoColors.TextPrimary,
                     checkedThumbColor = TranzoColors.White,
                 ),
             )
@@ -255,7 +255,7 @@ private fun SecurityActionRow(
 ) {
     Surface(
         onClick = onClick,
-        color = TranzoColors.Background,
+        color = TranzoColors.BackgroundLight,
         modifier = Modifier.padding(vertical = 4.dp),
     ) {
         Row(
@@ -286,12 +286,12 @@ private fun SecurityActionRow(
             if (badge != null) {
                 Surface(
                     shape = RoundedCornerShape(6.dp),
-                    color = if (badgeIsError) TranzoColors.ErrorLight else TranzoColors.BadgeGreenBg,
+                    color = if (badgeIsError) TranzoColors.ErrorLight else TranzoColors.Success,
                 ) {
                     Text(
                         text = badge,
                         style = MaterialTheme.typography.labelSmall,
-                        color = if (badgeIsError) TranzoColors.Error else TranzoColors.PrimaryBlack,
+                        color = if (badgeIsError) TranzoColors.Error else TranzoColors.TextPrimary,
                         modifier = Modifier.padding(horizontal = 8.dp, vertical = 4.dp),
                     )
                 }

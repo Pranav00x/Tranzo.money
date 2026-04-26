@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.draw.rotate
 import androidx.compose.ui.graphics.Brush
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import com.tranzo.app.ui.theme.TranzoColors
@@ -42,7 +43,7 @@ fun TranzoLogo(
                 .fillMaxSize()
                 .rotate(45f)
                 .clip(RoundedCornerShape(size * 0.05f))
-                .background(TranzoColors.PrimaryBlack)
+                .background(TranzoColors.TextPrimary)
         )
     }
 }
@@ -57,6 +58,7 @@ fun TranzoButton(
     modifier: Modifier = Modifier,
     enabled: Boolean = true,
     isLoading: Boolean = false,
+    containerColor: Color = TranzoColors.TextPrimary,
 ) {
     Button(
         onClick = onClick,
@@ -66,9 +68,9 @@ fun TranzoButton(
         enabled = enabled && !isLoading,
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.PrimaryBlack,
+            containerColor = containerColor,
             contentColor = TranzoColors.White,
-            disabledContainerColor = TranzoColors.PrimaryBlack.copy(alpha = 0.4f),
+            disabledContainerColor = containerColor.copy(alpha = 0.4f),
             disabledContentColor = TranzoColors.White.copy(alpha = 0.6f),
         ),
         elevation = ButtonDefaults.buttonElevation(
@@ -107,7 +109,7 @@ fun TranzoSecondaryButton(
             .height(52.dp),
         shape = RoundedCornerShape(28.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = TranzoColors.LightGray,
+            containerColor = TranzoColors.SurfaceLight,
             contentColor = TranzoColors.TextPrimary,
         ),
         elevation = ButtonDefaults.buttonElevation(
@@ -156,12 +158,12 @@ fun TranzoTextField(
             keyboardActions = keyboardActions,
             shape = RoundedCornerShape(12.dp),
             colors = OutlinedTextFieldDefaults.colors(
-                focusedBorderColor = TranzoColors.PrimaryBlack,
-                unfocusedBorderColor = TranzoColors.BorderGray,
+                focusedBorderColor = TranzoColors.TextPrimary,
+                unfocusedBorderColor = TranzoColors.DividerGray,
                 errorBorderColor = TranzoColors.Error,
-                focusedLabelColor = TranzoColors.PrimaryBlack,
+                focusedLabelColor = TranzoColors.TextPrimary,
                 unfocusedLabelColor = TranzoColors.TextSecondary,
-                cursorColor = TranzoColors.PrimaryBlack,
+                cursorColor = TranzoColors.TextPrimary,
             ),
         )
 
@@ -191,7 +193,7 @@ fun TranzoCard(
             modifier = modifier,
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = TranzoColors.CardSurface,
+                containerColor = TranzoColors.SurfaceLight,
             ),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 1.dp,
@@ -207,7 +209,7 @@ fun TranzoCard(
             modifier = modifier,
             shape = RoundedCornerShape(16.dp),
             colors = CardDefaults.cardColors(
-                containerColor = TranzoColors.CardSurface,
+                containerColor = TranzoColors.SurfaceLight,
             ),
             elevation = CardDefaults.cardElevation(
                 defaultElevation = 1.dp,
@@ -292,8 +294,8 @@ fun StatusBadge(
     modifier: Modifier = Modifier,
     isError: Boolean = false,
 ) {
-    val bgColor = if (isError) TranzoColors.BadgeRedBg else TranzoColors.BadgeGreenBg
-    val textColor = if (isError) TranzoColors.BadgeRed else TranzoColors.BadgeGreen
+    val bgColor = if (isError) TranzoColors.Error else TranzoColors.Success
+    val textColor = if (isError) TranzoColors.Error else TranzoColors.Success
 
     Box(
         modifier = modifier

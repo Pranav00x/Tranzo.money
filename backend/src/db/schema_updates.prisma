@@ -1,0 +1,48 @@
+// Add these fields to your existing User model in schema.prisma
+
+model User {
+  id                    String      @id @default(cuid())
+  email                 String      @unique
+  accessToken           String?
+  refreshToken          String?
+  walletAddress         String?     @unique
+
+  // NEW: Profile fields
+  firstName             String?
+  lastName              String?
+  phone                 String?
+  preferredLanguage     String      @default("en")  // en, es, fr, pt
+  avatarUrl             String?
+  biometricEnabled      Boolean     @default(false)
+
+  // Passkey/WebAuthn credentials
+  credentials           Credential[]
+
+  // Existing fields
+  createdAt             DateTime    @default(now())
+  updatedAt             DateTime    @updatedAt
+
+  @@index([email])
+  @@index([walletAddress])
+}
+
+// NEW: WebAuthn credential storage
+model Credential {
+  id                    String      @id @default(cuid())
+  userId                String
+  user                  User        @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  // WebAuthn credential data
+  credentialId          Bytes       @unique
+  credentialPublicKey   Bytes
+  credentialName        String      // Name user gave this credential (e.g., "iPhone 15")
+  counter               Int         @default(0)  // For cloning detection
+
+  // Metadata
+  createdAt             DateTime    @default(now())
+  lastUsedAt            DateTime?
+
+  @@index([userId])
+}
+
+// Migration: npx prisma migrate dev --name add_profile_fields_and_credentials

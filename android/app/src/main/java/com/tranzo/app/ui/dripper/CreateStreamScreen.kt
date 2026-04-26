@@ -84,7 +84,7 @@ fun CreateStreamScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Row(
@@ -116,7 +116,7 @@ fun CreateStreamScreen(
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.PaleTeal.copy(alpha = 0.5f),
+                color = TranzoColors.BackgroundLight.copy(alpha = 0.5f),
             ) {
                 Row(
                     modifier = Modifier
@@ -127,7 +127,7 @@ fun CreateStreamScreen(
                     Icon(
                         imageVector = Icons.Outlined.Info,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryBlack,
+                        tint = TranzoColors.TextPrimary,
                         modifier = Modifier.size(20.dp),
                     )
                     Text(
@@ -151,7 +151,7 @@ fun CreateStreamScreen(
                         Icon(
                             imageVector = Icons.Outlined.ContentPaste,
                             contentDescription = "Paste",
-                            tint = TranzoColors.PrimaryBlack,
+                            tint = TranzoColors.TextPrimary,
                             modifier = Modifier.size(20.dp),
                         )
                     }
@@ -173,7 +173,7 @@ fun CreateStreamScreen(
                         onClick = { selectedToken = token },
                         label = { Text(token) },
                         colors = FilterChipDefaults.filterChipColors(
-                            selectedContainerColor = TranzoColors.PrimaryBlack,
+                            selectedContainerColor = TranzoColors.TextPrimary,
                             selectedLabelColor = TranzoColors.White,
                         ),
                     )
@@ -203,7 +203,7 @@ fun CreateStreamScreen(
             if (ratePerDay != "-") {
                 Surface(
                     shape = RoundedCornerShape(16.dp),
-                    color = TranzoColors.CardSurface,
+                    color = TranzoColors.SurfaceLight,
                     tonalElevation = 1.dp,
                 ) {
                     Column(modifier = Modifier.padding(20.dp)) {

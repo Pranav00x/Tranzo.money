@@ -105,7 +105,7 @@ fun TransactionHistoryScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Text(
@@ -117,8 +117,8 @@ fun TransactionHistoryScreen(
 
         ScrollableTabRow(
             selectedTabIndex = filters.indexOf(selectedFilter).coerceAtLeast(0),
-            containerColor = TranzoColors.Background,
-            contentColor = TranzoColors.PrimaryBlack,
+            containerColor = TranzoColors.BackgroundLight,
+            contentColor = TranzoColors.TextPrimary,
             edgePadding = 24.dp,
             divider = {},
             indicator = {},
@@ -128,7 +128,7 @@ fun TransactionHistoryScreen(
                 Tab(selected = isSelected, onClick = { selectedFilter = filter }) {
                     Surface(
                         shape = RoundedCornerShape(20.dp),
-                        color = if (isSelected) TranzoColors.PrimaryBlack else TranzoColors.LightGray,
+                        color = if (isSelected) TranzoColors.TextPrimary else TranzoColors.SurfaceLight,
                         modifier = Modifier.padding(horizontal = 4.dp, vertical = 8.dp),
                     ) {
                         Text(
@@ -206,7 +206,7 @@ private fun TransactionRow(tx: TransactionUiItem) {
         else -> Icons.Outlined.Receipt
     }
 
-    Surface(color = TranzoColors.Background) {
+    Surface(color = TranzoColors.BackgroundLight) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
@@ -217,13 +217,13 @@ private fun TransactionRow(tx: TransactionUiItem) {
                 modifier = Modifier
                     .size(46.dp)
                     .clip(CircleShape)
-                    .background(TranzoColors.LightGray),
+                    .background(TranzoColors.SurfaceLight),
                 contentAlignment = Alignment.Center,
             ) {
                 androidx.compose.material3.Icon(
                     imageVector = icon,
                     contentDescription = null,
-                    tint = TranzoColors.PrimaryBlack,
+                    tint = TranzoColors.TextPrimary,
                     modifier = Modifier.size(22.dp),
                 )
             }
@@ -274,7 +274,7 @@ private fun EmptyState(filterName: String) {
             modifier = Modifier
                 .size(96.dp)
                 .clip(CircleShape)
-                .background(TranzoColors.LightGray),
+                .background(TranzoColors.SurfaceLight),
             contentAlignment = Alignment.Center,
         ) {
             androidx.compose.material3.Icon(

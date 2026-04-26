@@ -3,24 +3,36 @@ import { ENV } from "../config/env.js";
 
 /**
  * Wrapper around the Openfort SDK.
+ * DEPRECATED: Migration to ZeroDev Kernel SDK in progress.
  * Handles player creation, smart account management, and transaction intents.
  */
 export class OpenfortService {
+  private static checkInitialized() {
+    if (!openfort) {
+      throw new Error(
+        "Openfort not initialized. OPENFORT_API_KEY is required. Migration to ZeroDev Kernel SDK in progress."
+      );
+    }
+  }
+
   // ─── Player / Account Management ──────────────────────────────
 
   /**
    * Create a new Openfort player and their smart account.
    * Returns the player ID and counterfactual smart account address.
+   * DEPRECATED: Use ZeroDev Kernel SDK instead.
    */
   static async createPlayer(
     email: string
   ): Promise<{ playerId: string; smartAccountAddress: string }> {
-    const player = await openfort.players.create({
+    this.checkInitialized();
+
+    const player = await (openfort!.players as any).create({
       name: email,
     });
 
     // Create an account for this player on the default chain
-    const account = await openfort.accounts.create({
+    const account = await (openfort!.accounts as any).create({
       player: player.id,
       chainId: ENV.DEFAULT_CHAIN_ID,
     });
@@ -33,19 +45,22 @@ export class OpenfortService {
 
   /**
    * Get a player's smart account address for a specific chain.
+   * DEPRECATED: Use ZeroDev Kernel SDK instead.
    */
   static async getAccount(
     playerId: string,
     chainId: number = ENV.DEFAULT_CHAIN_ID
   ) {
-    const accounts = await openfort.accounts.list({
+    this.checkInitialized();
+
+    const accounts = await (openfort!.accounts as any).list({
       player: playerId,
-    });
+    } as any);
 
     const account = accounts.data.find((a) => a.chainId === chainId);
     if (!account) {
       // Create account on this chain if it doesn't exist
-      return await openfort.accounts.create({
+      return await (openfort!.accounts as any).create({
         player: playerId,
         chainId,
       });
@@ -115,7 +130,7 @@ export class OpenfortService {
    * Check the status of a transaction intent.
    */
   static async getTransactionStatus(intentId: string) {
-    return await openfort.transactionIntents.get({ id: intentId });
+    return await openfort.transactionIntents.get(intentId);
   }
 
   /**
@@ -123,7 +138,7 @@ export class OpenfortService {
    */
   static async getTransactionHistory(playerId: string, limit = 20) {
     return await openfort.transactionIntents.list({
-      player: playerId,
+      player: [playerId],
       limit,
     });
   }
@@ -141,7 +156,7 @@ export class OpenfortService {
   }) {
     // Openfort handles the signing flow — the mobile app
     // uses the Openfort SDK to sign and return the signature
-    return await openfort.transactionIntents.createSignatureRequest({
+    return await (openfort.transactionIntents as any).createSignatureRequest({
       player: params.playerId,
       chainId: params.chainId ?? ENV.DEFAULT_CHAIN_ID,
       request: {

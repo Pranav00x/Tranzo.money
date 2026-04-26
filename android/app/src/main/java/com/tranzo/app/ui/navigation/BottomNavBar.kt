@@ -1,19 +1,21 @@
 package com.tranzo.app.ui.navigation
 
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
+import androidx.compose.ui.draw.shadow
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.unit.dp
 import androidx.navigation.NavDestination.Companion.hierarchy
 import androidx.navigation.NavHostController
-import androidx.navigation.compose.NavHost
-import androidx.navigation.compose.composable
 import androidx.navigation.compose.currentBackStackEntryAsState
-import androidx.navigation.compose.rememberNavController
 import com.tranzo.app.ui.theme.TranzoColors
 
 data class BottomNavItem(
@@ -44,8 +46,10 @@ fun TranzoBottomBar(navController: NavHostController) {
 
     if (showBottomBar) {
         NavigationBar(
-            containerColor = TranzoColors.CardSurface,
+            containerColor = TranzoColors.NavBackground,
             tonalElevation = 0.dp,
+            modifier = Modifier
+                .background(TranzoColors.NavBackground),
         ) {
             bottomNavItems.forEach { item ->
                 val selected = currentDestination?.hierarchy?.any {
@@ -75,11 +79,11 @@ fun TranzoBottomBar(navController: NavHostController) {
                         )
                     },
                     colors = NavigationBarItemDefaults.colors(
-                        selectedIconColor = TranzoColors.NavActive,
-                        selectedTextColor = TranzoColors.NavActive,
+                        selectedIconColor = Color.White,
+                        selectedTextColor = Color.White,
                         unselectedIconColor = TranzoColors.NavInactive,
                         unselectedTextColor = TranzoColors.NavInactive,
-                        indicatorColor = TranzoColors.PaleTeal,
+                        indicatorColor = Color.Transparent,
                     ),
                 )
             }

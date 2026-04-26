@@ -1,9 +1,9 @@
 export declare class SmartAccountService {
     /**
-     * Create a new smart account (mock for testing)
+     * Create a new ZeroDev smart account (production-ready)
      */
-    static createAccount(privateKey?: string): Promise<{
-        address: string;
+    static createAccount(signerPrivateKey?: string): Promise<{
+        address: `0x${string}`;
         privateKey: string;
     }>;
     /**
@@ -11,10 +11,7 @@ export declare class SmartAccountService {
      */
     static getOrCreateSmartAccount(userId: string, email: string): Promise<string>;
     /**
-     * Send a gasless transaction (mock)
+     * Send a gasless transaction via ZeroDev (Unified Signature)
      */
-    static sendGaslessTransaction(userId: string, tx: any): Promise<{
-        hash: string;
-        status: string;
-    }>;
+    static sendGaslessTransaction(signerPrivateKey: `0x${string}`, to: `0x${string}`, value: bigint, data: `0x${string}`, chainId?: number): Promise<any>;
 }

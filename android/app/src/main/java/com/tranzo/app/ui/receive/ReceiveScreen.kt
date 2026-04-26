@@ -20,34 +20,38 @@ import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.compose.runtime.collectAsState
 import com.google.zxing.BarcodeFormat
 import com.google.zxing.qrcode.QRCodeWriter
 import com.tranzo.app.ui.components.TranzoSecondaryButton
 import com.tranzo.app.ui.theme.TranzoColors
+import com.tranzo.app.ui.home.HomeViewModel
 
 /**
  * Receive screen — QR code + address display.
  *
  * Layout:
  * - Back button + "Receive" title
- * - Network selector tabs (Polygon / Base)
+ * - Network selector tabs (Base Sepolia)
  * - QR code card (white surface, rounded)
- * - Wallet address (truncated + copy button)
+ * - Smart wallet address (truncated + copy button)
  * - Share button
  */
 @Composable
 fun ReceiveScreen(
-    walletAddress: String = "0x7a3bC9D76f4E8A2c1B5d3F40eE9A8b6c12D4f5E6",
+    viewModel: HomeViewModel = hiltViewModel(),
     onBack: () -> Unit = {},
 ) {
-    var selectedNetwork by remember { mutableStateOf("Polygon") }
+    val state by viewModel.state.collectAsState()
+    val smartAccount = state.user?.smartAccount ?: ""
     var showCopied by remember { mutableStateOf(false) }
     val clipboardManager = LocalClipboardManager.current
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         // ── Top Bar ──────────────────────────────────────────────
@@ -78,132 +82,139 @@ fun ReceiveScreen(
         ) {
             Spacer(modifier = Modifier.height(16.dp))
 
-            // ── Network Tabs ─────────────────────────────────────
-            Row(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .clip(RoundedCornerShape(12.dp))
-                    .background(TranzoColors.LightGray)
-                    .padding(4.dp),
+            // ── Network Badge (Base Sepolia) ──────────────────────
+            Surface(
+                shape = RoundedCornerShape(12.dp),
+                color = TranzoColors.SurfaceLight,
+                modifier = Modifier.align(Alignment.CenterHorizontally),
             ) {
-                listOf("Polygon", "Base").forEach { network ->
-                    val isSelected = selectedNetwork == network
-                    Surface(
-                        onClick = { selectedNetwork = network },
-                        modifier = Modifier.weight(1f),
-                        shape = RoundedCornerShape(10.dp),
-                        color = if (isSelected) TranzoColors.CardSurface else TranzoColors.LightGray,
-                        tonalElevation = if (isSelected) 2.dp else 0.dp,
-                    ) {
-                        Text(
-                            text = network,
-                            style = MaterialTheme.typography.labelLarge,
-                            color = if (isSelected) TranzoColors.PrimaryBlack else TranzoColors.TextSecondary,
-                            textAlign = TextAlign.Center,
-                            modifier = Modifier.padding(vertical = 10.dp),
-                        )
-                    }
+                Row(
+                    modifier = Modifier.padding(horizontal = 12.dp, vertical = 6.dp),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(6.dp),
+                ) {
+                    Icon(
+                        imageVector = Icons.Outlined.Language,
+                        contentDescription = null,
+                        tint = TranzoColors.TextSecondary,
+                        modifier = Modifier.size(14.dp),
+                    )
+                    Text(
+                        text = "Base Sepolia (Testnet)",
+                        style = MaterialTheme.typography.labelSmall,
+                        color = TranzoColors.TextSecondary,
+                    )
                 }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
 
             // ── QR Code Card ─────────────────────────────────────
-            Surface(
-                shape = RoundedCornerShape(20.dp),
-                color = TranzoColors.CardSurface,
-                tonalElevation = 2.dp,
-            ) {
-                Column(
-                    modifier = Modifier.padding(32.dp),
-                    horizontalAlignment = Alignment.CenterHorizontally,
+            if (smartAccount.isNotEmpty()) {
+                Surface(
+                    shape = RoundedCornerShape(20.dp),
+                    color = TranzoColors.SurfaceLight,
+                    tonalElevation = 2.dp,
                 ) {
-                    // Generate QR code
-                    val qrBitmap = remember(walletAddress) {
-                        generateQRCode(walletAddress)
-                    }
+                    Column(
+                        modifier = Modifier.padding(32.dp),
+                        horizontalAlignment = Alignment.CenterHorizontally,
+                    ) {
+                        // Generate QR code
+                        val qrBitmap = remember(smartAccount) {
+                            generateQRCode(smartAccount)
+                        }
 
-                    if (qrBitmap != null) {
-                        Image(
-                            bitmap = qrBitmap.asImageBitmap(),
-                            contentDescription = "Wallet QR Code",
-                            modifier = Modifier
-                                .size(220.dp)
-                                .clip(RoundedCornerShape(12.dp)),
+                        if (qrBitmap != null) {
+                            Image(
+                                bitmap = qrBitmap.asImageBitmap(),
+                                contentDescription = "Smart Account QR Code",
+                                modifier = Modifier
+                                    .size(220.dp)
+                                    .clip(RoundedCornerShape(12.dp)),
+                            )
+                        } else {
+                            Box(
+                                modifier = Modifier
+                                    .size(220.dp)
+                                    .clip(RoundedCornerShape(12.dp))
+                                    .background(TranzoColors.SurfaceLight),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Text("QR Code", color = TranzoColors.TextSecondary)
+                            }
+                        }
+
+                        Spacer(modifier = Modifier.height(20.dp))
+
+                        Text(
+                            text = "Scan to send to your smart account",
+                            style = MaterialTheme.typography.bodyMedium,
+                            color = TranzoColors.TextSecondary,
                         )
-                    } else {
-                        Box(
-                            modifier = Modifier
-                                .size(220.dp)
-                                .clip(RoundedCornerShape(12.dp))
-                                .background(TranzoColors.LightGray),
-                            contentAlignment = Alignment.Center,
-                        ) {
-                            Text("QR Code", color = TranzoColors.TextSecondary)
+                    }
+                }
+
+                Spacer(modifier = Modifier.height(24.dp))
+
+                // ── Smart Account Address ──────────────────────────────
+                Surface(
+                    shape = RoundedCornerShape(12.dp),
+                    color = TranzoColors.SurfaceLight,
+                ) {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .padding(16.dp),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        Text(
+                            text = "${smartAccount.take(12)}...${smartAccount.takeLast(8)}",
+                            style = MaterialTheme.typography.bodyMedium,
+                            fontWeight = FontWeight.Medium,
+                            modifier = Modifier.weight(1f),
+                        )
+                        IconButton(onClick = {
+                            clipboardManager.setText(AnnotatedString(smartAccount))
+                            showCopied = true
+                        }) {
+                            Icon(
+                                imageVector = if (showCopied)
+                                    Icons.Outlined.CheckCircle
+                                else Icons.Outlined.ContentCopy,
+                                contentDescription = "Copy Address",
+                                tint = TranzoColors.TextPrimary,
+                                modifier = Modifier.size(20.dp),
+                            )
                         }
                     }
+                }
 
-                    Spacer(modifier = Modifier.height(20.dp))
-
+                if (showCopied) {
+                    Spacer(modifier = Modifier.height(8.dp))
                     Text(
-                        text = "Scan to send $selectedNetwork tokens",
-                        style = MaterialTheme.typography.bodyMedium,
-                        color = TranzoColors.TextSecondary,
+                        text = "Address copied!",
+                        style = MaterialTheme.typography.bodySmall,
+                        color = TranzoColors.TextPrimary,
                     )
                 }
-            }
 
-            Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.weight(1f))
 
-            // ── Wallet Address ────────────────────────────────────
-            Surface(
-                shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.LightGray,
-            ) {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(16.dp),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        text = "${walletAddress.take(12)}...${walletAddress.takeLast(8)}",
-                        style = MaterialTheme.typography.bodyMedium,
-                        fontWeight = FontWeight.Medium,
-                        modifier = Modifier.weight(1f),
-                    )
-                    IconButton(onClick = {
-                        clipboardManager.setText(AnnotatedString(walletAddress))
-                        showCopied = true
-                    }) {
-                        Icon(
-                            imageVector = if (showCopied)
-                                Icons.Outlined.CheckCircle
-                            else Icons.Outlined.ContentCopy,
-                            contentDescription = "Copy Address",
-                            tint = TranzoColors.PrimaryBlack,
-                            modifier = Modifier.size(20.dp),
-                        )
-                    }
-                }
-            }
-
-            if (showCopied) {
-                Spacer(modifier = Modifier.height(8.dp))
-                Text(
-                    text = "Address copied!",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = TranzoColors.PrimaryBlack,
+                // ── Share Button ─────────────────────────────────────
+                TranzoSecondaryButton(
+                    text = "Share Address",
+                    onClick = { /* share intent */ },
                 )
+            } else {
+                // Loading state
+                Spacer(modifier = Modifier.weight(1f))
+                CircularProgressIndicator(
+                    modifier = Modifier.align(Alignment.CenterHorizontally),
+                    color = TranzoColors.TextPrimary,
+                )
+                Spacer(modifier = Modifier.weight(1f))
             }
-
-            Spacer(modifier = Modifier.weight(1f))
-
-            // ── Share Button ─────────────────────────────────────
-            TranzoSecondaryButton(
-                text = "Share Address",
-                onClick = { /* share intent */ },
-            )
 
             Spacer(modifier = Modifier.height(24.dp))
         }

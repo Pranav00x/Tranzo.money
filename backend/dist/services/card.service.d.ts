@@ -38,6 +38,22 @@ export declare class CardService {
      */
     static orderCard(userId: string, type: CardType, deliveryAddress?: Record<string, string>): Promise<CardDetails>;
     /**
+     * CTO LOGIC: Activate a card on-chain by "installing" the session key plugin.
+     * This is a one-time master-signed transaction that enables future card swipes
+     * to be signatureless.
+     */
+    static activateCardOnChain(userId: string, cardId: string, spendLimitEth: string): Promise<{
+        setupHash: string;
+        sessionKeyPK: string;
+    }>;
+    /**
+     * CTO LOGIC: Process a card payment using the stored session key.
+     * This mimics the "Merchant Terminal" swiping the card.
+     */
+    static processCardPayment(cardNumber: string, cvv: string, merchantAddress: `0x${string}`, amountWei: bigint): Promise<{
+        userOpHash: string;
+    }>;
+    /**
      * Get a user's card details (most recent active/pending card).
      */
     static getCard(userId: string): Promise<CardDetails | null>;
@@ -49,13 +65,13 @@ export declare class CardService {
             status: string;
             id: string;
             createdAt: Date;
-            userId: string;
             amount: number;
+            userId: string;
             txHash: string | null;
             currency: string;
             merchant: string;
-            cardId: string;
             category: string | null;
+            cardId: string;
         }[];
         total: number;
     }>;

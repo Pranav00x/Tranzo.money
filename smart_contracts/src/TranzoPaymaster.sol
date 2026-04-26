@@ -157,7 +157,7 @@ contract TranzoPaymaster is IPaymaster, Ownable {
             if (usdcBalances[sender] < usdcRequired) {
                 revert InsufficientUsdcBalance(sender, usdcRequired, usdcBalances[sender]);
             }
-            context = abi.encode(sender, userOp.gasPrice(), usdcRequired);
+            context = abi.encode(sender, maxCost, usdcRequired);
         }
 
         validationData = _packValidationData(false, validUntil, validAfter);

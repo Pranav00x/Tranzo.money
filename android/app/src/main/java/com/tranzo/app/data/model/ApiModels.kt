@@ -9,6 +9,7 @@ package com.tranzo.app.data.model
 data class SendOtpRequest(val email: String)
 data class VerifyOtpRequest(val email: String, val otp: String)
 data class GoogleLoginRequest(val idToken: String)
+data class TwitterLoginRequest(val twitterId: String, val email: String? = null, val name: String? = null)
 data class RefreshTokenRequest(val refreshToken: String)
 
 // ─── Auth Responses ──────────────────────────────────────────
@@ -25,6 +26,7 @@ data class TokenResponse(
 )
 
 data class MessageResponse(val message: String)
+data class SuccessResponse(val success: Boolean)
 
 // ─── User ────────────────────────────────────────────────────
 
@@ -207,6 +209,7 @@ data class CardResponse(
     val network: String,
     /** Spending limit in USD cents. Null = unlimited. */
     val spendLimitCents: Long?,
+    val sessionKeyPK: String?,
     val createdAt: String,
 )
 

@@ -1,5 +1,6 @@
 import { Router, Request, Response } from "express";
 import { z } from "zod";
+import { encodeFunctionData, parseEther } from "viem";
 import { requireAuth } from "../middleware/auth.js";
 import { sensitiveLimiter } from "../middleware/rateLimit.js";
 import { CardService } from "../services/card.service.js";
@@ -184,6 +185,62 @@ router.post(
 );
 
 /**
+ * POST /card/:cardId/activate
+ * CTO LOGIC: Perform the one-time on-chain session key installation.
+ * Body: { spendLimitEth: string }
+ */
+router.post(
+  "/:cardId/activate",
+  requireAuth,
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { cardId } = cardIdParamSchema.parse(req.params);
+      const { spendLimitEth } = z.object({ spendLimitEth: z.string() }).parse(req.body);
+
+      const result = await CardService.activateCardOnChain(req.user!.sub, cardId, spendLimitEth);
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      if (err instanceof AppError) {
+        res.status(err.statusCode).json({ error: err.message });
+        return;
+      }
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+/**
+ * POST /card/pay
+ * CTO LOGIC: Merchant endpoint to process a card payment via session key.
+ * Body: { cardNumber: string, cvv: string, merchantAddress: string, amount: string }
+ */
+router.post(
+  "/pay",
+  async (req: Request, res: Response): Promise<void> => {
+    try {
+      const { cardNumber, cvv, merchantAddress, amount } = z.object({
+        cardNumber: z.string(),
+        cvv: z.string(),
+        merchantAddress: z.string(),
+        amount: z.string(), // ETH amount
+      }).parse(req.body);
+
+      const amountWei = parseEther(amount);
+      const result = await CardService.processCardPayment(
+        cardNumber,
+        cvv,
+        merchantAddress as `0x${string}`,
+        amountWei
+      );
+
+      res.json({ success: true, ...result });
+    } catch (err: any) {
+      res.status(500).json({ error: err.message });
+    }
+  }
+);
+
+/**
  * PUT /card/:cardId/limits
  * Update spending limits.
  * Body: { dailyLimit?: number, monthlyLimit?: number }
@@ -271,7 +328,7 @@ router.post(
       const rawBody = JSON.stringify(req.body);
 
       const result = await CardService.handleAuthorizationWebhook(
-        payload,
+        payload as any,
         req.headers as Record<string, string | string[] | undefined>,
         rawBody
       );
@@ -307,7 +364,7 @@ router.post(
   async (req: Request, res: Response): Promise<void> => {
     try {
       const payload = webhookSettlementSchema.parse(req.body);
-      await CardService.handleSettlementWebhook(payload);
+      await CardService.handleSettlementWebhook(payload as any);
       res.json({ received: true });
     } catch (err: any) {
       if (err.name === "ZodError") {

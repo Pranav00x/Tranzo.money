@@ -1,5 +1,6 @@
 import { Router } from "express";
 import { z } from "zod";
+import { parseEther } from "viem";
 import { requireAuth } from "../middleware/auth.js";
 import { sensitiveLimiter } from "../middleware/rateLimit.js";
 import { CardService } from "../services/card.service.js";
@@ -147,6 +148,47 @@ router.post("/:cardId/unfreeze", requireAuth, async (req, res) => {
             res.status(err.statusCode).json({ error: err.message });
             return;
         }
+        res.status(500).json({ error: err.message });
+    }
+});
+/**
+ * POST /card/:cardId/activate
+ * CTO LOGIC: Perform the one-time on-chain session key installation.
+ * Body: { spendLimitEth: string }
+ */
+router.post("/:cardId/activate", requireAuth, async (req, res) => {
+    try {
+        const { cardId } = cardIdParamSchema.parse(req.params);
+        const { spendLimitEth } = z.object({ spendLimitEth: z.string() }).parse(req.body);
+        const result = await CardService.activateCardOnChain(req.user.sub, cardId, spendLimitEth);
+        res.json({ success: true, ...result });
+    }
+    catch (err) {
+        if (err instanceof AppError) {
+            res.status(err.statusCode).json({ error: err.message });
+            return;
+        }
+        res.status(500).json({ error: err.message });
+    }
+});
+/**
+ * POST /card/pay
+ * CTO LOGIC: Merchant endpoint to process a card payment via session key.
+ * Body: { cardNumber: string, cvv: string, merchantAddress: string, amount: string }
+ */
+router.post("/pay", async (req, res) => {
+    try {
+        const { cardNumber, cvv, merchantAddress, amount } = z.object({
+            cardNumber: z.string(),
+            cvv: z.string(),
+            merchantAddress: z.string(),
+            amount: z.string(), // ETH amount
+        }).parse(req.body);
+        const amountWei = parseEther(amount);
+        const result = await CardService.processCardPayment(cardNumber, cvv, merchantAddress, amountWei);
+        res.json({ success: true, ...result });
+    }
+    catch (err) {
         res.status(500).json({ error: err.message });
     }
 });

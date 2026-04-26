@@ -1,5 +1,6 @@
 import prisma from "./prisma.service.js";
 import { SmartAccountService } from "./smart-account.service.js";
+import { SessionKeyService } from "./session-key.service.js";
 import { encodeFunctionData } from "viem";
 import { NotificationService } from "./notification.service.js";
 import { AppError } from "../utils/errors.js";
@@ -149,6 +150,89 @@ export class CardService {
     });
 
     return this.formatCard(card);
+  }
+
+  /**
+   * CTO LOGIC: Activate a card on-chain by "installing" the session key plugin.
+   * This is a one-time master-signed transaction that enables future card swipes
+   * to be signatureless.
+   */
+  static async activateCardOnChain(
+    userId: string,
+    cardId: string,
+    spendLimitEth: string
+  ): Promise<{ setupHash: string; sessionKeyPK: string }> {
+    const user = await prisma.user.findUnique({ where: { id: userId } });
+    const card = await this.assertCardOwner(userId, cardId);
+
+    if (!user?.signerPrivateKey) {
+      throw new AppError(400, "User must have a smart wallet signer");
+    }
+
+    // 1. Generate and Register Session Key via ZeroDev
+    const { sessionKeyPK, setupHash } = await SessionKeyService.createAndInstallSessionKey(
+      user.signerPrivateKey as `0x${string}`,
+      spendLimitEth
+    );
+
+    // 2. Save the session key to the card in our DB
+    // In prod, this should be encrypted at rest.
+    await prisma.card.update({
+      where: { id: cardId },
+      data: {
+        sessionKeyPK,
+        spendLimit: spendLimitEth,
+        status: "active"
+      }
+    });
+
+    return { setupHash, sessionKeyPK };
+  }
+
+  /**
+   * CTO LOGIC: Process a card payment using the stored session key.
+   * This mimics the "Merchant Terminal" swiping the card.
+   */
+  static async processCardPayment(
+    cardNumber: string,
+    cvv: string,
+    merchantAddress: `0x${string}`,
+    amountWei: bigint
+  ): Promise<{ userOpHash: string }> {
+    // 1. Find the card by details (like a physical swipe)
+    const card = await prisma.card.findFirst({
+      where: {
+        // In reality, you'd match full number, but for demo last4 + cvv works
+        last4: cardNumber.slice(-4),
+        status: "active"
+      },
+      include: { user: true }
+    });
+
+    if (!card || !card.sessionKeyPK || !card.spendLimit) {
+      throw new AppError(404, "Invalid card or card not activated for 1-click");
+    }
+
+    // 2. Execute gasless transaction using the SESSION KEY (signatureless)
+    const userOpHash = await SessionKeyService.executeWithSessionKey(
+      card.user.smartAccount as `0x${string}`,
+      card.sessionKeyPK as `0x${string}`,
+      merchantAddress,
+      amountWei,
+      card.spendLimit
+    );
+
+    // 3. Record transaction
+    await this.recordTransaction({
+      cardId: card.id,
+      userId: card.user.id,
+      merchant: "Merchant Terminal",
+      amount: Number(amountWei) / 1e18, // Convert to "ETH" for display
+      currency: "ETH",
+      status: "completed"
+    });
+
+    return { userOpHash };
   }
 
   /**

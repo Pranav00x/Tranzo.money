@@ -75,7 +75,7 @@ fun SendConfirmationScreen(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.Background)
+            .background(TranzoColors.BackgroundLight)
             .systemBarsPadding(),
     ) {
         Box(
@@ -83,7 +83,7 @@ fun SendConfirmationScreen(
                 .fillMaxWidth()
                 .background(
                     Brush.verticalGradient(
-                        colors = listOf(TranzoColors.Navy, TranzoColors.DarkTeal),
+                        colors = listOf(TranzoColors.PrimaryBlue, TranzoColors.AccentCyan),
                     ),
                 )
                 .padding(horizontal = 24.dp)
@@ -98,13 +98,13 @@ fun SendConfirmationScreen(
                         Icon(
                             imageVector = Icons.AutoMirrored.Outlined.ArrowBack,
                             contentDescription = "Back",
-                            tint = TranzoColors.TextOnDark,
+                            tint = TranzoColors.TextDarkPrimary,
                         )
                     }
                     Text(
                         text = "Review Transfer",
                         style = MaterialTheme.typography.headlineMedium,
-                        color = TranzoColors.TextOnDark,
+                        color = TranzoColors.TextDarkPrimary,
                     )
                 }
 
@@ -112,7 +112,7 @@ fun SendConfirmationScreen(
                 Text(
                     text = "$amount $tokenSymbol",
                     style = MaterialTheme.typography.displayMedium,
-                    color = TranzoColors.TextOnDark,
+                    color = TranzoColors.TextDarkPrimary,
                     fontWeight = FontWeight.Bold,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
@@ -121,7 +121,7 @@ fun SendConfirmationScreen(
                 Text(
                     text = usdValue,
                     style = MaterialTheme.typography.bodyLarge,
-                    color = TranzoColors.LightTeal,
+                    color = TranzoColors.AccentEmerald,
                     modifier = Modifier.fillMaxWidth(),
                     textAlign = TextAlign.Center,
                 )
@@ -133,14 +133,14 @@ fun SendConfirmationScreen(
                 .weight(1f)
                 .offset(y = (-20).dp)
                 .clip(RoundedCornerShape(topStart = 24.dp, topEnd = 24.dp))
-                .background(TranzoColors.Background)
+                .background(TranzoColors.BackgroundLight)
                 .verticalScroll(rememberScrollState())
                 .padding(horizontal = 24.dp)
                 .padding(top = 28.dp),
         ) {
             Surface(
                 shape = RoundedCornerShape(16.dp),
-                color = TranzoColors.CardSurface,
+                color = TranzoColors.SurfaceLight,
                 tonalElevation = 1.dp,
                 modifier = Modifier.fillMaxWidth(),
             ) {
@@ -167,12 +167,12 @@ fun SendConfirmationScreen(
                         )
                         Surface(
                             shape = RoundedCornerShape(20.dp),
-                            color = TranzoColors.PaleTeal,
+                            color = TranzoColors.BackgroundLight,
                         ) {
                             Text(
                                 text = "Sponsored",
                                 style = MaterialTheme.typography.labelMedium,
-                                color = TranzoColors.PrimaryBlack,
+                                color = TranzoColors.TextPrimary,
                                 fontWeight = FontWeight.SemiBold,
                                 modifier = Modifier.padding(horizontal = 10.dp, vertical = 4.dp),
                             )
@@ -185,7 +185,7 @@ fun SendConfirmationScreen(
 
             Surface(
                 shape = RoundedCornerShape(12.dp),
-                color = TranzoColors.PaleTeal.copy(alpha = 0.5f),
+                color = TranzoColors.BackgroundLight.copy(alpha = 0.5f),
             ) {
                 Row(
                     modifier = Modifier
@@ -196,7 +196,7 @@ fun SendConfirmationScreen(
                     Icon(
                         imageVector = Icons.Outlined.Shield,
                         contentDescription = null,
-                        tint = TranzoColors.PrimaryBlack,
+                        tint = TranzoColors.TextPrimary,
                         modifier = Modifier
                             .size(18.dp)
                             .padding(top = 1.dp),
@@ -226,7 +226,7 @@ fun SendConfirmationScreen(
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(TranzoColors.Background)
+                .background(TranzoColors.BackgroundLight)
                 .padding(horizontal = 24.dp)
                 .padding(bottom = 24.dp, top = 8.dp),
         ) {
@@ -269,14 +269,14 @@ private fun SuccessContent(
             modifier = Modifier
                 .size(100.dp)
                 .clip(CircleShape)
-                .background(TranzoColors.PaleTeal),
+                .background(TranzoColors.BackgroundLight),
             contentAlignment = Alignment.Center,
         ) {
             Icon(
                 imageVector = Icons.Outlined.CheckCircle,
                 contentDescription = null,
                 modifier = Modifier.size(60.dp),
-                tint = TranzoColors.PrimaryBlack,
+                tint = TranzoColors.TextPrimary,
             )
         }
 
@@ -312,7 +312,7 @@ private fun SuccessContent(
 
         Surface(
             shape = RoundedCornerShape(20.dp),
-            color = TranzoColors.PaleTeal,
+            color = TranzoColors.BackgroundLight,
         ) {
             Row(
                 modifier = Modifier.padding(horizontal = 16.dp, vertical = 8.dp),
@@ -321,13 +321,13 @@ private fun SuccessContent(
                 Icon(
                     imageVector = Icons.Outlined.AutoAwesome,
                     contentDescription = null,
-                    tint = TranzoColors.PrimaryBlack,
+                    tint = TranzoColors.TextPrimary,
                     modifier = Modifier.size(16.dp),
                 )
                 Text(
                     text = " Zero gas fees paid",
                     style = MaterialTheme.typography.labelMedium,
-                    color = TranzoColors.PrimaryBlack,
+                    color = TranzoColors.TextPrimary,
                     fontWeight = FontWeight.SemiBold,
                 )
             }

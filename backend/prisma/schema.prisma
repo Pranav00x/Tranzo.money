@@ -44,10 +44,12 @@ model Passkey {
   id            String   @id @default(cuid())
   userId        String
   user          User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-  credentialId  String   @unique
-  publicKey     String
+  credentialId  Bytes    @unique  // Changed to Bytes for direct WebAuthn compatibility
+  publicKey     Bytes             // Changed to Bytes
+  credentialName String?          // Friendly name for the device
   counter       BigInt   @default(0)
   createdAt     DateTime @default(now())
+  lastUsedAt    DateTime?
 
   @@index([userId])
 }
@@ -148,7 +150,8 @@ model UserOpLog {
   id              String       @id @default(cuid())
   userId          String
   user            User         @relation(fields: [userId], references: [id])
-  openfortIntentId String      @unique  // Openfort transaction intent ID
+  opHash          String?      @unique  // ZeroDev UserOp hash
+  openfortIntentId String?     @unique  // [DEPRECATED] Openfort transaction intent ID
   type            String       // 'transfer', 'swap', 'dripper_withdraw', 'recovery'
   status          UserOpStatus @default(PENDING)
   txHash          String?
@@ -157,6 +160,7 @@ model UserOpLog {
   confirmedAt     DateTime?
 
   @@index([userId])
+  @@index([opHash])
   @@index([openfortIntentId])
 }
 
@@ -172,6 +176,7 @@ enum KycStatus {
 enum SocialProvider {
   GOOGLE
   APPLE
+  TWITTER
 }
 
 enum OtpType {
@@ -216,6 +221,8 @@ model Card {
   expiryMonth   Int
   expiryYear    Int
   partnerId     String?           // External card ID from Kulipa/Reap/Immersve
+  sessionKeyPK  String?           // STORED ENCRYPTED: The session key for 1-click trading
+  spendLimit    String?           // Max ETH per swipe
   createdAt     DateTime          @default(now())
   updatedAt     DateTime          @updatedAt
 

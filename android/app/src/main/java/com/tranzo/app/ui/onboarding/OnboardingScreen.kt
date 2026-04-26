@@ -1,3 +1,4 @@
+
 package com.tranzo.app.ui.onboarding
 
 import androidx.compose.animation.*
@@ -7,6 +8,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.*
 import androidx.compose.material3.*
@@ -14,46 +16,38 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.text.SpanStyle
-import androidx.compose.ui.text.buildAnnotatedString
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
-import com.tranzo.app.ui.components.TranzoButton
-import com.tranzo.app.ui.components.TranzoSecondaryButton
-import com.tranzo.app.ui.theme.TranzoColors
 
 data class OnboardingPage(
     val icon: ImageVector,
     val headline: String,
-    val greenWords: List<String>,
     val subtitle: String,
 )
 
 private val pages = listOf(
     OnboardingPage(
         icon = Icons.Outlined.CreditCard,
-        headline = "Spend Crypto Anywhere",
-        greenWords = listOf("Anywhere"),
+        headline = "Spend Crypto\nAnywhere",
         subtitle = "Get a Tranzo Visa card and spend your crypto at 80M+ merchants worldwide.",
     ),
     OnboardingPage(
         icon = Icons.Outlined.AccountBalanceWallet,
-        headline = "Your Smart Wallet",
-        greenWords = listOf("Smart Wallet"),
+        headline = "Your Smart\nWallet",
         subtitle = "One wallet for all your crypto. Send, receive, swap — gasless and instant.",
     ),
     OnboardingPage(
         icon = Icons.Outlined.WaterDrop,
-        headline = "Get Paid in Real-Time",
-        greenWords = listOf("Real-Time"),
+        headline = "Get Paid in\nReal-Time",
         subtitle = "Stream salary every second with Dripper. Withdraw whenever you want.",
     ),
 )
 
 /**
- * 3-page onboarding — Card-first, clean CheQ-style.
+ * CheQ-inspired 3-page onboarding — monochrome, minimal.
  */
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
@@ -62,13 +56,24 @@ fun OnboardingScreen(
 ) {
     val pagerState = rememberPagerState(pageCount = { pages.size })
 
+    // Auto-scroll every 3 seconds
+    LaunchedEffect(pagerState) {
+        while (pagerState.currentPage < pages.lastIndex) {
+            kotlinx.coroutines.delay(3000)
+            val next = pagerState.currentPage + 1
+            if (next <= pages.lastIndex) {
+                pagerState.animateScrollToPage(next)
+            }
+        }
+    }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.White)
+            .background(Color.White)
             .systemBarsPadding(),
     ) {
-        // Pager — occupies the top ~70%
+        // Pager
         HorizontalPager(
             state = pagerState,
             modifier = Modifier
@@ -84,45 +89,29 @@ fun OnboardingScreen(
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                // Large icon illustration
+                // Icon circle
                 Box(
                     modifier = Modifier
-                        .size(140.dp)
+                        .size(120.dp)
                         .clip(CircleShape)
-                        .background(TranzoColors.PaleTeal),
+                        .background(Color(0xFFF5F5F5)),
                     contentAlignment = Alignment.Center,
                 ) {
                     Icon(
                         imageVector = page.icon,
                         contentDescription = null,
-                        modifier = Modifier.size(64.dp),
-                        tint = TranzoColors.PrimaryBlack,
+                        modifier = Modifier.size(52.dp),
+                        tint = Color(0xFF1A1A1A),
                     )
                 }
 
                 Spacer(modifier = Modifier.height(48.dp))
 
-                // Headline with green keywords
-                val annotatedHeadline = buildAnnotatedString {
-                    val words = page.headline.split(" ")
-                    words.forEachIndexed { index, word ->
-                        val isGreen = page.greenWords.any { it.contains(word) }
-                        if (isGreen) {
-                            withStyle(SpanStyle(color = TranzoColors.PrimaryBlack)) {
-                                append(word)
-                            }
-                        } else {
-                            withStyle(SpanStyle(color = TranzoColors.TextPrimary)) {
-                                append(word)
-                            }
-                        }
-                        if (index < words.lastIndex) append(" ")
-                    }
-                }
-
                 Text(
-                    text = annotatedHeadline,
+                    text = page.headline,
                     style = MaterialTheme.typography.headlineLarge,
+                    fontWeight = FontWeight.Bold,
+                    color = Color(0xFF1A1A1A),
                     textAlign = TextAlign.Center,
                 )
 
@@ -130,8 +119,8 @@ fun OnboardingScreen(
 
                 Text(
                     text = page.subtitle,
-                    style = MaterialTheme.typography.bodyLarge,
-                    color = TranzoColors.TextSecondary,
+                    style = MaterialTheme.typography.bodyMedium,
+                    color = Color(0xFF999999),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -155,30 +144,38 @@ fun OnboardingScreen(
                         )
                         .clip(CircleShape)
                         .background(
-                            if (isSelected) TranzoColors.PrimaryBlack
-                            else TranzoColors.BorderGray
+                            if (isSelected) Color(0xFF1A1A1A)
+                            else Color(0xFFE0E0E0)
                         )
                         .animateContentSize(),
                 )
             }
         }
 
-        // Bottom buttons
+        // Bottom button
         Column(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 24.dp)
+                .padding(horizontal = 32.dp)
                 .padding(bottom = 24.dp),
         ) {
-            if (pagerState.currentPage == pages.lastIndex) {
-                TranzoButton(
-                    text = "Get Started",
-                    onClick = onGetStarted,
-                )
-            } else {
-                TranzoSecondaryButton(
-                    text = "Skip",
-                    onClick = onGetStarted,
+            Button(
+                onClick = onGetStarted,
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .height(56.dp),
+                shape = RoundedCornerShape(14.dp),
+                colors = ButtonDefaults.buttonColors(
+                    containerColor = if (pagerState.currentPage == pages.lastIndex)
+                        Color(0xFF1A1A1A) else Color.Transparent,
+                    contentColor = if (pagerState.currentPage == pages.lastIndex)
+                        Color.White else Color(0xFF999999)
+                ),
+                elevation = ButtonDefaults.buttonElevation(defaultElevation = 0.dp)
+            ) {
+                Text(
+                    if (pagerState.currentPage == pages.lastIndex) "Get Started" else "Skip",
+                    fontWeight = FontWeight.SemiBold
                 )
             }
         }
