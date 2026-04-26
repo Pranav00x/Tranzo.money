@@ -4,11 +4,14 @@ import android.app.Activity
 import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.outlined.ChevronRight
 import androidx.compose.material.icons.outlined.Email
 import androidx.compose.material.icons.outlined.Lock
 import androidx.compose.material3.*
@@ -23,10 +26,10 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import com.tranzo.app.ui.components.TranzoButton
-import com.tranzo.app.ui.components.TranzoSecondaryButton
-import com.tranzo.app.ui.components.TranzoTextField
+import com.tranzo.app.ui.components.ClayButton
+import com.tranzo.app.ui.components.ClayTextField
 import com.tranzo.app.ui.theme.TranzoColors
 import com.tranzo.app.util.GoogleSignInHelper
 import dagger.hilt.EntryPoint
@@ -34,7 +37,6 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.EntryPointAccessors
 import dagger.hilt.components.SingletonComponent
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
 @EntryPoint
 @InstallIn(SingletonComponent::class)
@@ -42,10 +44,6 @@ interface GoogleSignInEntryPointPro {
     fun googleSignInHelper(): GoogleSignInHelper
 }
 
-/**
- * Professional Welcome Screen - Clean, minimal design
- * Supports: Email OTP, Google OAuth, Biometric, Passkey
- */
 @Composable
 fun WelcomeScreenPro(
     viewModel: AuthViewModel = hiltViewModel(),
@@ -65,7 +63,6 @@ fun WelcomeScreenPro(
         ).googleSignInHelper()
     }
 
-    // Animation state
     var showContent by remember { mutableStateOf(false) }
     LaunchedEffect(Unit) {
         showContent = true
@@ -80,7 +77,7 @@ fun WelcomeScreenPro(
     Box(
         modifier = Modifier
             .fillMaxSize()
-            .background(TranzoColors.White)
+            .background(TranzoColors.ClayBackground)
     ) {
         Column(
             modifier = Modifier
@@ -88,10 +85,9 @@ fun WelcomeScreenPro(
                 .verticalScroll(rememberScrollState())
                 .alpha(contentAlpha)
                 .padding(horizontal = 24.dp),
-            verticalArrangement = Arrangement.spacedBy(16.dp)
+            verticalArrangement = Arrangement.spacedBy(20.dp)
         ) {
-            // Header space
-            Spacer(modifier = Modifier.height(48.dp))
+            Spacer(modifier = Modifier.height(60.dp))
 
             // Logo & Branding
             Column(
@@ -100,47 +96,46 @@ fun WelcomeScreenPro(
             ) {
                 Box(
                     modifier = Modifier
-                        .size(48.dp)
-                        .clip(RoundedCornerShape(12.dp))
-                        .background(TranzoColors.PrimaryBlue),
+                        .size(56.dp)
+                        .clip(RoundedCornerShape(16.dp))
+                        .background(Color.White),
                     contentAlignment = Alignment.Center
                 ) {
                     Text(
                         "₮",
                         style = MaterialTheme.typography.displayMedium,
-                        color = Color.White,
-                        fontWeight = FontWeight.Bold
+                        color = Color.Black,
+                        fontWeight = FontWeight.ExtraBold
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(28.dp))
 
                 Text(
                     "Tranzo",
-                    style = MaterialTheme.typography.displaySmall,
-                    fontWeight = FontWeight.Bold,
-                    color = TranzoColors.TextPrimary
+                    style = MaterialTheme.typography.displayMedium,
+                    fontWeight = FontWeight.ExtraBold,
+                    color = TranzoColors.TextPrimary,
+                    letterSpacing = (-1.5).sp
                 )
 
                 Text(
                     "Crypto card + smart wallet",
-                    style = MaterialTheme.typography.bodyMedium,
-                    color = TranzoColors.TextSecondary
+                    style = MaterialTheme.typography.titleMedium,
+                    color = TranzoColors.TextSecondary,
+                    fontWeight = FontWeight.Medium
                 )
             }
 
-            Spacer(modifier = Modifier.height(32.dp))
+            Spacer(modifier = Modifier.height(40.dp))
 
             if (!showEmailInput) {
-                // Auth method selection
                 Text(
-                    "How do you want to login?",
+                    "Get started",
                     style = MaterialTheme.typography.headlineSmall,
                     color = TranzoColors.TextPrimary,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
-
-                Spacer(modifier = Modifier.height(20.dp))
 
                 // Email option
                 AuthMethodCard(
@@ -167,13 +162,12 @@ fun WelcomeScreenPro(
                     }
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(32.dp))
 
                 // Trust indicators
                 Row(
                     modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 16.dp),
+                        .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                     verticalAlignment = Alignment.CenterVertically
                 ) {
@@ -181,30 +175,27 @@ fun WelcomeScreenPro(
                         imageVector = Icons.Outlined.Lock,
                         contentDescription = null,
                         tint = TranzoColors.TextTertiary,
-                        modifier = Modifier.size(14.dp)
+                        modifier = Modifier.size(16.dp)
                     )
-                    Spacer(modifier = Modifier.width(6.dp))
+                    Spacer(modifier = Modifier.width(8.dp))
                     Text(
                         "Your funds are always in your control",
-                        style = MaterialTheme.typography.labelSmall,
-                        color = TranzoColors.TextTertiary
+                        style = MaterialTheme.typography.labelMedium,
+                        color = TranzoColors.TextTertiary,
+                        fontWeight = FontWeight.Medium
                     )
                 }
             } else {
-                // Email input screen
                 Text(
                     "Enter your email",
                     style = MaterialTheme.typography.headlineSmall,
                     color = TranzoColors.TextPrimary,
-                    fontWeight = FontWeight.SemiBold
+                    fontWeight = FontWeight.Bold
                 )
 
-                Spacer(modifier = Modifier.height(20.dp))
-
-                TranzoTextField(
+                ClayTextField(
                     value = email,
                     onValueChange = { email = it.trim() },
-                    label = "Email",
                     placeholder = "you@example.com",
                     keyboardOptions = androidx.compose.foundation.text.KeyboardOptions(
                         keyboardType = KeyboardType.Email
@@ -212,39 +203,18 @@ fun WelcomeScreenPro(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                // Terms checkbox
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(vertical = 12.dp),
-                    verticalAlignment = Alignment.CenterVertically
-                ) {
-                    Checkbox(
-                        checked = true,
-                        onCheckedChange = { },
-                        modifier = Modifier.size(20.dp)
-                    )
-                    Spacer(modifier = Modifier.width(12.dp))
-                    Text(
-                        "I agree to Tranzo's Terms and Privacy Policy",
-                        style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.TextSecondary
-                    )
-                }
-
-                // Error message
                 if (state.error != null) {
                     Text(
                         state.error!!,
                         style = MaterialTheme.typography.bodySmall,
-                        color = TranzoColors.Error,
-                        modifier = Modifier.padding(vertical = 8.dp)
+                        color = TranzoColors.ClayCoral,
+                        modifier = Modifier.padding(vertical = 4.dp)
                     )
                 }
 
-                Spacer(modifier = Modifier.height(20.dp))
+                Spacer(modifier = Modifier.height(8.dp))
 
-                TranzoButton(
+                ClayButton(
                     text = "Send Code",
                     onClick = {
                         if (email.contains("@")) {
@@ -257,11 +227,12 @@ fun WelcomeScreenPro(
                     modifier = Modifier.fillMaxWidth()
                 )
 
-                TranzoSecondaryButton(
-                    text = "Back",
+                TextButton(
                     onClick = { showEmailInput = false },
                     modifier = Modifier.fillMaxWidth()
-                )
+                ) {
+                    Text("Back", color = TranzoColors.TextSecondary, fontWeight = FontWeight.Bold)
+                }
             }
 
             Spacer(modifier = Modifier.height(32.dp))
@@ -276,21 +247,17 @@ private fun AuthMethodCard(
     description: String,
     onClick: () -> Unit
 ) {
-    Card(
+    Box(
         modifier = Modifier
             .fillMaxWidth()
-            .height(72.dp),
-        shape = RoundedCornerShape(12.dp),
-        colors = CardDefaults.cardColors(
-            containerColor = TranzoColors.SurfaceLight,
-            contentColor = TranzoColors.TextPrimary
-        ),
-        onClick = onClick
+            .clip(RoundedCornerShape(20.dp))
+            .background(TranzoColors.ClayCard)
+            .border(1.dp, TranzoColors.DividerGray, RoundedCornerShape(20.dp))
+            .clickable(onClick = onClick)
+            .padding(20.dp)
     ) {
         Row(
-            modifier = Modifier
-                .fillMaxSize()
-                .padding(16.dp),
+            modifier = Modifier.fillMaxWidth(),
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.SpaceBetween
         ) {
@@ -298,29 +265,42 @@ private fun AuthMethodCard(
                 verticalAlignment = Alignment.CenterVertically,
                 modifier = Modifier.weight(1f)
             ) {
-                Icon(
-                    imageVector = icon,
-                    contentDescription = null,
-                    tint = TranzoColors.PrimaryBlue,
-                    modifier = Modifier.size(24.dp)
-                )
+                Box(
+                    modifier = Modifier
+                        .size(44.dp)
+                        .clip(RoundedCornerShape(12.dp))
+                        .background(TranzoColors.ClayBackgroundAlt),
+                    contentAlignment = Alignment.Center
+                ) {
+                    Icon(
+                        imageVector = icon,
+                        contentDescription = null,
+                        tint = Color.White,
+                        modifier = Modifier.size(22.dp)
+                    )
+                }
                 Spacer(modifier = Modifier.width(16.dp))
                 Column {
                     Text(
                         title,
-                        style = MaterialTheme.typography.titleMedium,
-                        fontWeight = FontWeight.SemiBold
+                        style = MaterialTheme.typography.titleLarge,
+                        fontWeight = FontWeight.Bold,
+                        color = TranzoColors.TextPrimary
                     )
                     Text(
                         description,
-                        style = MaterialTheme.typography.labelSmall,
+                        style = MaterialTheme.typography.labelMedium,
                         color = TranzoColors.TextSecondary
                     )
                 }
             }
 
-            // Icon placeholder - chevron right will be added later
-            Text("→", style = MaterialTheme.typography.bodyLarge, color = TranzoColors.TextTertiary)
+            Icon(
+                Icons.Outlined.ChevronRight,
+                null,
+                tint = TranzoColors.TextTertiary,
+                modifier = Modifier.size(20.dp)
+            )
         }
     }
 }

@@ -6,41 +6,40 @@ import androidx.compose.ui.text.font.FontFamily
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.sp
 
-// Bold, modern typography system with distinctive hierarchy
+// ─── PREMIUM TYPOGRAPHY SYSTEM ───
+// Focus on tight letter-spacing for headlines and clear hierarchy.
 val TranzoTypography = Typography(
-    // Display styles - BOLD, attention-grabbing
     displayLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.ExtraBold,
-        fontSize = 36.sp,
-        lineHeight = 44.sp,
-        letterSpacing = (-1).sp,
+        fontSize = 42.sp,
+        lineHeight = 48.sp,
+        letterSpacing = (-2).sp,
         color = TranzoColors.TextPrimary
     ),
     displayMedium = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.ExtraBold,
-        fontSize = 32.sp,
+        fontSize = 34.sp,
         lineHeight = 40.sp,
-        letterSpacing = (-0.5).sp,
+        letterSpacing = (-1.5).sp,
         color = TranzoColors.TextPrimary
     ),
     displaySmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Bold,
+        fontWeight = FontWeight.ExtraBold,
         fontSize = 28.sp,
-        lineHeight = 36.sp,
-        letterSpacing = 0.sp,
+        lineHeight = 34.sp,
+        letterSpacing = (-1).sp,
         color = TranzoColors.TextPrimary
     ),
 
-    // Headline styles - STRONG hierarchy
     headlineLarge = TextStyle(
         fontFamily = FontFamily.Default,
         fontWeight = FontWeight.Bold,
         fontSize = 24.sp,
         lineHeight = 32.sp,
-        letterSpacing = (-0.25).sp,
+        letterSpacing = (-0.5).sp,
         color = TranzoColors.TextPrimary
     ),
     headlineMedium = TextStyle(
@@ -48,33 +47,32 @@ val TranzoTypography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 20.sp,
         lineHeight = 28.sp,
-        letterSpacing = 0.sp,
+        letterSpacing = (-0.25).sp,
         color = TranzoColors.TextPrimary
     ),
     headlineSmall = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 18.sp,
         lineHeight = 26.sp,
         letterSpacing = 0.sp,
         color = TranzoColors.TextPrimary
     ),
 
-    // Title styles - secondary emphasis
     titleLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.15.sp,
+        letterSpacing = 0.sp,
         color = TranzoColors.TextPrimary
     ),
     titleMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.1.sp,
+        letterSpacing = 0.sp,
         color = TranzoColors.TextPrimary
     ),
     titleSmall = TextStyle(
@@ -82,17 +80,16 @@ val TranzoTypography = Typography(
         fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp,
+        letterSpacing = 0.sp,
         color = TranzoColors.TextPrimary
     ),
 
-    // Body styles - main content
     bodyLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.Normal,
+        fontWeight = FontWeight.Medium,
         fontSize = 16.sp,
         lineHeight = 24.sp,
-        letterSpacing = 0.5.sp,
+        letterSpacing = 0.1.sp,
         color = TranzoColors.TextPrimary
     ),
     bodyMedium = TextStyle(
@@ -100,7 +97,7 @@ val TranzoTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 14.sp,
         lineHeight = 20.sp,
-        letterSpacing = 0.25.sp,
+        letterSpacing = 0.1.sp,
         color = TranzoColors.TextSecondary
     ),
     bodySmall = TextStyle(
@@ -108,14 +105,13 @@ val TranzoTypography = Typography(
         fontWeight = FontWeight.Normal,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.4.sp,
+        letterSpacing = 0.1.sp,
         color = TranzoColors.TextSecondary
     ),
 
-    // Label styles - UI elements, buttons, tags
     labelLarge = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 14.sp,
         lineHeight = 20.sp,
         letterSpacing = 0.1.sp,
@@ -123,10 +119,10 @@ val TranzoTypography = Typography(
     ),
     labelMedium = TextStyle(
         fontFamily = FontFamily.Default,
-        fontWeight = FontWeight.SemiBold,
+        fontWeight = FontWeight.Bold,
         fontSize = 12.sp,
         lineHeight = 16.sp,
-        letterSpacing = 0.5.sp,
+        letterSpacing = 0.2.sp,
         color = TranzoColors.TextPrimary
     ),
     labelSmall = TextStyle(
