@@ -15,29 +15,29 @@ import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.tranzo.app.ui.card.CardScreenModern
 import com.tranzo.app.ui.card.OrderCardScreen
-import com.tranzo.app.ui.auth.OtpScreenPro
+import com.tranzo.app.ui.auth.OtpScreenModern
 import com.tranzo.app.ui.auth.ProfileSetupScreenPro
 import com.tranzo.app.ui.auth.WalletCreationScreenPro
-import com.tranzo.app.ui.auth.WelcomeScreenPro
+import com.tranzo.app.ui.auth.WelcomeScreenModern
 import com.tranzo.app.ui.dripper.CreateStreamScreen
-import com.tranzo.app.ui.dripper.DripperDashboardScreen
+import com.tranzo.app.ui.dripper.DripperScreenModern
 import com.tranzo.app.ui.dripper.StreamDetailScreen
-import com.tranzo.app.ui.history.TransactionHistoryScreenClay
+import com.tranzo.app.ui.history.TransactionHistoryScreenModern
 import com.tranzo.app.ui.home.HomeScreenModern
 import com.tranzo.app.ui.security.BiometricSetupScreen
 import com.tranzo.app.ui.security.PinMode
 import com.tranzo.app.ui.security.PinScreen
 import com.tranzo.app.ui.navigation.Screen
 import com.tranzo.app.ui.navigation.TranzoBottomBar
-import com.tranzo.app.ui.onboarding.OnboardingScreen
-import com.tranzo.app.ui.profile.ProfileScreen
+import com.tranzo.app.ui.onboarding.OnboardingScreenModern
+import com.tranzo.app.ui.profile.ProfileScreenModern
 import com.tranzo.app.ui.receive.ReceiveScreenModern
 import com.tranzo.app.ui.send.SendConfirmationScreen
 import com.tranzo.app.ui.send.SendScreenModern
-import com.tranzo.app.ui.settings.SettingsScreenProClay
+import com.tranzo.app.ui.settings.SettingsScreenModern
 import com.tranzo.app.ui.settings.ThemeSelectorScreen
 import com.tranzo.app.ui.splash.SplashScreenModern
-import com.tranzo.app.ui.swap.SwapScreenProClay
+import com.tranzo.app.ui.swap.SwapScreenModern
 import com.tranzo.app.ui.theme.TranzoTheme
 import com.tranzo.app.ui.auth.AuthViewModel
 import dagger.hilt.android.AndroidEntryPoint
@@ -91,7 +91,7 @@ class MainActivity : FragmentActivity() {
                         }
 
                         composable(Screen.Onboarding.route) {
-                            OnboardingScreen(
+                            OnboardingScreenModern(
                                 onGetStarted = {
                                     navController.navigate(Screen.Welcome.route) {
                                         popUpTo(Screen.Onboarding.route) { inclusive = true }
@@ -101,7 +101,7 @@ class MainActivity : FragmentActivity() {
                         }
 
                         composable(Screen.Welcome.route) {
-                            WelcomeScreenPro(
+                            WelcomeScreenModern(
                                 onNavigateToOtp = { email ->
                                     navController.navigate(Screen.Otp.createRoute(email))
                                 },
@@ -121,7 +121,7 @@ class MainActivity : FragmentActivity() {
 
                         composable(Screen.Otp.route) { backStackEntry ->
                             val email = backStackEntry.arguments?.getString("email") ?: ""
-                            OtpScreenPro(
+                            OtpScreenModern(
                                 email = email,
                                 onNavigateToHome = { isNewUser ->
                                     if (isNewUser) {
@@ -292,14 +292,14 @@ class MainActivity : FragmentActivity() {
 
                         // ── Swap ─────────────────────────────────────
                         composable(Screen.Swap.route) {
-                            SwapScreenProClay(
+                            SwapScreenModern(
                                 onSwapInitiated = { navController.popBackStack() },
                             )
                         }
 
                         // ── Dripper ──────────────────────────────────
                         composable(Screen.DripperDashboard.route) {
-                            DripperDashboardScreen(
+                            DripperScreenModern(
                                 onCreateStream = {
                                     navController.navigate(Screen.CreateStream.route)
                                 },
@@ -328,12 +328,12 @@ class MainActivity : FragmentActivity() {
 
                         // ── Transaction History ──────────────────────
                         composable(Screen.TransactionHistory.route) {
-                            TransactionHistoryScreenClay()
+                            TransactionHistoryScreenModern()
                         }
 
                         // ── Profile ──────────────────────────────────
                         composable(Screen.Profile.route) {
-                            ProfileScreen(
+                            ProfileScreenModern(
                                 onBack = { navController.popBackStack() },
                                 onEdit = { /* Edit profile feature */ },
                             )
@@ -341,7 +341,7 @@ class MainActivity : FragmentActivity() {
 
                         // ── Settings ─────────────────────────────────
                         composable(Screen.Settings.route) {
-                            SettingsScreenProClay(
+                            SettingsScreenModern(
                                 onLogout = {
                                     navController.navigate(Screen.Welcome.route) {
                                         popUpTo(0) { inclusive = true }
