@@ -16,9 +16,13 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun CardScreenModern() {
+fun CardScreenModern(
+    viewModel: CardViewModel = hiltViewModel(),
+) {
+    val state by viewModel.state.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -74,7 +78,7 @@ fun CardScreenModern() {
                         )
                         Column {
                             Text(
-                                "•••• •••• •••• 4242",
+                                state.card?.maskedPan ?: "•••• •••• •••• ••••",
                                 fontSize = 16.sp,
                                 fontWeight = FontWeight.Bold,
                                 color = Color.White,
@@ -92,7 +96,7 @@ fun CardScreenModern() {
                                         color = Color.White,
                                     )
                                     Text(
-                                        "12/28",
+                                        state.card?.expiry ?: "--/--",
                                         fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,

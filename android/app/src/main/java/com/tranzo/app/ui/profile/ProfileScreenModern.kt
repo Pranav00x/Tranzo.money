@@ -15,12 +15,16 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import com.tranzo.app.ui.home.HomeViewModel
 
 @Composable
 fun ProfileScreenModern(
     onBack: () -> Unit = {},
     onEdit: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -82,7 +86,7 @@ fun ProfileScreenModern(
 
                 // Name
                 Text(
-                    "John Doe",
+                    state.user?.displayName ?: state.user?.firstName ?: "User",
                     fontSize = 24.sp,
                     fontWeight = FontWeight.Black,
                     color = Color.Black,
@@ -90,7 +94,7 @@ fun ProfileScreenModern(
                 )
 
                 Text(
-                    "john@example.com",
+                    state.user?.email ?: "No email",
                     fontSize = 12.sp,
                     fontWeight = FontWeight.Normal,
                     color = Color.Black,
@@ -108,14 +112,14 @@ fun ProfileScreenModern(
                         .padding(16.dp),
                     horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    ProfileStat("Portfolio", "$2,450.00")
+                    ProfileStat("Portfolio", "$${String.format("%.2f", state.totalUsdBalance)}")
                     Box(
                         modifier = Modifier
                             .width(1.dp)
                             .height(50.dp)
                             .background(Color.Black),
                     )
-                    ProfileStat("Transactions", "47")
+                    ProfileStat("Assets", "${state.balances.size}")
                 }
 
                 Spacer(modifier = Modifier.height(28.dp))

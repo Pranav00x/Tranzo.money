@@ -16,9 +16,14 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
-fun TransactionHistoryScreenModern() {
+fun TransactionHistoryScreenModern(
+    viewModel: HistoryViewModel = hiltViewModel(),
+) {
+    val state by viewModel.state.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -38,56 +43,63 @@ fun TransactionHistoryScreenModern() {
             )
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(horizontal = 16.dp),
-        ) {
-            // Today Section
-            item {
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(color = Color.Black)
+            }
+        } else if (state.transactions.isEmpty()) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center,
+            ) {
                 Text(
-                    "Today",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Black,
-                    color = Color.Black,
+                    "No transactions yet",
+                    fontSize = 16.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Gray,
                 )
-                Spacer(modifier = Modifier.height(12.dp))
             }
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+            ) {
+                item {
+                    Text(
+                        "Recent Transactions",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color.Black,
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+                }
 
-            items(3) {
-                TransactionCard(
-                    icon = Icons.Outlined.ArrowUpward,
-                    label = "Sent USDC",
-                    amount = "-250.00",
-                    timestamp = "2:30 PM",
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
+                items(state.transactions.size) { index ->
+                    val tx = state.transactions[index]
+                    val icon = if (tx.type == "sent") Icons.Outlined.ArrowUpward else Icons.Outlined.ArrowDownward
+                    val label = "${tx.type?.capitalize() ?: "Transaction"} - ${tx.status?.capitalize() ?: "Pending"}"
+                    val timestamp = java.text.SimpleDateFormat("MMM dd", java.util.Locale.getDefault()).format(java.util.Date(tx.createdAt))
+                    TransactionCard(
+                        icon = icon,
+                        label = label,
+                        amount = tx.transactionHash?.take(8) ?: "---",
+                        timestamp = timestamp,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                }
 
-            item {
-                Spacer(modifier = Modifier.height(12.dp))
-                Text(
-                    "Yesterday",
-                    fontSize = 12.sp,
-                    fontWeight = FontWeight.Black,
-                    color = Color.Black,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            items(2) {
-                TransactionCard(
-                    icon = Icons.Outlined.ArrowDownward,
-                    label = "Received USDC",
-                    amount = "+500.00",
-                    timestamp = "Apr 26",
-                )
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
+                item {
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
             }
         }
     }
