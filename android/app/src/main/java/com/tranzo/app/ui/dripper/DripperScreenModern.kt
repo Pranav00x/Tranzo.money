@@ -16,12 +16,15 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun DripperScreenModern(
     onCreateStream: () -> Unit = {},
     onStreamClick: (String) -> Unit = {},
+    viewModel: DripperViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsState()
     Column(
         modifier = Modifier
             .fillMaxSize()
