@@ -121,20 +121,6 @@ fi
 if [ "$cygwin" = "true" -o "$msys" = "true" ] ; then
     APP_HOME=`cygpath --path --mixed "$APP_HOME"`
     CLASSPATH=`cygpath --path --mixed "$CLASSPATH"`
-
-    JAVACMD=`cygpath --unix "$JAVACMD"`
-
-    # We build the pattern for arguments to be converted via cygpath
-    ROOTDIRSRAW=`find -L / -maxdepth 3 -type d -name gradle 2>/dev/null`
-    SEP=""
-    for dir in $ROOTDIRSRAW ; do
-        ROOTDIRS="$ROOTDIRS$SEP$dir"
-        SEP="|"
-    done
-    OURCYGPATTERN="(^($ROOTDIRS))"
-    CLASSPATHARG=`echo "$CLASSPATH" | sed 's|[^:|]*|cygpath --path --ignore --mixed "&"|g' | tr '\n' ':'`
-    CLASSPATH=`echo "$CLASSPATHARG" | sed 's|;$||'`
-
 fi
 
 # traverses directory structure from process work directory to filesystem root
