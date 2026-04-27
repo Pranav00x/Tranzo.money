@@ -23,6 +23,8 @@ fun WelcomeScreenModern(
     onNavigateToOtp: (String) -> Unit = {},
     onAuthenticationSuccess: (Boolean) -> Unit = {},
 ) {
+    var email by remember { mutableStateOf("") }
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -72,22 +74,58 @@ fun WelcomeScreenModern(
                 Spacer(modifier = Modifier.height(48.dp))
 
                 // Email Input
-                AuthInputField(
-                    label = "Email",
-                    icon = Icons.Outlined.Email,
-                    onValueChange = { /* TODO */ }
-                )
+                Column {
+                    Text(
+                        "Email",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Bold,
+                        color = Color.Black,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+
+                    OutlinedTextField(
+                        value = email,
+                        onValueChange = { email = it },
+                        placeholder = { Text("Enter your email") },
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(48.dp),
+                        leadingIcon = {
+                            Icon(
+                                Icons.Outlined.Email,
+                                contentDescription = "Email",
+                                tint = Color.Black,
+                            )
+                        },
+                        singleLine = true,
+                        shape = RoundedCornerShape(8.dp),
+                        colors = OutlinedTextFieldDefaults.colors(
+                            focusedBorderColor = Color.Black,
+                            unfocusedBorderColor = Color.Black,
+                            focusedTextColor = Color.Black,
+                            unfocusedTextColor = Color.Black,
+                            focusedPlaceholderColor = Color.Black,
+                            unfocusedPlaceholderColor = Color.Black,
+                            focusedLabelColor = Color.Black,
+                        ),
+                    )
+                }
 
                 Spacer(modifier = Modifier.height(16.dp))
 
                 // Continue Button
                 Button(
-                    onClick = { onNavigateToOtp("") },
+                    onClick = {
+                        if (email.isNotBlank()) {
+                            onNavigateToOtp(email)
+                        }
+                    },
                     modifier = Modifier
                         .fillMaxWidth()
                         .height(48.dp),
                     colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
                     shape = RoundedCornerShape(8.dp),
+                    enabled = email.isNotBlank(),
                 ) {
                     Text(
                         "Continue",
@@ -129,11 +167,11 @@ fun WelcomeScreenModern(
                 Spacer(modifier = Modifier.height(24.dp))
 
                 // Social Auth Options
-                AuthMethodButton("Google", Icons.Outlined.Circle)
+                AuthMethodButton("Google", Icons.Outlined.Circle) { onAuthenticationSuccess(true) }
                 Spacer(modifier = Modifier.height(10.dp))
-                AuthMethodButton("Apple", Icons.Outlined.Circle)
+                AuthMethodButton("Apple", Icons.Outlined.Circle) { onAuthenticationSuccess(true) }
                 Spacer(modifier = Modifier.height(10.dp))
-                AuthMethodButton("Passkey", Icons.Outlined.Circle)
+                AuthMethodButton("Passkey", Icons.Outlined.Circle) { onAuthenticationSuccess(true) }
 
                 Spacer(modifier = Modifier.height(32.dp))
 
@@ -153,53 +191,9 @@ fun WelcomeScreenModern(
                         fontSize = 11.sp,
                         fontWeight = FontWeight.Bold,
                         color = Color.Black,
-                        modifier = Modifier.clickable { /* TODO */ }
+                        modifier = Modifier.clickable { /* Terms dialog */ }
                     )
                 }
-            }
-        }
-    }
-}
-
-@Composable
-private fun AuthInputField(
-    label: String,
-    icon: ImageVector,
-    onValueChange: (String) -> Unit = {},
-) {
-    Column {
-        Text(
-            label,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color.Black,
-        )
-        Spacer(modifier = Modifier.height(8.dp))
-
-        Box(
-            modifier = Modifier
-                .fillMaxWidth()
-                .background(Color.White, RoundedCornerShape(8.dp))
-                .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
-                .padding(12.dp),
-        ) {
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Icon(
-                    icon,
-                    contentDescription = label,
-                    tint = Color.Black,
-                    modifier = Modifier.size(20.dp),
-                )
-                Spacer(modifier = Modifier.width(12.dp))
-                Text(
-                    "Enter your $label",
-                    fontSize = 13.sp,
-                    fontWeight = FontWeight.Normal,
-                    color = Color.Black,
-                )
             }
         }
     }
@@ -209,9 +203,10 @@ private fun AuthInputField(
 private fun AuthMethodButton(
     label: String,
     icon: ImageVector,
+    onClick: () -> Unit = {},
 ) {
     Button(
-        onClick = { /* TODO */ },
+        onClick = onClick,
         modifier = Modifier
             .fillMaxWidth()
             .height(44.dp),
