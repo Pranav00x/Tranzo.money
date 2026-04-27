@@ -76,6 +76,7 @@ fun HomeScreenModern(
             ) {
                 Column(
                     horizontalAlignment = Alignment.CenterHorizontally,
+                    modifier = Modifier.padding(24.dp),
                 ) {
                     Text(
                         "Error",
@@ -90,12 +91,16 @@ fun HomeScreenModern(
                         fontWeight = FontWeight.Normal,
                         color = Color.Black,
                         modifier = Modifier.padding(16.dp),
+                        textAlign = androidx.compose.ui.text.style.TextAlign.Center,
                     )
                     Spacer(modifier = Modifier.height(16.dp))
                     Button(
                         onClick = { viewModel.loadDashboard() },
                         colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
-                        modifier = Modifier.height(44.dp),
+                        modifier = Modifier
+                            .height(48.dp)
+                            .fillMaxWidth(),
+                        shape = RoundedCornerShape(12.dp),
                     ) {
                         Text("Retry", color = Color.White, fontWeight = FontWeight.Bold)
                     }
