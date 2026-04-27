@@ -11,7 +11,6 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
@@ -23,28 +22,27 @@ fun CardScreenModern() {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAFB))
-            .systemBarsPadding(),
+            .background(Color.White),
     ) {
         // Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 "Your Card",
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF111827),
+                fontWeight = FontWeight.Black,
+                color = Color.Black,
             )
             IconButton(onClick = {}) {
                 Icon(
                     Icons.Outlined.MoreVert,
                     contentDescription = "More",
-                    tint = Color(0xFF111827),
+                    tint = Color.Black,
                 )
             }
         }
@@ -60,17 +58,9 @@ fun CardScreenModern() {
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(220.dp)
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(
-                                    Color(0xFF0D9488),
-                                    Color(0xFF06B6D4),
-                                ),
-                            ),
-                            RoundedCornerShape(20.dp),
-                        )
-                        .padding(24.dp),
+                        .height(160.dp)
+                        .background(Color.Black, RoundedCornerShape(12.dp))
+                        .padding(20.dp),
                 ) {
                     Column(
                         modifier = Modifier.fillMaxSize(),
@@ -78,37 +68,32 @@ fun CardScreenModern() {
                     ) {
                         Text(
                             "Tranzo",
-                            fontSize = 20.sp,
-                            fontWeight = FontWeight.Bold,
+                            fontSize = 18.sp,
+                            fontWeight = FontWeight.Black,
                             color = Color.White,
                         )
                         Column {
                             Text(
-                                "Card Number",
-                                fontSize = 12.sp,
-                                color = Color(0xFFCEFCE8),
-                            )
-                            Text(
                                 "•••• •••• •••• 4242",
                                 fontSize = 16.sp,
-                                fontWeight = FontWeight.SemiBold,
+                                fontWeight = FontWeight.Bold,
                                 color = Color.White,
                             )
+                            Spacer(modifier = Modifier.height(12.dp))
                             Row(
-                                modifier = Modifier
-                                    .fillMaxWidth()
-                                    .padding(top = 12.dp),
+                                modifier = Modifier.fillMaxWidth(),
                                 horizontalArrangement = Arrangement.SpaceBetween,
                             ) {
                                 Column {
                                     Text(
                                         "Valid Thru",
-                                        fontSize = 10.sp,
-                                        color = Color(0xFFCEFCE8),
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color.White,
                                     )
                                     Text(
                                         "12/28",
-                                        fontSize = 14.sp,
+                                        fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                     )
@@ -116,12 +101,13 @@ fun CardScreenModern() {
                                 Column {
                                     Text(
                                         "CVV",
-                                        fontSize = 10.sp,
-                                        color = Color(0xFFCEFCE8),
+                                        fontSize = 9.sp,
+                                        fontWeight = FontWeight.Normal,
+                                        color = Color.White,
                                     )
                                     Text(
                                         "•••",
-                                        fontSize = 14.sp,
+                                        fontSize = 12.sp,
                                         fontWeight = FontWeight.Bold,
                                         color = Color.White,
                                     )
@@ -130,15 +116,15 @@ fun CardScreenModern() {
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
             // Status Badge
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Box(
                     modifier = Modifier
-                        .background(Color(0xFFDEFAF1), RoundedCornerShape(8.dp))
-                        .padding(horizontal = 12.dp, vertical = 8.dp),
+                        .background(Color.Black, RoundedCornerShape(6.dp))
+                        .padding(horizontal = 10.dp, vertical = 6.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.CenterVertically,
@@ -146,70 +132,82 @@ fun CardScreenModern() {
                         Icon(
                             Icons.Outlined.CheckCircle,
                             contentDescription = "Active",
-                            tint = Color(0xFF10B981),
-                            modifier = Modifier.size(16.dp),
+                            tint = Color.White,
+                            modifier = Modifier.size(14.dp),
                         )
-                        Spacer(modifier = Modifier.width(8.dp))
+                        Spacer(modifier = Modifier.width(6.dp))
                         Text(
                             "Card Active",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
-                            color = Color(0xFF10B981),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // Stats
+            // Stats Grid
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Row(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(16.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(16.dp))
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                         .padding(16.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
+                    horizontalArrangement = Arrangement.SpaceEvenly,
                 ) {
-                    StatItem("Balance", "$2,450.00")
-                    StatItem("Monthly\nLimit", "$10,000")
-                    StatItem("Transactions", "47")
+                    StatCard("Balance", "$2,450.00")
+                    Divider(
+                        modifier = Modifier
+                            .width(1.dp)
+                            .height(50.dp),
+                        color = Color.Black,
+                    )
+                    StatCard("Monthly Limit", "$10,000")
+                    Divider(
+                        modifier = Modifier
+                            .width(1.dp)
+                            .height(50.dp),
+                        color = Color.Black,
+                    )
+                    StatCard("Transactions", "47")
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // Actions
+            // Action Buttons
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Column(modifier = Modifier.fillMaxWidth()) {
                     ActionButton("View Details", Icons.Outlined.Info)
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     ActionButton("Manage Limits", Icons.Outlined.Settings)
-                    Spacer(modifier = Modifier.height(12.dp))
+                    Spacer(modifier = Modifier.height(10.dp))
                     ActionButton("Block Card", Icons.Outlined.Block, isDestructive = true)
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }
 }
 
 @Composable
-private fun StatItem(label: String, value: String) {
-    Column(horizontalAlignment = Alignment.CenterHorizontally) {
+private fun StatCard(label: String, value: String) {
+    Column(
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
         Text(
             label,
-            fontSize = 12.sp,
-            color = Color(0xFF6B7280),
+            fontSize = 10.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black,
         )
         Spacer(modifier = Modifier.height(4.dp))
         Text(
             value,
-            fontSize = 14.sp,
-            fontWeight = FontWeight.Bold,
-            color = Color(0xFF111827),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Black,
+            color = Color.Black,
         )
     }
 }
@@ -224,29 +222,29 @@ private fun ActionButton(
         onClick = {},
         modifier = Modifier
             .fillMaxWidth()
-            .height(48.dp),
+            .height(44.dp),
         colors = ButtonDefaults.buttonColors(
-            containerColor = if (isDestructive) Color(0xFFFEE2E2) else Color.White,
+            containerColor = if (isDestructive) Color.White else Color.Black,
         ),
-        shape = RoundedCornerShape(12.dp),
+        shape = RoundedCornerShape(8.dp),
         border = androidx.compose.foundation.BorderStroke(
             1.dp,
-            if (isDestructive) Color(0xFFEF4444) else Color(0xFFE5E7EB),
+            Color.Black,
         ),
     ) {
         Icon(
             icon,
             contentDescription = label,
-            tint = if (isDestructive) Color(0xFFEF4444) else Color(0xFF0D9488),
+            tint = if (isDestructive) Color.Black else Color.White,
             modifier = Modifier
-                .size(20.dp)
+                .size(16.dp)
                 .padding(end = 8.dp),
         )
         Text(
             label,
-            fontSize = 16.sp,
-            fontWeight = FontWeight.SemiBold,
-            color = if (isDestructive) Color(0xFFEF4444) else Color(0xFF111827),
+            fontSize = 13.sp,
+            fontWeight = FontWeight.Bold,
+            color = if (isDestructive) Color.Black else Color.White,
         )
     }
 }

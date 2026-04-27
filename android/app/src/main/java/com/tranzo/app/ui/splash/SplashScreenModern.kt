@@ -1,7 +1,11 @@
 package com.tranzo.app.ui.splash
 
-import androidx.compose.animation.core.*
-import androidx.compose.foundation.*
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
+import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
@@ -9,9 +13,8 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.rotate
-import androidx.compose.ui.graphics.Brush
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
@@ -21,47 +24,74 @@ fun SplashScreenModern() {
     val rotation by infiniteTransition.animateFloat(
         initialValue = 0f,
         targetValue = 360f,
-        animationSpec = infiniteRepeatable(animation = tween(2000, easing = LinearEasing)),
+        animationSpec = infiniteRepeatable(
+            animation = tween(2000, easing = LinearEasing),
+        ),
         label = "rotation",
     )
 
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(
-                Brush.verticalGradient(
-                    colors = listOf(
-                        Color(0xFF0D9488),
-                        Color(0xFF06B6D4),
-                    ),
-                ),
-            ),
+            .background(Color.White),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
+        // Logo Box - Rounded square
         Box(
             modifier = Modifier
-                .size(120.dp)
-                .background(Color.White, RoundedCornerShape(32.dp)),
+                .size(80.dp)
+                .background(Color.Black, RoundedCornerShape(12.dp)),
             contentAlignment = Alignment.Center,
         ) {
-            Text("T", fontSize = 60.sp, fontWeight = FontWeight.Bold, color = Color(0xFF0D9488))
+            Text(
+                text = "T",
+                fontSize = 48.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.White,
+            )
         }
 
         Spacer(modifier = Modifier.height(32.dp))
-        Text("Tranzo", fontSize = 36.sp, fontWeight = FontWeight.Bold, color = Color.White)
-        Spacer(modifier = Modifier.height(12.dp))
-        Text("Your crypto. Your control.", fontSize = 16.sp, color = Color(0xFFCEFCE8))
+
+        Text(
+            text = "Tranzo",
+            fontSize = 32.sp,
+            fontWeight = FontWeight.Black,
+            color = Color.Black,
+        )
+
+        Spacer(modifier = Modifier.height(8.dp))
+
+        Text(
+            text = "Your crypto. Your control.",
+            fontSize = 14.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black,
+        )
+
         Spacer(modifier = Modifier.height(48.dp))
 
-        CircularProgressIndicator(
-            modifier = Modifier
-                .size(48.dp)
-                .rotate(rotation),
-            color = Color.White,
-            strokeWidth = 4.dp,
-        )
+        Box(
+            modifier = Modifier.size(48.dp),
+            contentAlignment = Alignment.Center,
+        ) {
+            CircularProgressIndicator(
+                modifier = Modifier
+                    .size(48.dp)
+                    .rotate(rotation),
+                color = Color.Black,
+                strokeWidth = 2.5.dp,
+            )
+        }
+
         Spacer(modifier = Modifier.height(16.dp))
-        Text("Loading...", fontSize = 14.sp, color = Color(0xFFCEFCE8))
+
+        Text(
+            text = "Loading...",
+            fontSize = 12.sp,
+            fontWeight = FontWeight.Normal,
+            color = Color.Black,
+        )
     }
 }

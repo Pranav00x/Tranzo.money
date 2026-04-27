@@ -21,28 +21,27 @@ fun ReceiveScreenModern(onBack: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAFB))
-            .systemBarsPadding(),
+            .background(Color.White),
     ) {
         // Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 "Receive Crypto",
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF111827),
+                fontWeight = FontWeight.Black,
+                color = Color.Black,
             )
             IconButton(onClick = onBack) {
                 Icon(
                     Icons.Outlined.Close,
                     contentDescription = "Close",
-                    tint = Color(0xFF111827),
+                    tint = Color.Black,
                 )
             }
         }
@@ -54,42 +53,41 @@ fun ReceiveScreenModern(onBack: () -> Unit = {}) {
                 .padding(horizontal = 16.dp),
             horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            // QR Code Box
+            // QR Code
             item {
-                Spacer(modifier = Modifier.height(24.dp))
+                Spacer(modifier = Modifier.height(16.dp))
                 Box(
                     modifier = Modifier
-                        .size(240.dp)
-                        .background(Color.White, RoundedCornerShape(16.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(16.dp))
+                        .size(220.dp)
+                        .background(Color.White, RoundedCornerShape(12.dp))
+                        .border(2.dp, Color.Black, RoundedCornerShape(12.dp))
                         .padding(16.dp),
                     contentAlignment = Alignment.Center,
                 ) {
-                    // Placeholder QR code
                     Box(
                         modifier = Modifier
-                            .size(200.dp)
-                            .background(Color(0xFFF3F4F6)),
+                            .size(180.dp)
+                            .background(Color.Black, RoundedCornerShape(8.dp)),
                         contentAlignment = Alignment.Center,
                     ) {
                         Icon(
                             Icons.Outlined.QrCode,
                             contentDescription = "QR Code",
-                            tint = Color(0xFF0D9488),
+                            tint = Color.White,
                             modifier = Modifier.size(80.dp),
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(24.dp))
             }
 
             // Token Selection
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(12.dp))
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                         .padding(16.dp),
                 ) {
                     Row(
@@ -100,83 +98,81 @@ fun ReceiveScreenModern(onBack: () -> Unit = {}) {
                         Column {
                             Text(
                                 "USDC on Polygon",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF111827),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Black,
+                                color = Color.Black,
                             )
                             Text(
                                 "Polygon Network",
-                                fontSize = 12.sp,
-                                color = Color(0xFF6B7280),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black,
                             )
                         }
                         Icon(
                             Icons.Outlined.ExpandMore,
                             contentDescription = "Select",
-                            tint = Color(0xFF6B7280),
+                            tint = Color.Black,
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
             // Wallet Address
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     "Your Wallet Address",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF111827),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(12.dp))
-                        .padding(16.dp),
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                        .padding(12.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
                         verticalAlignment = Alignment.CenterVertically,
                         horizontalArrangement = Arrangement.SpaceBetween,
                     ) {
-                        Column {
-                            Text(
-                                "0x1234...abcd",
-                                fontSize = 14.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF111827),
-                            )
-                        }
+                        Text(
+                            "0x1234...abcd",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
+                        )
                         Button(
                             onClick = {},
-                            modifier = Modifier.height(36.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFF3F4F6),
-                            ),
-                            shape = RoundedCornerShape(8.dp),
+                            modifier = Modifier.height(32.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                            shape = RoundedCornerShape(6.dp),
                         ) {
                             Text(
                                 "Copy",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF0D9488),
+                                fontSize = 10.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
                             )
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
             // Info Banner
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFEFF6FF), RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFBFDBFE), RoundedCornerShape(12.dp))
-                        .padding(16.dp),
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                        .padding(12.dp),
                 ) {
                     Row(
                         verticalAlignment = Alignment.Top,
@@ -184,22 +180,20 @@ fun ReceiveScreenModern(onBack: () -> Unit = {}) {
                         Icon(
                             Icons.Outlined.Info,
                             contentDescription = "Info",
-                            tint = Color(0xFF3B82F6),
+                            tint = Color.Black,
                             modifier = Modifier
-                                .size(20.dp)
-                                .padding(end = 12.dp),
+                                .size(16.dp)
+                                .padding(end = 8.dp),
                         )
                         Text(
                             "Only send USDC on Polygon to this address. Sending other tokens or using different networks may result in loss of funds.",
-                            fontSize = 12.sp,
-                            color = Color(0xFF111827),
+                            fontSize = 11.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Black,
                         )
                     }
                 }
-            }
-
-            item {
-                Spacer(modifier = Modifier.height(32.dp))
+                Spacer(modifier = Modifier.height(24.dp))
             }
         }
     }

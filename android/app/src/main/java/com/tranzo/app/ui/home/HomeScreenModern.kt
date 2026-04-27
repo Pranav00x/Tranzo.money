@@ -12,21 +12,12 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 
-/**
- * Modern Home Screen Redesign
- * - Vibrant teal gradient header
- * - Quick action buttons (Send, Receive, Swap, Dripper)
- * - Clean token balance cards
- * - Card preview section
- * - Minimal brutal aesthetic
- */
 @Composable
 fun HomeScreenModern(
     onNavigateToTransfer: () -> Unit = {},
@@ -37,56 +28,28 @@ fun HomeScreenModern(
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAFB))
-            .systemBarsPadding(),
+            .background(Color.White),
     ) {
-        // Gradient Header
-        Box(
+        // Header
+        Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .background(
-                    Brush.verticalGradient(
-                        colors = listOf(
-                            Color(0xFF0D9488),  // Teal
-                            Color(0xFF06B6D4),  // Cyan
-                        ),
-                    ),
-                )
-                .padding(24.dp),
+                .padding(20.dp),
+            horizontalArrangement = Arrangement.SpaceBetween,
+            verticalAlignment = Alignment.CenterVertically,
         ) {
-            Column {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(bottom = 24.dp),
-                    horizontalArrangement = Arrangement.SpaceBetween,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        "Tranzo",
-                        fontSize = 24.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = Color.White,
-                    )
-                    IconButton(onClick = onNavigateToSettings) {
-                        Icon(
-                            Icons.Outlined.Notifications,
-                            contentDescription = "Notifications",
-                            tint = Color.White,
-                        )
-                    }
-                }
-
-                Text(
-                    "Total Balance",
-                    fontSize = 14.sp,
-                    color = Color(0xFFCEFCE8),
-                )
-                Text(
-                    "$2,450.00",
-                    fontSize = 36.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color.White,
+            Text(
+                "Tranzo",
+                fontSize = 24.sp,
+                fontWeight = FontWeight.Black,
+                color = Color.Black,
+            )
+            IconButton(onClick = onNavigateToSettings) {
+                Icon(
+                    Icons.Outlined.Settings,
+                    contentDescription = "Settings",
+                    tint = Color.Black,
+                    modifier = Modifier.size(24.dp),
                 )
             }
         }
@@ -97,130 +60,143 @@ fun HomeScreenModern(
                 .weight(1f)
                 .padding(horizontal = 16.dp),
         ) {
-            // Quick Actions
+            // Balance Section
             item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Row(
-                    modifier = Modifier.fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
-                ) {
-                    QuickActionButtonModern("Send", Icons.Outlined.ArrowOutward, onClick = onNavigateToTransfer)
-                    QuickActionButtonModern("Receive", Icons.Outlined.ArrowDownward)
-                    QuickActionButtonModern("Swap", Icons.Outlined.SwapHoriz, onClick = onNavigateToSwap)
-                    QuickActionButtonModern("Dripper", Icons.Outlined.WaterDrop)
-                }
-            }
-
-            // Assets Section
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    "Assets",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF111827),
-                    modifier = Modifier.padding(vertical = 12.dp),
-                )
-            }
-
-            // Token Cards
-            items(3) {
-                TokenCardModern("USDC", "1,250.00", "$1,250.00")
-                Spacer(modifier = Modifier.height(8.dp))
-            }
-
-            // Card Section
-            item {
-                Spacer(modifier = Modifier.height(24.dp))
-                Text(
-                    "Your Card",
-                    fontSize = 18.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF111827),
-                    modifier = Modifier.padding(vertical = 12.dp),
-                )
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(200.dp)
-                        .background(
-                            Brush.linearGradient(
-                                colors = listOf(
-                                    Color(0xFF0D9488),
-                                    Color(0xFF06B6D4),
-                                ),
-                            ),
-                            RoundedCornerShape(20.dp),
-                        )
-                        .padding(24.dp),
+                        .background(Color.Black, RoundedCornerShape(12.dp))
+                        .padding(20.dp),
                 ) {
-                    Column(
-                        modifier = Modifier.align(Alignment.BottomStart),
-                    ) {
+                    Column {
                         Text(
-                            "Tranzo Visa Card",
-                            fontSize = 14.sp,
+                            "Total Balance",
+                            fontSize = 12.sp,
                             fontWeight = FontWeight.Normal,
-                            color = Color(0xFFCEFCE8),
+                            color = Color.White,
                         )
-                        Spacer(modifier = Modifier.height(12.dp))
+                        Spacer(modifier = Modifier.height(8.dp))
                         Text(
-                            "Tap to manage",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.SemiBold,
+                            "$2,450.00",
+                            fontSize = 40.sp,
+                            fontWeight = FontWeight.Black,
                             color = Color.White,
                         )
                     }
                 }
                 Spacer(modifier = Modifier.height(24.dp))
             }
+
+            // Quick Actions
+            item {
+                Row(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(80.dp),
+                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                ) {
+                    QuickActionButton("Send", Icons.Outlined.ArrowUpward, onClick = onNavigateToTransfer, modifier = Modifier.weight(1f))
+                    QuickActionButton("Receive", Icons.Outlined.ArrowDownward, modifier = Modifier.weight(1f))
+                    QuickActionButton("Swap", Icons.Outlined.SwapHoriz, onClick = onNavigateToSwap, modifier = Modifier.weight(1f))
+                    QuickActionButton("Dripper", Icons.Outlined.WaterDrop, modifier = Modifier.weight(1f))
+                }
+                Spacer(modifier = Modifier.height(24.dp))
+            }
+
+            // Assets Section
+            item {
+                Text(
+                    "Assets",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+            }
+
+            items(3) {
+                AssetCard("USDC", "1,250.00", "$1,250.00")
+                Spacer(modifier = Modifier.height(10.dp))
+            }
+
+            // Card Section
+            item {
+                Spacer(modifier = Modifier.height(20.dp))
+                Text(
+                    "Your Card",
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
+                )
+                Spacer(modifier = Modifier.height(12.dp))
+
+                Box(
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .height(140.dp)
+                        .background(Color.Black, RoundedCornerShape(12.dp))
+                        .padding(16.dp)
+                        .clickable(onClick = onNavigateToCard),
+                ) {
+                    Column(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .align(Alignment.BottomStart),
+                    ) {
+                        Text(
+                            "•••• •••• •••• 4242",
+                            fontSize = 16.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.White,
+                        )
+                        Spacer(modifier = Modifier.height(12.dp))
+                        Text(
+                            "Tap to manage",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.White,
+                        )
+                    }
+                }
+                Spacer(modifier = Modifier.height(32.dp))
+            }
         }
     }
 }
 
 @Composable
-private fun QuickActionButtonModern(
+private fun QuickActionButton(
     label: String,
     icon: ImageVector,
     onClick: () -> Unit = {},
+    modifier: Modifier = Modifier,
 ) {
     Column(
+        modifier = modifier
+            .fillMaxHeight()
+            .background(Color.Black, RoundedCornerShape(8.dp))
+            .clickable(onClick = onClick),
         horizontalAlignment = Alignment.CenterHorizontally,
-        modifier = Modifier
-            .width(70.dp)
-            .let {
-                if (label != "Dripper") {
-                    it.clickable(enabled = true, onClick = onClick)
-                } else {
-                    it
-                }
-            },
+        verticalArrangement = Arrangement.Center,
     ) {
-        Box(
-            modifier = Modifier
-                .size(56.dp)
-                .background(Color(0xFFF3F4F6), RoundedCornerShape(14.dp)),
-            contentAlignment = Alignment.Center,
-        ) {
-            Icon(
-                icon,
-                contentDescription = label,
-                tint = Color(0xFF0D9488),
-                modifier = Modifier.size(24.dp),
-            )
-        }
-        Spacer(modifier = Modifier.height(8.dp))
+        Icon(
+            icon,
+            contentDescription = label,
+            tint = Color.White,
+            modifier = Modifier.size(28.dp),
+        )
+        Spacer(modifier = Modifier.height(4.dp))
         Text(
             label,
-            fontSize = 12.sp,
-            fontWeight = FontWeight.Medium,
-            color = Color(0xFF111827),
+            fontSize = 11.sp,
+            fontWeight = FontWeight.Bold,
+            color = Color.White,
         )
     }
 }
 
 @Composable
-private fun TokenCardModern(
+private fun AssetCard(
     symbol: String,
     balance: String,
     usdValue: String,
@@ -228,9 +204,9 @@ private fun TokenCardModern(
     Box(
         modifier = Modifier
             .fillMaxWidth()
-            .background(Color.White, RoundedCornerShape(16.dp))
-            .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(16.dp))
-            .padding(16.dp),
+            .background(Color.White, RoundedCornerShape(8.dp))
+            .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+            .padding(12.dp),
     ) {
         Row(
             modifier = Modifier.fillMaxWidth(),
@@ -240,21 +216,22 @@ private fun TokenCardModern(
             Column {
                 Text(
                     symbol,
-                    fontSize = 16.sp,
-                    fontWeight = FontWeight.Bold,
-                    color = Color(0xFF111827),
+                    fontSize = 14.sp,
+                    fontWeight = FontWeight.Black,
+                    color = Color.Black,
                 )
                 Text(
                     balance,
-                    fontSize = 12.sp,
-                    color = Color(0xFF6B7280),
+                    fontSize = 11.sp,
+                    fontWeight = FontWeight.Normal,
+                    color = Color.Black,
                 )
             }
             Text(
                 usdValue,
-                fontSize = 16.sp,
+                fontSize = 14.sp,
                 fontWeight = FontWeight.Bold,
-                color = Color(0xFF111827),
+                color = Color.Black,
             )
         }
     }

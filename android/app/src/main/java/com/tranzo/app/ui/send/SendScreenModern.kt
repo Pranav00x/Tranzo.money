@@ -21,28 +21,27 @@ fun SendScreenModern(onBack: () -> Unit = {}) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(Color(0xFFF8FAFB))
-            .systemBarsPadding(),
+            .background(Color.White),
     ) {
         // Header
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(24.dp),
+                .padding(16.dp),
             horizontalArrangement = Arrangement.SpaceBetween,
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 "Send Crypto",
                 fontSize = 24.sp,
-                fontWeight = FontWeight.Bold,
-                color = Color(0xFF111827),
+                fontWeight = FontWeight.Black,
+                color = Color.Black,
             )
             IconButton(onClick = onBack) {
                 Icon(
                     Icons.Outlined.Close,
                     contentDescription = "Close",
-                    tint = Color(0xFF111827),
+                    tint = Color.Black,
                 )
             }
         }
@@ -53,23 +52,22 @@ fun SendScreenModern(onBack: () -> Unit = {}) {
                 .weight(1f)
                 .padding(horizontal = 16.dp),
         ) {
-            // Amount Input
+            // Amount Section
             item {
-                Spacer(modifier = Modifier.height(12.dp))
                 Text(
                     "Amount",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF111827),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(12.dp))
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                         .padding(16.dp),
-                    contentAlignment = Alignment.Center,
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -80,49 +78,49 @@ fun SendScreenModern(onBack: () -> Unit = {}) {
                             Text(
                                 "250.00",
                                 fontSize = 28.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF111827),
+                                fontWeight = FontWeight.Black,
+                                color = Color.Black,
                             )
                             Text(
                                 "≈ $250.00",
-                                fontSize = 12.sp,
-                                color = Color(0xFF6B7280),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black,
                             )
                         }
                         Button(
                             onClick = {},
                             modifier = Modifier.height(36.dp),
-                            colors = ButtonDefaults.buttonColors(
-                                containerColor = Color(0xFFF3F4F6),
-                            ),
-                            shape = RoundedCornerShape(8.dp),
+                            colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                            shape = RoundedCornerShape(6.dp),
                         ) {
                             Text(
                                 "Max",
-                                fontSize = 12.sp,
-                                fontWeight = FontWeight.SemiBold,
-                                color = Color(0xFF0D9488),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
                             )
                         }
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
             // Token Selection
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     "Token",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF111827),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(12.dp))
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                         .padding(16.dp),
                 ) {
                     Row(
@@ -133,40 +131,42 @@ fun SendScreenModern(onBack: () -> Unit = {}) {
                         Column {
                             Text(
                                 "USDC",
-                                fontSize = 16.sp,
-                                fontWeight = FontWeight.Bold,
-                                color = Color(0xFF111827),
+                                fontSize = 14.sp,
+                                fontWeight = FontWeight.Black,
+                                color = Color.Black,
                             )
                             Text(
                                 "Balance: 1,250.00",
-                                fontSize = 12.sp,
-                                color = Color(0xFF6B7280),
+                                fontSize = 11.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.Black,
                             )
                         }
                         Icon(
                             Icons.Outlined.ExpandMore,
                             contentDescription = "Select",
-                            tint = Color(0xFF6B7280),
+                            tint = Color.Black,
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
             // Recipient
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Text(
                     "Recipient Address",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.SemiBold,
-                    color = Color(0xFF111827),
+                    fontSize = 12.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = Color.Black,
                 )
                 Spacer(modifier = Modifier.height(8.dp))
+
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color.White, RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFE5E7EB), RoundedCornerShape(12.dp))
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
                         .padding(16.dp),
                 ) {
                     Row(
@@ -176,27 +176,28 @@ fun SendScreenModern(onBack: () -> Unit = {}) {
                     ) {
                         Text(
                             "0x...",
-                            fontSize = 14.sp,
-                            color = Color(0xFF6B7280),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Normal,
+                            color = Color.Black,
                         )
                         Icon(
                             Icons.Outlined.QrCode,
                             contentDescription = "QR",
-                            tint = Color(0xFF0D9488),
+                            tint = Color.Black,
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(20.dp))
             }
 
-            // Fee Info
+            // Fee Section
             item {
-                Spacer(modifier = Modifier.height(24.dp))
                 Box(
                     modifier = Modifier
                         .fillMaxWidth()
-                        .background(Color(0xFFF0FDF4), RoundedCornerShape(12.dp))
-                        .border(1.dp, Color(0xFFDCFCE7), RoundedCornerShape(12.dp))
-                        .padding(16.dp),
+                        .background(Color.White, RoundedCornerShape(8.dp))
+                        .border(1.dp, Color.Black, RoundedCornerShape(8.dp))
+                        .padding(12.dp),
                 ) {
                     Row(
                         modifier = Modifier.fillMaxWidth(),
@@ -204,36 +205,35 @@ fun SendScreenModern(onBack: () -> Unit = {}) {
                     ) {
                         Text(
                             "Network Fee",
-                            fontSize = 14.sp,
-                            color = Color(0xFF111827),
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Bold,
+                            color = Color.Black,
                         )
                         Text(
-                            "FREE (Gasless)",
-                            fontSize = 14.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color(0xFF10B981),
+                            "FREE",
+                            fontSize = 12.sp,
+                            fontWeight = FontWeight.Black,
+                            color = Color.Black,
                         )
                     }
                 }
+                Spacer(modifier = Modifier.height(32.dp))
             }
 
             // Send Button
             item {
-                Spacer(modifier = Modifier.height(32.dp))
                 Button(
                     onClick = {},
                     modifier = Modifier
                         .fillMaxWidth()
-                        .height(56.dp),
-                    colors = ButtonDefaults.buttonColors(
-                        containerColor = Color(0xFF0D9488),
-                    ),
-                    shape = RoundedCornerShape(12.dp),
+                        .height(48.dp),
+                    colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                    shape = RoundedCornerShape(8.dp),
                 ) {
                     Text(
                         "Review & Send",
-                        fontSize = 16.sp,
-                        fontWeight = FontWeight.SemiBold,
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Black,
                         color = Color.White,
                     )
                 }
