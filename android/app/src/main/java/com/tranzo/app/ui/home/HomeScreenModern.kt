@@ -17,6 +17,7 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 
 @Composable
 fun HomeScreenModern(
@@ -24,7 +25,10 @@ fun HomeScreenModern(
     onNavigateToSwap: () -> Unit = {},
     onNavigateToCard: () -> Unit = {},
     onNavigateToSettings: () -> Unit = {},
+    viewModel: HomeViewModel = hiltViewModel(),
 ) {
+    val state by viewModel.state.collectAsState()
+
     Column(
         modifier = Modifier
             .fillMaxSize()
@@ -54,111 +58,159 @@ fun HomeScreenModern(
             }
         }
 
-        LazyColumn(
-            modifier = Modifier
-                .fillMaxWidth()
-                .weight(1f)
-                .padding(horizontal = 16.dp),
-        ) {
-            // Balance Section
-            item {
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .background(Color.Black, RoundedCornerShape(12.dp))
-                        .padding(20.dp),
+        if (state.isLoading) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator(color = Color.Black)
+            }
+        } else if (state.error != null) {
+            Box(
+                modifier = Modifier
+                    .fillMaxSize()
+                    .background(Color.White),
+                contentAlignment = Alignment.Center,
+            ) {
+                Column(
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
-                    Column {
-                        Text(
-                            "Total Balance",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.White,
-                        )
-                        Spacer(modifier = Modifier.height(8.dp))
-                        Text(
-                            "$2,450.00",
-                            fontSize = 40.sp,
-                            fontWeight = FontWeight.Black,
-                            color = Color.White,
-                        )
+                    Text(
+                        "Error",
+                        fontSize = 18.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color.Black,
+                    )
+                    Spacer(modifier = Modifier.height(8.dp))
+                    Text(
+                        state.error ?: "Unknown error",
+                        fontSize = 12.sp,
+                        fontWeight = FontWeight.Normal,
+                        color = Color.Black,
+                        modifier = Modifier.padding(16.dp),
+                    )
+                    Spacer(modifier = Modifier.height(16.dp))
+                    Button(
+                        onClick = { viewModel.loadDashboard() },
+                        colors = ButtonDefaults.buttonColors(containerColor = Color.Black),
+                        modifier = Modifier.height(44.dp),
+                    ) {
+                        Text("Retry", color = Color.White, fontWeight = FontWeight.Bold)
                     }
                 }
-                Spacer(modifier = Modifier.height(24.dp))
             }
-
-            // Quick Actions
-            item {
-                Row(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(80.dp),
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
-                ) {
-                    QuickActionButton("Send", Icons.Outlined.ArrowUpward, onClick = onNavigateToTransfer, modifier = Modifier.weight(1f))
-                    QuickActionButton("Receive", Icons.Outlined.ArrowDownward, modifier = Modifier.weight(1f))
-                    QuickActionButton("Swap", Icons.Outlined.SwapHoriz, onClick = onNavigateToSwap, modifier = Modifier.weight(1f))
-                    QuickActionButton("Dripper", Icons.Outlined.WaterDrop, modifier = Modifier.weight(1f))
-                }
-                Spacer(modifier = Modifier.height(24.dp))
-            }
-
-            // Assets Section
-            item {
-                Text(
-                    "Assets",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Black,
-                    color = Color.Black,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-            }
-
-            items(3) {
-                AssetCard("USDC", "1,250.00", "$1,250.00")
-                Spacer(modifier = Modifier.height(10.dp))
-            }
-
-            // Card Section
-            item {
-                Spacer(modifier = Modifier.height(20.dp))
-                Text(
-                    "Your Card",
-                    fontSize = 14.sp,
-                    fontWeight = FontWeight.Black,
-                    color = Color.Black,
-                )
-                Spacer(modifier = Modifier.height(12.dp))
-
-                Box(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .height(140.dp)
-                        .background(Color.Black, RoundedCornerShape(12.dp))
-                        .padding(16.dp)
-                        .clickable(onClick = onNavigateToCard),
-                ) {
-                    Column(
+        } else {
+            LazyColumn(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .weight(1f)
+                    .padding(horizontal = 16.dp),
+            ) {
+                // Balance Section
+                item {
+                    Box(
                         modifier = Modifier
                             .fillMaxWidth()
-                            .align(Alignment.BottomStart),
+                            .background(Color.Black, RoundedCornerShape(12.dp))
+                            .padding(20.dp),
                     ) {
+                        Column {
+                            Text(
+                                "Total Balance",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.White,
+                            )
+                            Spacer(modifier = Modifier.height(8.dp))
+                            Text(
+                                "$${String.format("%.2f", state.totalUsdBalance)}",
+                                fontSize = 40.sp,
+                                fontWeight = FontWeight.Black,
+                                color = Color.White,
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
+                // Quick Actions
+                item {
+                    Row(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(80.dp),
+                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    ) {
+                        QuickActionButton("Send", Icons.Outlined.ArrowUpward, onClick = onNavigateToTransfer, modifier = Modifier.weight(1f))
+                        QuickActionButton("Receive", Icons.Outlined.ArrowDownward, modifier = Modifier.weight(1f))
+                        QuickActionButton("Swap", Icons.Outlined.SwapHoriz, onClick = onNavigateToSwap, modifier = Modifier.weight(1f))
+                        QuickActionButton("Dripper", Icons.Outlined.WaterDrop, modifier = Modifier.weight(1f))
+                    }
+                    Spacer(modifier = Modifier.height(24.dp))
+                }
+
+                // Assets Section
+                if (state.balances.isNotEmpty()) {
+                    item {
                         Text(
-                            "•••• •••• •••• 4242",
-                            fontSize = 16.sp,
-                            fontWeight = FontWeight.Bold,
-                            color = Color.White,
+                            "Assets",
+                            fontSize = 14.sp,
+                            fontWeight = FontWeight.Black,
+                            color = Color.Black,
                         )
                         Spacer(modifier = Modifier.height(12.dp))
-                        Text(
-                            "Tap to manage",
-                            fontSize = 12.sp,
-                            fontWeight = FontWeight.Normal,
-                            color = Color.White,
-                        )
+                    }
+
+                    items(state.balances.size) { index ->
+                        val balance = state.balances[index]
+                        AssetCard(balance.symbol, balance.balance, balance.formatted)
+                        Spacer(modifier = Modifier.height(10.dp))
                     }
                 }
-                Spacer(modifier = Modifier.height(32.dp))
+
+                // Card Section
+                item {
+                    Spacer(modifier = Modifier.height(20.dp))
+                    Text(
+                        "Your Card",
+                        fontSize = 14.sp,
+                        fontWeight = FontWeight.Black,
+                        color = Color.Black,
+                    )
+                    Spacer(modifier = Modifier.height(12.dp))
+
+                    Box(
+                        modifier = Modifier
+                            .fillMaxWidth()
+                            .height(140.dp)
+                            .background(Color.Black, RoundedCornerShape(12.dp))
+                            .padding(16.dp)
+                            .clickable(onClick = onNavigateToCard),
+                    ) {
+                        Column(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .align(Alignment.BottomStart),
+                        ) {
+                            Text(
+                                "•••• •••• •••• 4242",
+                                fontSize = 16.sp,
+                                fontWeight = FontWeight.Bold,
+                                color = Color.White,
+                            )
+                            Spacer(modifier = Modifier.height(12.dp))
+                            Text(
+                                "Tap to manage",
+                                fontSize = 12.sp,
+                                fontWeight = FontWeight.Normal,
+                                color = Color.White,
+                            )
+                        }
+                    }
+                    Spacer(modifier = Modifier.height(32.dp))
+                }
             }
         }
     }
